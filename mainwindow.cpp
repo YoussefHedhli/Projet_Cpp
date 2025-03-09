@@ -4,10 +4,27 @@
 #include "match.h"
 #include <QMessageBox>
 #include <QDebug>
+#include <QDate>
+#include <QPdfWriter>
+#include <QPainter>
+#include <QTableWidget>
+#include <QDesktopServices>
+#include <QUrl>
+#include <QDir>
+#include <QtCharts>
+#include <QMap>
+#include <QBarSeries>
+#include <QBarSet>
+#include <QChartView>
+#include <QBarCategoryAxis>
+#include <QValueAxis>
+#include <QVBoxLayout>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
+    displayStatistics(); // ✅ Load statistics at startup
+
 
     Connection c;
     bool connectionSuccess = c.createconnect();
@@ -19,7 +36,11 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->btnAjouter, &QPushButton::clicked, this, &MainWindow::addMatchToDatabase);
     connect(ui->btnSupprimer, &QPushButton::clicked, this, &MainWindow::deleteMatch);
-
+    connect(ui->btnModifier, &QPushButton::clicked, this, &MainWindow::modifyMatch);
+    connect(ui->tableWidget, &QTableWidget::itemSelectionChanged, this, &MainWindow::on_tableWidget_itemSelectionChanged);
+    connect(ui->recherche, &QPushButton::clicked, this, &MainWindow::searchMatch);
+    connect(ui->tri, &QPushButton::clicked, this, &MainWindow::sortMatchesByID);
+    connect(ui->pdfButton, &QPushButton::clicked, this, &MainWindow::generatePDF);
     updateMatchDisplay();
 }
 
@@ -31,32 +52,44 @@ void MainWindow::updateMatchDisplay() {
     QVector<QVector<QString>> data = m.afficher();
 
     ui->tableWidget->setRowCount(data.size());
-    ui->tableWidget->setColumnCount(4);
-    ui->tableWidget->setHorizontalHeaderLabels({"ID", "Date", "Lieu", "État"});
+    ui->tableWidget->setColumnCount(6);
+    ui->tableWidget->setHorizontalHeaderLabels({"ID", "Equipe 1", "Equipe 2", "Date", "Lieu", "État"});
 
     for (int row = 0; row < data.size(); ++row) {
-        for (int col = 0; col < data[row].size(); ++col) {
+        for (int col = 0; col < 6; ++col) {
             ui->tableWidget->setItem(row, col, new QTableWidgetItem(data[row][col]));
         }
     }
 }
 
 void MainWindow::addMatchToDatabase() {
-    QString date = ui->lineEditDate->text().trimmed();
+    QString dateInput = ui->lineEditDate->text().trimmed();
     QString lieu = ui->lineEditLieu->text().trimmed();
     QString etat = ui->comboEtat->currentText();
+    QString equipe1 = ui->lineEditTeam1->text().trimmed();
+    QString equipe2 = ui->lineEditTeam2->text().trimmed();
 
-    if (date.isEmpty() || lieu.isEmpty() || etat.isEmpty()) {
+    if (dateInput.isEmpty() || lieu.isEmpty() || etat.isEmpty() || equipe1.isEmpty() || equipe2.isEmpty()) {
         QMessageBox::warning(this, "Erreur", "Veuillez remplir tous les champs !");
         return;
     }
 
-    Match m(0, date, lieu, etat);
+    QDate formattedDate = QDate::fromString(dateInput, "dd/MM/yyyy");
+    if (!formattedDate.isValid()) {
+        QMessageBox::warning(this, "Erreur", "Format de date invalide! Utilisez JJ/MM/AAAA.");
+        return;
+    }
+    QString formattedDateString = formattedDate.toString("yyyy-MM-dd");
+
+    Match m(0, equipe1, equipe2, formattedDateString, lieu, etat);
     if (m.ajouter()) {
         QMessageBox::information(this, "Succès", "Match ajouté !");
         updateMatchDisplay();
     } else {
         QMessageBox::critical(this, "Erreur", "Échec de l'ajout du match.");
+
+        displayStatistics(); // ✅ Update chart after adding data
+
     }
 }
 
@@ -74,4 +107,227 @@ void MainWindow::deleteMatch() {
     } else {
         QMessageBox::critical(this, "Erreur", "Échec de la suppression.");
     }
+}
+
+void MainWindow::on_tableWidget_itemSelectionChanged() {
+    int row = ui->tableWidget->currentRow();
+    if (row == -1) return;
+
+    ui->lineEditTeam1->setText(ui->tableWidget->item(row, 1)->text());
+    ui->lineEditTeam2->setText(ui->tableWidget->item(row, 2)->text());
+    ui->lineEditDate->setText(ui->tableWidget->item(row, 3)->text());
+    ui->lineEditLieu->setText(ui->tableWidget->item(row, 4)->text());
+    ui->comboEtat->setCurrentText(ui->tableWidget->item(row, 5)->text());
+}
+void MainWindow::on_btnModifier_clicked() {
+    modifyMatch();
+}
+
+
+void MainWindow::modifyMatch() {
+    int row = ui->tableWidget->currentRow();
+    if (row == -1) {
+        QMessageBox::warning(this, "Erreur", "Veuillez sélectionner un match à modifier !");
+        return;
+    }
+
+    int id = ui->tableWidget->item(row, 0)->text().toInt();
+    QString newEquipe1 = ui->lineEditTeam1->text().trimmed();
+    QString newEquipe2 = ui->lineEditTeam2->text().trimmed();
+    QString newDate = ui->lineEditDate->text().trimmed();
+    QString newLieu = ui->lineEditLieu->text().trimmed();
+    QString newEtat = ui->comboEtat->currentText();
+
+    if (newEquipe1.isEmpty() || newEquipe2.isEmpty() || newDate.isEmpty() || newLieu.isEmpty() || newEtat.isEmpty()) {
+        QMessageBox::warning(this, "Erreur", "Veuillez remplir tous les champs !");
+        return;
+    }
+
+    QDate formattedDate = QDate::fromString(newDate, "dd/MM/yyyy");
+    if (!formattedDate.isValid()) {
+        QMessageBox::warning(this, "Erreur", "Format de date invalide! Utilisez JJ/MM/AAAA.");
+        return;
+    }
+    QString formattedDateString = formattedDate.toString("yyyy-MM-dd");
+
+    Match m(id, newEquipe1, newEquipe2, formattedDateString, newLieu, newEtat);
+    if (m.modifier(id)) {
+        QMessageBox::information(this, "Succès", "Match modifié !");
+        updateMatchDisplay();
+    } else {
+        QMessageBox::critical(this, "Erreur", "Échec de la modification.");
+    }
+}
+
+void MainWindow::searchMatch() {
+    QString teamName = ui->rechtxt->text().trimmed();
+    QVector<QVector<QString>> data = m.rechercher(teamName);
+
+    ui->tableWidget->setRowCount(data.size());
+    ui->tableWidget->setColumnCount(6);
+    ui->tableWidget->setHorizontalHeaderLabels({"ID", "Equipe 1", "Equipe 2", "Date", "Lieu", "État"});
+
+    for (int row = 0; row < data.size(); ++row) {
+        for (int col = 0; col < 6; ++col) {
+            ui->tableWidget->setItem(row, col, new QTableWidgetItem(data[row][col]));
+        }
+    }
+}
+
+void MainWindow::sortMatchesByID() {
+    QVector<QVector<QString>> data = m.trierParID();
+
+    ui->tableWidget->setRowCount(data.size());
+    ui->tableWidget->setColumnCount(6);
+    ui->tableWidget->setHorizontalHeaderLabels({"ID", "Equipe 1", "Equipe 2", "Date", "Lieu", "État"});
+
+    for (int row = 0; row < data.size(); ++row) {
+        for (int col = 0; col < 6; ++col) {
+            ui->tableWidget->setItem(row, col, new QTableWidgetItem(data[row][col]));
+        }
+    }
+}
+
+#include <QDir>
+#include <QDesktopServices>
+#include <QUrl>
+#include <QPdfWriter>
+#include <QPainter>
+#include <QFont>
+#include <QMessageBox>
+
+void MainWindow::generatePDF() {
+    // Define the file path
+    QString filePath = QDir::currentPath() + "/matches_list.pdf";
+
+    // Create the PDF writer
+    QPdfWriter writer(filePath);
+    writer.setPageSize(QPageSize::A4);
+    writer.setResolution(300); // High-quality resolution
+
+    QPainter painter(&writer);
+    painter.begin(&writer);
+
+    // Set the font
+    QFont font("Arial", 10);
+    painter.setFont(font);
+
+    // Table dimensions
+    int marginLeft = 50;
+    int marginTop = 50;
+    int rowHeight = 30;
+    int colWidths[] = {50, 100, 100, 100, 100, 100}; // Adjust column widths
+
+    // Draw the table headers
+    QStringList headers = {"ID", "Equipe 1", "Equipe 2", "Date", "Lieu", "Etat"};
+    int x = marginLeft;
+    int y = marginTop;
+
+    // Draw table header
+    for (int i = 0; i < headers.size(); ++i) {
+        QRect rect(x, y, colWidths[i], rowHeight);
+        painter.drawRect(rect);  // Draw cell border
+        painter.drawText(rect, Qt::AlignCenter, headers[i]); // Center text
+        x += colWidths[i];
+    }
+
+    // Draw table rows
+    y += rowHeight; // Move to the first row
+    for (int row = 0; row < ui->tableWidget->rowCount(); ++row) {
+        x = marginLeft; // Reset x position
+        for (int col = 0; col < headers.size(); ++col) {
+            QRect rect(x, y, colWidths[col], rowHeight);
+            painter.drawRect(rect);  // Draw cell border
+            if (ui->tableWidget->item(row, col)) { // Check if cell exists
+                painter.drawText(rect, Qt::AlignCenter, ui->tableWidget->item(row, col)->text());
+            }
+            x += colWidths[col];
+        }
+        y += rowHeight; // Move to the next row
+    }
+
+    // End the painting
+    painter.end();
+
+    // Open the generated PDF automatically
+    QDesktopServices::openUrl(QUrl::fromLocalFile(filePath));
+
+    // Notify the user
+    QMessageBox::information(this, "PDF Generated", "The PDF of the matches list has been generated.");
+}
+
+void MainWindow::displayStatistics() {
+    if (!ui->stat) {
+        qDebug() << "stat (QGraphicsView) is NULL!";
+        return;
+    }
+
+    // Clear the previous scene to avoid stacking multiple charts
+    QGraphicsScene *scene = new QGraphicsScene(this);
+    ui->stat->setScene(scene);
+
+    // Map to store the number of matches per team
+    QMap<QString, int> teamMatches;
+
+    for (int row = 0; row < ui->tableWidget->rowCount(); ++row) {
+        QTableWidgetItem *item1 = ui->tableWidget->item(row, 1);
+        QTableWidgetItem *item2 = ui->tableWidget->item(row, 2);
+
+        if (!item1 || !item2) continue;
+
+        QString team1 = item1->text();
+        QString team2 = item2->text();
+
+        teamMatches[team1]++;
+        teamMatches[team2]++;
+    }
+
+    if (teamMatches.isEmpty()) {
+        qDebug() << "No matches found!";
+        return;
+    }
+
+    // Create bar set and category labels
+    QBarSet *set = new QBarSet("Matches Count");
+    QStringList categories;
+
+    for (auto it = teamMatches.begin(); it != teamMatches.end(); ++it) {
+        categories << it.key();
+        *set << it.value();
+    }
+
+    // Create the bar series
+    QBarSeries *series = new QBarSeries();
+    series->append(set);
+
+    // Create the chart
+    QChart *chart = new QChart();
+    chart->addSeries(series);
+    chart->setTitle("Matches Per Team");
+    chart->setAnimationOptions(QChart::SeriesAnimations);
+
+    // X-Axis (Team Names)
+    QBarCategoryAxis *axisX = new QBarCategoryAxis();
+    axisX->append(categories);
+    chart->addAxis(axisX, Qt::AlignBottom);
+    series->attachAxis(axisX);
+
+    // Y-Axis (Match Count)
+    QValueAxis *axisY = new QValueAxis();
+    axisY->setLabelFormat("%d");
+    chart->addAxis(axisY, Qt::AlignLeft);
+    series->attachAxis(axisY);
+
+    // Create chart view
+    QChartView *chartView = new QChartView(chart);
+    chartView->setRenderHint(QPainter::Antialiasing);
+
+    // Convert chartView into a QGraphicsProxyWidget to add it to the QGraphicsView
+    QGraphicsProxyWidget *proxyWidget = scene->addWidget(chartView);
+
+    // Center the chart inside the QGraphicsView
+    proxyWidget->setPos((ui->stat->width() - chartView->width()) / 2,
+                        (ui->stat->height() - chartView->height()) / 2);
+
+    ui->stat->setScene(scene);  // Apply the new scene
 }

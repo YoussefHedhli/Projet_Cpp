@@ -1,5 +1,7 @@
 # Define the Qt modules needed
 QT += core gui widgets sql  # Added "sql" to enable database support
+QT += charts
+
 
 # Set the target name (output executable)
 TARGET = my_project

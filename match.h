@@ -8,17 +8,22 @@
 class Match {
 private:
     int idmatch;
+    QString equipe1;
+    QString equipe2;
     QString date;
     QString lieu;
     QString etat;
 
 public:
     Match();
-    Match(int, QString, QString, QString);
+    Match(int,QString ,QString,QString, QString, QString);
 
     bool ajouter();
     bool supprimer(int);
     QVector<QVector<QString>> afficher();
+    QVector<QVector<QString>> rechercher(QString team);
+    QVector<QVector<QString>> trierParID();
+    bool modifier(int id);
 
     // Getters & Setters
     int getIdMatch() const;

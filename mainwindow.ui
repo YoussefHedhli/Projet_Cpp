@@ -239,46 +239,7 @@ background:gray;
      </widget>
     </widget>
    </widget>
-   <widget class="QFrame" name="Mailing_3">
-    <property name="geometry">
-     <rect>
-      <x>930</x>
-      <y>290</y>
-      <width>181</width>
-      <height>251</height>
-     </rect>
-    </property>
-    <property name="autoFillBackground">
-     <bool>true</bool>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QLabel {
-    background-color: #000000;
-    color: #FFFFFF;
-}
-</string>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::Shape::StyledPanel</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Shadow::Raised</enum>
-    </property>
-    <widget class="QLabel" name="label_15">
-     <property name="geometry">
-      <rect>
-       <x>50</x>
-       <y>10</y>
-       <width>81</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Statistique</string>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QPushButton" name="pushButton_7">
+   <widget class="QPushButton" name="pdfButton">
     <property name="geometry">
      <rect>
       <x>720</x>
@@ -729,7 +690,7 @@ QPushButton:hover {
      <string>Supprimer</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_6">
+   <widget class="QPushButton" name="recherche">
     <property name="geometry">
      <rect>
       <x>512</x>
@@ -756,7 +717,7 @@ QPushButton:hover {
      <string>Recherche</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEdit_11">
+   <widget class="QLineEdit" name="rechtxt">
     <property name="geometry">
      <rect>
       <x>230</x>
@@ -773,7 +734,7 @@ QPushButton:hover {
 </string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_8">
+   <widget class="QPushButton" name="tri">
     <property name="geometry">
      <rect>
       <x>620</x>
@@ -800,7 +761,7 @@ QPushButton:hover {
      <string>Tri par ID</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="btnModifier">
     <property name="geometry">
      <rect>
       <x>790</x>
@@ -899,19 +860,36 @@ QPushButton:hover {
      <string/>
     </property>
    </widget>
+   <widget class="QGraphicsView" name="stat">
+    <property name="geometry">
+     <rect>
+      <x>930</x>
+      <y>280</y>
+      <width>301</width>
+      <height>271</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel {
+    background-color: #000000;
+    color: #FFFFFF;
+}
+</string>
+    </property>
+   </widget>
    <zorder>label_8</zorder>
    <zorder>label_pic</zorder>
    <zorder>Mailing</zorder>
-   <zorder>Mailing_3</zorder>
-   <zorder>pushButton_7</zorder>
+   <zorder>pdfButton</zorder>
    <zorder>frame</zorder>
    <zorder>btnSupprimer</zorder>
-   <zorder>pushButton_6</zorder>
-   <zorder>lineEdit_11</zorder>
-   <zorder>pushButton_8</zorder>
-   <zorder>pushButton</zorder>
+   <zorder>recherche</zorder>
+   <zorder>rechtxt</zorder>
+   <zorder>tri</zorder>
+   <zorder>btnModifier</zorder>
    <zorder>tableWidget</zorder>
    <zorder>formulere</zorder>
+   <zorder>stat</zorder>
   </widget>
  </widget>
  <resources/>
