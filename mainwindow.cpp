@@ -20,9 +20,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_sponsor_clicked()
 {
-    sponsor *spon = new sponsor(this); // Création d'une instance de la fenêtre sponsor
-    spon->setModal(true);  // Empêche l'utilisateur d'interagir avec la fenêtre principale tant que sponsor est ouvert
-    spon->exec();  // Affichage en mode boîte de dialogue
+
 }
 
 
