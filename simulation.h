@@ -29,18 +29,24 @@ private:
     bool isPaused;
     bool isGameRunning;
     int blueScore;
+    int redScore;
     bool goalProcessed;
+    bool isBlueTurn;  // Flag to track which team is attacking
     QMap<QLabel*, QPoint> initialPositions;
 
-    void movePlayersTowardsBall();
+    // Updated function signatures with parameters
+    void movePlayersTowardsBall(int start, int end);
+    void moveAttackers(int start, int end, QLabel *goal);
+    void shootBall(QLabel *shooter, QLabel *goal);
+
     void checkGoalScored();
     void passBall(QLabel *player, int ballX, int ballY);
     void movePlayerTowardsGoal(QLabel *player);
     void decideShotOutcome(QLabel *shooter);
     void missShot(QLabel *shooter);
-    void shootBall(QLabel *player);
-    void moveAttackers();
     void initializePlayers();
+    void moveRedAttackers();
+    void switchTurn();
     void saveInitialPositions();
     void resetGame();
 };

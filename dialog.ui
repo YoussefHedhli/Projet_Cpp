@@ -40,7 +40,7 @@
    <property name="geometry">
     <rect>
      <x>340</x>
-     <y>370</y>
+     <y>390</y>
      <width>21</width>
      <height>21</height>
     </rect>
@@ -524,7 +524,7 @@ QPushButton:hover {
     <string>START</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_2">
+  <widget class="QPushButton" name="Resume">
    <property name="geometry">
     <rect>
      <x>810</x>
@@ -586,7 +586,7 @@ QPushButton:hover {
     </rect>
    </property>
   </widget>
-  <widget class="QLabel" name="label">
+  <widget class="QLabel" name="scoreb">
    <property name="geometry">
     <rect>
      <x>390</x>
@@ -599,7 +599,7 @@ QPushButton:hover {
     <string>0</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_2">
+  <widget class="QLabel" name="scorer">
    <property name="geometry">
     <rect>
      <x>810</x>
@@ -615,8 +615,8 @@ QPushButton:hover {
   <widget class="QLabel" name="label_3">
    <property name="geometry">
     <rect>
-     <x>-10</x>
-     <y>-20</y>
+     <x>-30</x>
+     <y>0</y>
      <width>1331</width>
      <height>681</height>
     </rect>
@@ -829,6 +829,32 @@ QPushButton:hover {
    <zorder>pushButton_12</zorder>
    <zorder>label_7</zorder>
   </widget>
+  <widget class="QLabel" name="GOAL">
+   <property name="geometry">
+    <rect>
+     <x>940</x>
+     <y>360</y>
+     <width>63</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>GOAL</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="GOAL1">
+   <property name="geometry">
+    <rect>
+     <x>280</x>
+     <y>370</y>
+     <width>63</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
   <zorder>label_3</zorder>
   <zorder>FieldLabel</zorder>
   <zorder>Player1</zorder>
@@ -855,12 +881,14 @@ QPushButton:hover {
   <zorder>Player22</zorder>
   <zorder>Ball</zorder>
   <zorder>Start</zorder>
-  <zorder>pushButton_2</zorder>
+  <zorder>Resume</zorder>
   <zorder>Pause</zorder>
   <zorder>lcdNumber</zorder>
-  <zorder>label</zorder>
-  <zorder>label_2</zorder>
+  <zorder>scoreb</zorder>
+  <zorder>scorer</zorder>
   <zorder>frame</zorder>
+  <zorder>GOAL</zorder>
+  <zorder>GOAL1</zorder>
  </widget>
  <resources/>
  <connections/>
