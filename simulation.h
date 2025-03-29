@@ -28,6 +28,9 @@ private:
     QTimer *timer;
     bool isPaused;
     bool isGameRunning;
+    int blueScore;
+    bool goalProcessed;
+    QMap<QLabel*, QPoint> initialPositions;
 
     void movePlayersTowardsBall();
     void checkGoalScored();
@@ -38,6 +41,8 @@ private:
     void shootBall(QLabel *player);
     void moveAttackers();
     void initializePlayers();
+    void saveInitialPositions();
+    void resetGame();
 };
 
 #endif // SIMULATION_H

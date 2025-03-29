@@ -7,7 +7,9 @@ Simulation::Simulation(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Dialog),
     isPaused(false),
-    isGameRunning(false)
+    isGameRunning(false),
+    blueScore(0),
+    goalProcessed(false) // Ensure it's initially false
 {
     ui->setupUi(this);
 
@@ -16,6 +18,8 @@ Simulation::Simulation(QWidget *parent) :
 
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &Simulation::updatePositions);
+
+    saveInitialPositions(); // Save initial positions for reset
 }
 
 Simulation::~Simulation() {
@@ -53,7 +57,6 @@ void Simulation::movePlayersTowardsBall() {
     int ballX = ball->x();
     int ballY = ball->y();
 
-    // Move players dynamically toward the ball
     for (int i = 2; i <= 11; ++i) {
         QLabel *player = findChild<QLabel*>(QString("Player%1").arg(i));
 
@@ -65,7 +68,6 @@ void Simulation::movePlayersTowardsBall() {
         }
     }
 
-    // If attackers (Player9, Player10, Player11) reach the ball, move toward goal
     moveAttackers();
 }
 
@@ -82,51 +84,69 @@ void Simulation::moveAttackers() {
             int moveY = (goalY > attacker->y()) ? 3 : -3;
 
             attacker->move(attacker->x() + moveX, attacker->y() + moveY);
-            ui->Ball->move(attacker->x(), attacker->y()); // Ball follows the attacker
+            ui->Ball->move(attacker->x(), attacker->y());
 
             if (qAbs(attacker->x() - goalX) < 50) {
-                decideShotOutcome(attacker);
+                shootBall(attacker);
             }
         }
     }
 }
 
-void Simulation::decideShotOutcome(QLabel *shooter) {
-    bool shotOnTarget = QRandomGenerator::global()->bounded(2); // 50% chance of goal or miss
-
-    if (shotOnTarget) {
-        shootBall(shooter);
-    } else {
-        missShot(shooter);
-    }
-}
-
 void Simulation::shootBall(QLabel *shooter) {
     QLabel *goal = ui->GOAL;
-    ui->Ball->move(goal->x(), goal->y());
 
+    bool isMiss = (QRandomGenerator::global()->bounded(2) == 0); // 50% chance to miss
+
+    if (isMiss) {
+        int missOffsetX = QRandomGenerator::global()->bounded(-50, 50); // Slightly left/right
+        int missOffsetY = QRandomGenerator::global()->bounded(20, 80); // Slightly above/below
+        ui->Ball->move(goal->x() + missOffsetX, goal->y() + missOffsetY); // Near miss
+        qDebug() << shooter->objectName() << " shoots! Missed!";
+
+        // Reset everything immediately after missing
+        QTimer::singleShot(500, this, &Simulation::resetGame);
+        return;
+    }
+
+    // If it's not a miss, move ball to goal and check for scoring
+    ui->Ball->move(goal->x(), goal->y());
     qDebug() << shooter->objectName() << " shoots! Goal attempt!";
     checkGoalScored();
 }
 
-void Simulation::missShot(QLabel *shooter) {
-    int missX = shooter->x() + QRandomGenerator::global()->bounded(50, 100); // Randomly far from goal
-    int missY = shooter->y() + QRandomGenerator::global()->bounded(-30, 30); // Slight variation in height
-    ui->Ball->move(missX, missY);
 
-    qDebug() << shooter->objectName() << " shoots! Missed shot!";
-    timer->stop();
-    isGameRunning = false;
-}
 
 void Simulation::checkGoalScored() {
+    if (goalProcessed) return; // Prevent multiple counts
+
     if (ui->Ball->geometry().intersects(ui->GOAL->geometry())) {
         qDebug() << "GOAL for Blue Team!";
-        timer->stop();
-        isGameRunning = false;
-    } else if (ui->Ball->geometry().intersects(ui->GOAL1->geometry())) {
-        qDebug() << "GOAL for Red Team!";
-        timer->stop();
-        isGameRunning = false;
+        blueScore++;
+        ui->scoreb->setText(QString::number(blueScore));
+        goalProcessed = true;
+
+        // Delay reset to make shot visible
+        QTimer::singleShot(500, this, &Simulation::resetGame);
     }
+}
+
+
+
+void Simulation::saveInitialPositions() {
+    QList<QLabel*> elements = findChildren<QLabel*>();
+    for (QLabel *element : elements) {
+        initialPositions[element] = element->pos();
+    }
+}
+
+void Simulation::resetGame() {
+    for (auto it = initialPositions.begin(); it != initialPositions.end(); ++it) {
+        it.key()->move(it.value());
+    }
+
+    goalProcessed = false; // Reset goal processing
+    isGameRunning = false;
+    timer->stop();
+    qDebug() << "Game reset! Ready for next attack.";
 }
