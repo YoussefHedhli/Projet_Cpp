@@ -21,6 +21,7 @@ public:
     ~MainWindow();
 
 private slots:
+    void paintEvent(QPaintEvent *event);
     void addMatchToDatabase();
     void deleteMatch();
     void updateMatchDisplay();
@@ -31,6 +32,9 @@ private slots:
     void sortMatchesByID();
     void generatePDF();
     void displayStatistics();
+    void on_sim_clicked();
+    void onCalendarDateSelected(const QDate &date);
+
 
 private:
     Ui::MainWindow *ui;

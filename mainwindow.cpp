@@ -19,11 +19,18 @@
 #include <QBarCategoryAxis>
 #include <QValueAxis>
 #include <QVBoxLayout>
+#include <QPixmap>
+#include <QFont>
+#include "simulation.h"
+
+
+
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
-    displayStatistics(); // ✅ Load statistics at startup
+    displayStatistics();
 
 
     Connection c;
@@ -41,11 +48,42 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->recherche, &QPushButton::clicked, this, &MainWindow::searchMatch);
     connect(ui->tri, &QPushButton::clicked, this, &MainWindow::sortMatchesByID);
     connect(ui->pdfButton, &QPushButton::clicked, this, &MainWindow::generatePDF);
+    connect(ui->sim, &QPushButton::clicked, this, &MainWindow::on_sim_clicked);
+    connect(ui->calendar, &QCalendarWidget::clicked, this, &MainWindow::onCalendarDateSelected);
     updateMatchDisplay();
+
 }
 
 MainWindow::~MainWindow() {
     delete ui;
+}
+
+void MainWindow::on_sim_clicked() {
+    Simulation *simulationWindow = new Simulation(this);
+    simulationWindow->exec();  // Open as a modal dialog
+}
+
+    void MainWindow::paintEvent(QPaintEvent *event)
+{
+    // Load background image
+    QPixmap pix("C:/Users/AMEN WORKSTATION/Desktop/projet/untitled/bg.jpg");  // Use resource path if image is part of Qt resource system
+    if (pix.isNull()) {
+        qDebug() << "Failed to load bg.jpg. Check the file path.";
+    } else {
+        // Scale the image to fit the size of the label
+        ui->label_pic->setPixmap(pix.scaled(900, 1000, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    }
+    QPixmap logoPix("C:/Users/AMEN WORKSTATION/Desktop/projet/untitled/ball.png");  // Assuming the logo is also stored as a resource
+    if (logoPix.isNull()) {
+        qDebug() << "Failed to load logo.png. Check the file path.";
+    } else {
+        // Scale the logo to a desired size
+        ui->ball->setPixmap(logoPix.scaled(200, 200, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    }
+
+
+    // Optionally, you can also use QPainter for other custom drawing if needed
+    QMainWindow::paintEvent(event);  // Ensure the parent class paintEvent is called
 }
 
 void MainWindow::updateMatchDisplay() {
@@ -188,14 +226,6 @@ void MainWindow::sortMatchesByID() {
     }
 }
 
-#include <QDir>
-#include <QDesktopServices>
-#include <QUrl>
-#include <QPdfWriter>
-#include <QPainter>
-#include <QFont>
-#include <QMessageBox>
-
 void MainWindow::generatePDF() {
     // Define the file path
     QString filePath = QDir::currentPath() + "/matches_list.pdf";
@@ -331,3 +361,19 @@ void MainWindow::displayStatistics() {
 
     ui->stat->setScene(scene);  // Apply the new scene
 }
+
+void MainWindow::onCalendarDateSelected(const QDate &date) {
+    QString selectedDate = date.toString("yyyy-MM-dd");
+    QVector<QVector<QString>> data = m.getMatchesByDate(selectedDate);
+
+    ui->tableWidget->setRowCount(data.size());
+    ui->tableWidget->setColumnCount(6);
+    ui->tableWidget->setHorizontalHeaderLabels({"ID", "Equipe 1", "Equipe 2", "Date", "Lieu", "État"});
+
+    for (int row = 0; row < data.size(); ++row) {
+        for (int col = 0; col < 6; ++col) {
+            ui->tableWidget->setItem(row, col, new QTableWidgetItem(data[row][col]));
+        }
+    }
+}
+
