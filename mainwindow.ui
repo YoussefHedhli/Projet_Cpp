@@ -707,23 +707,6 @@ QPushButton:hover {
      <string/>
     </property>
    </widget>
-   <widget class="QGraphicsView" name="stat">
-    <property name="geometry">
-     <rect>
-      <x>960</x>
-      <y>20</y>
-      <width>301</width>
-      <height>271</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QLabel {
-    background-color: #000000;
-    color: #FFFFFF;
-}
-</string>
-    </property>
-   </widget>
    <widget class="QLineEdit" name="rechtxt">
     <property name="geometry">
      <rect>
@@ -754,6 +737,16 @@ QPushButton:hover {
      <bool>true</bool>
     </property>
    </widget>
+   <widget class="QWidget" name="stat" native="true">
+    <property name="geometry">
+     <rect>
+      <x>940</x>
+      <y>80</y>
+      <width>341</width>
+      <height>351</height>
+     </rect>
+    </property>
+   </widget>
    <zorder>label_8</zorder>
    <zorder>label_pic</zorder>
    <zorder>Mailing</zorder>
@@ -765,9 +758,9 @@ QPushButton:hover {
    <zorder>btnModifier</zorder>
    <zorder>tableWidget</zorder>
    <zorder>formulere</zorder>
-   <zorder>stat</zorder>
    <zorder>rechtxt</zorder>
    <zorder>calendar</zorder>
+   <zorder>stat</zorder>
   </widget>
  </widget>
  <resources/>

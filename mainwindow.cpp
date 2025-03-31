@@ -23,10 +23,6 @@
 #include <QFont>
 #include "simulation.h"
 
-
-
-
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
@@ -51,6 +47,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->sim, &QPushButton::clicked, this, &MainWindow::on_sim_clicked);
     connect(ui->calendar, &QCalendarWidget::clicked, this, &MainWindow::onCalendarDateSelected);
     updateMatchDisplay();
+    displayStatistics();
 
 }
 
@@ -287,80 +284,81 @@ void MainWindow::generatePDF() {
 }
 
 void MainWindow::displayStatistics() {
-    if (!ui->stat) {
-        qDebug() << "stat (QGraphicsView) is NULL!";
-        return;
+    if (ui->stat->layout() == nullptr) {
+        ui->stat->setLayout(new QVBoxLayout());
     }
 
-    // Clear the previous scene to avoid stacking multiple charts
-    QGraphicsScene *scene = new QGraphicsScene(this);
-    ui->stat->setScene(scene);
+    QMap<QString, int> teamCount;
+    int rowCount = ui->tableWidget->rowCount();
 
-    // Map to store the number of matches per team
-    QMap<QString, int> teamMatches;
+    // Count occurrences of each team
+    for (int row = 0; row < rowCount; ++row) {
+        QString team1 = (ui->tableWidget->item(row, 1) != nullptr) ? ui->tableWidget->item(row, 1)->text() : "";
+        QString team2 = (ui->tableWidget->item(row, 2) != nullptr) ? ui->tableWidget->item(row, 2)->text() : "";
 
-    for (int row = 0; row < ui->tableWidget->rowCount(); ++row) {
-        QTableWidgetItem *item1 = ui->tableWidget->item(row, 1);
-        QTableWidgetItem *item2 = ui->tableWidget->item(row, 2);
-
-        if (!item1 || !item2) continue;
-
-        QString team1 = item1->text();
-        QString team2 = item2->text();
-
-        teamMatches[team1]++;
-        teamMatches[team2]++;
+        if (!team1.isEmpty()) teamCount[team1]++;
+        if (!team2.isEmpty()) teamCount[team2]++;
     }
 
-    if (teamMatches.isEmpty()) {
-        qDebug() << "No matches found!";
-        return;
-    }
-
-    // Create bar set and category labels
-    QBarSet *set = new QBarSet("Matches Count");
-    QStringList categories;
-
-    for (auto it = teamMatches.begin(); it != teamMatches.end(); ++it) {
-        categories << it.key();
-        *set << it.value();
-    }
-
-    // Create the bar series
+    // Create Bar Series
     QBarSeries *series = new QBarSeries();
+    QBarSet *set = new QBarSet("Match Count");
+
+    QStringList categories;
+    for (auto it = teamCount.begin(); it != teamCount.end(); ++it) {
+        *set << it.value();
+        categories << it.key();
+    }
     series->append(set);
 
-    // Create the chart
+    // Create Chart
     QChart *chart = new QChart();
     chart->addSeries(series);
-    chart->setTitle("Matches Per Team");
+    chart->setTitle("Teams with the Most Matches");
     chart->setAnimationOptions(QChart::SeriesAnimations);
 
-    // X-Axis (Team Names)
+    // X-Axis
     QBarCategoryAxis *axisX = new QBarCategoryAxis();
     axisX->append(categories);
     chart->addAxis(axisX, Qt::AlignBottom);
     series->attachAxis(axisX);
 
-    // Y-Axis (Match Count)
+    // Y-Axis
     QValueAxis *axisY = new QValueAxis();
     axisY->setLabelFormat("%d");
     chart->addAxis(axisY, Qt::AlignLeft);
     series->attachAxis(axisY);
 
-    // Create chart view
+    // Create ChartView
     QChartView *chartView = new QChartView(chart);
     chartView->setRenderHint(QPainter::Antialiasing);
 
-    // Convert chartView into a QGraphicsProxyWidget to add it to the QGraphicsView
-    QGraphicsProxyWidget *proxyWidget = scene->addWidget(chartView);
+    // Remove old widgets safely
+    if (ui->stat->layout() != nullptr) {
+        QLayoutItem *child;
+        while ((child = ui->stat->layout()->takeAt(0)) != nullptr) {
+            if (child->widget()) delete child->widget();
+            delete child;
+        }
+    }
 
-    // Center the chart inside the QGraphicsView
-    proxyWidget->setPos((ui->stat->width() - chartView->width()) / 2,
-                        (ui->stat->height() - chartView->height()) / 2);
+    // Add new ChartView
+    ui->stat->layout()->addWidget(chartView);
+    qDebug() << "Team count data:" << teamCount;
+    qDebug() << "Row count in tableWidget:" << ui->tableWidget->rowCount();
+    for (int row = 0; row < ui->tableWidget->rowCount(); ++row) {
+        for (int col = 0; col < 6; ++col) {
+            if (ui->tableWidget->item(row, col) != nullptr)
+                qDebug() << "Row" << row << "Column" << col << ":" << ui->tableWidget->item(row, col)->text();
+            else
+                qDebug() << "Row" << row << "Column" << col << ": NULL";
+        }
+    }
 
-    ui->stat->setScene(scene);  // Apply the new scene
+
 }
+
+
 
 void MainWindow::onCalendarDateSelected(const QDate &date) {
     QString selectedDate = date.toString("yyyy-MM-dd");
