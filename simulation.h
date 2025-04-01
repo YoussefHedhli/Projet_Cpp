@@ -1,6 +1,8 @@
 #ifndef SIMULATION_H
 #define SIMULATION_H
 
+#include <QMediaPlayer>
+#include <QAudioOutput>
 #include <QDialog>
 #include <QTimer>
 #include <QLabel>
@@ -33,8 +35,16 @@ private:
     bool goalProcessed;
     bool isBlueTurn;  // Flag to track which team is attacking
     QMap<QLabel*, QPoint> initialPositions;
+    QTimer *matchTimer;  // Declare match timer
+    int matchTime;
+    QMediaPlayer *goalCheer;
+    QMediaPlayer *whistleEnd;
+    QMediaPlayer *fansCheering;
+    QMediaPlayer *whistleStart;
+    QAudioOutput *audioOutput;
 
     // Updated function signatures with parameters
+    void paintEvent(QPaintEvent *event);
     void movePlayersTowardsBall(int start, int end);
     void moveAttackers(int start, int end, QLabel *goal);
     void shootBall(QLabel *shooter, QLabel *goal);
@@ -42,13 +52,17 @@ private:
     void checkGoalScored();
     void passBall(QLabel *player, int ballX, int ballY);
     void movePlayerTowardsGoal(QLabel *player);
+    void updateMatchTime();
     void decideShotOutcome(QLabel *shooter);
     void missShot(QLabel *shooter);
     void initializePlayers();
     void moveRedAttackers();
+    void moveBallTowards(int targetX, int targetY);
     void switchTurn();
     void saveInitialPositions();
     void resetGame();
+    void endMatch();
+    void resetPlayers();
 };
 
 #endif // SIMULATION_H
