@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include <QApplication>
 #include <QMessageBox>
-#include "connetion.h"  // Vérifie le bon nom de ton fichier et classe
+#include "connetion.h"
 #include <QDebug>
 
 int main(int argc, char *argv[])

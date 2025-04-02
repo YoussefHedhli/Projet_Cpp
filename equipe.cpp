@@ -48,6 +48,8 @@ QSqlQueryModel* Equipe::afficher() {
 
     return model;
 }
+
+// Modifier une équipe
 bool Equipe::modifier(int id) {
     QSqlQuery query;
     query.prepare("UPDATE GS_EQUIPE SET NOM_E = :nom, PAYS = :pays WHERE ID_E = :id");
@@ -59,5 +61,64 @@ bool Equipe::modifier(int id) {
         qDebug() << "Erreur lors de la modification de l'équipe:" << query.lastError().text();
         return false;
     }
+
     return true;
+}
+
+// Supprimer une équipe par son ID
+bool Equipe::supprimer(int id) {
+    QSqlQuery query;
+    query.prepare("DELETE FROM GS_EQUIPE WHERE ID_E = :id");
+    query.bindValue(":id", id);
+
+    if (!query.exec()) {
+        qDebug() << "Erreur lors de la suppression de l'équipe:" << query.lastError().text();
+        return false;
+    }
+
+    qDebug() << "Équipe supprimée avec succès.";
+    return true;
+}
+
+// Rechercher une équipe par son nom
+QSqlQueryModel* Equipe::rechercher(const QString& keyword) {
+    QSqlQueryModel* model = new QSqlQueryModel();
+    QSqlQuery query;
+    query.prepare("SELECT ID_E, NOM_E, PAYS FROM GS_EQUIPE WHERE NOM_E LIKE :keyword");
+    query.bindValue(":keyword", "%" + keyword + "%");
+    query.exec();
+
+    model->setQuery(query);
+
+    if (model->lastError().isValid()) {
+        qDebug() << "Erreur lors de la recherche de l'équipe:" << model->lastError().text();
+    }
+
+    return model;
+}
+
+// Trier les équipes par ID (ascendant ou descendant)
+QSqlQueryModel* Equipe::trierParId(bool asc) {
+    QSqlQueryModel* model = new QSqlQueryModel();
+    QString order = asc ? "ASC" : "DESC";
+    model->setQuery("SELECT ID_E, NOM_E, PAYS FROM GS_EQUIPE ORDER BY ID_E " + order);
+
+    if (model->lastError().isValid()) {
+        qDebug() << "Erreur lors du tri par ID:" << model->lastError().text();
+    }
+
+    return model;
+}
+
+// Trier les équipes par nom (alphabetiquement)
+QSqlQueryModel* Equipe::trierParNom(bool asc) {
+    QSqlQueryModel* model = new QSqlQueryModel();
+    QString order = asc ? "ASC" : "DESC";
+    model->setQuery("SELECT ID_E, NOM_E, PAYS FROM GS_EQUIPE ORDER BY NOM_E " + order);
+
+    if (model->lastError().isValid()) {
+        qDebug() << "Erreur lors du tri par nom:" << model->lastError().text();
+    }
+
+    return model;
 }
