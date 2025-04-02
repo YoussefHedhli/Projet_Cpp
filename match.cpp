@@ -67,7 +67,7 @@ QVector<QVector<QString>> Match::rechercher(QString team) {
 
 
 QVector<QVector<QString>> Match::afficher() {
-    QSqlQuery query("SELECT ID_M,EQUIPE1,EQUIPE2 DATEM, LIEU, ETAT FROM GS_MATCH");
+    QSqlQuery query("SELECT ID_M, EQUIPE1, EQUIPE2, DATEM, LIEU, ETAT FROM GS_MATCH");  // Added missing comma
     QVector<QVector<QString>> data;
 
     while (query.next()) {
@@ -82,6 +82,7 @@ QVector<QVector<QString>> Match::afficher() {
     }
     return data;
 }
+
 
 QVector<QVector<QString>> Match::trierParID() {
     QSqlQuery query("SELECT ID_M, EQUIPE1, EQUIPE2, DATEM, LIEU, ETAT FROM GS_MATCH ORDER BY ID_M ASC");
@@ -117,7 +118,31 @@ bool Match::modifier(int id) {
     }
     return true;
 
-
 }
+
+QVector<QVector<QString>> Match::getMatchesByDate(const QString &selectedDate) {
+    QVector<QVector<QString>> matches;
+    QSqlQuery query;
+
+    query.prepare("SELECT ID_M, EQUIPE1, EQUIPE2, DATEM, LIEU, ETAT FROM GS_MATCH WHERE DATEM = TO_DATE(:date, 'YYYY-MM-DD')");
+    query.bindValue(":date", selectedDate);
+
+    if (query.exec()) {
+        while (query.next()) {
+            QVector<QString> match;
+            for (int i = 0; i < 6; ++i) {
+                match.append(query.value(i).toString());
+            }
+            matches.append(match);
+        }
+    } else {
+        qDebug() << "Query failed:" << query.lastError().text();
+    }
+
+    return matches;
+}
+
+
+
 
 
