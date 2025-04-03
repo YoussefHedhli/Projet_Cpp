@@ -39,7 +39,11 @@ private slots:
      void exporterPDF();
      void triParId();            // Sort by ID (ascending/descending)
      void triParAlphabet();      // Sort alphabetically (ascending/descending)
+<<<<<<< HEAD
 void on_updateButton_clicked();
+=======
+
+>>>>>>> ab0bf032062a63f601f25ec60cb258c7aea77f06
      // Button click handlers
      void on_btri_clicked();     //  triParId() when clicking "btri"
      void on_btri2_clicked();

@@ -33,7 +33,11 @@ connect(ui->AFF, &QTableView::clicked, this, &MainWindow::on_AFF_clicked);
     connect(ui->Rech, &QPushButton::clicked, this, &MainWindow::rechercherEquipe);
 connect(ui->bpdf, &QPushButton::clicked, this, &MainWindow::exporterPDF);
  connect(ui->btri, &QPushButton::clicked, this, &MainWindow::on_btri_clicked);
+<<<<<<< HEAD
  connect(ui->up, &QPushButton::clicked, this, &MainWindow::on_updateButton_clicked);
+=======
+
+>>>>>>> ab0bf032062a63f601f25ec60cb258c7aea77f06
     // Chargement des images
     QPixmap pix("C:/Users/MSI/Pictures/ft2.png");
     ui->label->setPixmap(pix.scaled(1200, 1100, Qt::KeepAspectRatio));
@@ -458,6 +462,7 @@ void MainWindow::afficherStatistiquesPaysGraph()
         QMessageBox::critical(this, "Erreur", "La frame pour les statistiques n'a pas été trouvée.");
     }
 }
+<<<<<<< HEAD
 //etat de forme
 void MainWindow::on_updateButton_clicked()
 {
@@ -533,3 +538,5 @@ void MainWindow::on_updateButton_clicked()
     qDebug() << "Connexion réussie.";
     qDebug() << "Requête exécutée.";
 }
+=======
+>>>>>>> ab0bf032062a63f601f25ec60cb258c7aea77f06

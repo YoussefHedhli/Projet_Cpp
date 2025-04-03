@@ -151,9 +151,15 @@ QPushButton:hover {
    <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
+<<<<<<< HEAD
       <x>590</x>
       <y>240</y>
       <width>391</width>
+=======
+      <x>580</x>
+      <y>230</y>
+      <width>411</width>
+>>>>>>> ab0bf032062a63f601f25ec60cb258c7aea77f06
       <height>341</height>
      </rect>
     </property>
@@ -757,9 +763,15 @@ QPushButton:hover {
     <property name="geometry">
      <rect>
       <x>260</x>
+<<<<<<< HEAD
       <y>330</y>
       <width>311</width>
       <height>261</height>
+=======
+      <y>320</y>
+      <width>311</width>
+      <height>271</height>
+>>>>>>> ab0bf032062a63f601f25ec60cb258c7aea77f06
      </rect>
     </property>
     <property name="frameShape">
