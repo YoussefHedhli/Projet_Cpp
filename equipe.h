@@ -29,7 +29,11 @@ public:
     // Méthodes
     bool ajouter();                // Ajouter une équipe
     QSqlQueryModel* afficher();    // Afficher toutes les équipes
-    bool modifier(int id);
+    bool modifier(int id);         // Modifier une équipe
+    bool supprimer(int id);        // Supprimer une équipe
+    QSqlQueryModel* rechercher(const QString& keyword);  // Rechercher une équipe
+    QSqlQueryModel* trierParId(bool asc);  // Trier par ID
+    QSqlQueryModel* trierParNom(bool asc); // Trier par nom
 };
 
 #endif // EQUIPE_H
