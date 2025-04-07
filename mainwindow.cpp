@@ -413,10 +413,10 @@ void MainWindow::afficherStatistiquesPaysGraph()
     }
 
     // Revenir à la première ligne de la requête
-    query.first();
 
-    // Ajouter les résultats de la requête à la série
+    query.exec(); // On ré-exécute pour repartir du début
     while (query.next()) {
+
         QString pays = query.value(0).toString();  // Récupérer le nom du pays
         int nombreEquipes = query.value(1).toInt();  // Récupérer le nombre d'équipes pour ce pays
         QPieSlice *slice = series->append(pays, nombreEquipes);  // Ajouter les données à la série
@@ -651,40 +651,82 @@ void MainWindow::placerJoueur(QWidget *joueur, int x, int y)
     joueur->move(x, y);
     joueur->show();
 }
-
-
 void MainWindow::afficherTactiqueGraphique(const QString &tactique) {
-    int w = ui->label_3->width();
-    int h = ui->label_3->height();
+    int w = ui->label_4->width();
+    int h = ui->label_4->height();
 
     if (tactique == "4-4-2") {
-        placerJoueur(ui->l1, w * 1 / 6, 50);
-        placerJoueur(ui->l2, w * 2 / 6, 50);
-        placerJoueur(ui->l3, w * 4 / 6, 50);
-        placerJoueur(ui->l4, w * 5 / 6, 50);
+        // Horizontale : Défense à gauche → Attaque à droite
+        int def_x = 50;
+        int mid_x = 160;
+        int att_x = 270;
+        int spacing_y = h / 6;
 
-        placerJoueur(ui->l5, w * 1 / 6, 120);
-        placerJoueur(ui->l6, w * 2.5 / 6, 120);
-        placerJoueur(ui->l7, w * 3.5 / 6, 120);
-        placerJoueur(ui->l8, w * 5 / 6, 120);
+        // Défense (4)
+        placerJoueur(ui->l1, def_x, spacing_y * 1);
+        placerJoueur(ui->l2, def_x, spacing_y * 2);
+        placerJoueur(ui->l3, def_x, spacing_y * 3);
+        placerJoueur(ui->l4, def_x, spacing_y * 4);
 
-        placerJoueur(ui->l9, w * 2 / 6, 190);
-        placerJoueur(ui->l10, w * 4 / 6, 190);
+        // Milieu (4)
+        placerJoueur(ui->l5, mid_x, spacing_y * 1);
+        placerJoueur(ui->l6, mid_x, spacing_y * 2);
+        placerJoueur(ui->l7, mid_x, spacing_y * 3);
+        placerJoueur(ui->l8, mid_x, spacing_y * 4);
+
+        // Attaque (2)
+        placerJoueur(ui->l9, att_x, spacing_y * 2);
+        placerJoueur(ui->l10, att_x, spacing_y * 3);
     }
+
     else if (tactique == "5-4-1") {
-        placerJoueur(ui->l1, w * 1 / 7, 40);
-        placerJoueur(ui->l2, w * 2 / 7, 40);
-        placerJoueur(ui->l3, w * 3 / 7, 40);
-        placerJoueur(ui->l4, w * 4 / 7, 40);
-        placerJoueur(ui->l5, w * 5 / 7, 40);
+        int def_x = 50;
+        int mid_x = 160;
+        int att_x = 270;
+        int spacing_y = h / 6;
 
-        placerJoueur(ui->l6, w * 1.5 / 6, 110);
-        placerJoueur(ui->l7, w * 2.5 / 6, 110);
-        placerJoueur(ui->l8, w * 3.5 / 6, 110);
-        placerJoueur(ui->l9, w * 4.5 / 6, 110);
+        // Défense (5)
+        placerJoueur(ui->l1, def_x, spacing_y * 1);
+        placerJoueur(ui->l2, def_x, spacing_y * 2);
+        placerJoueur(ui->l3, def_x, spacing_y * 3);
+        placerJoueur(ui->l4, def_x, spacing_y * 4);
+        placerJoueur(ui->l5, def_x, spacing_y * 5);
 
-        placerJoueur(ui->l10, w * 3 / 6, 180);
+        // Milieu (4)
+        placerJoueur(ui->l6, mid_x, spacing_y * 2);
+        placerJoueur(ui->l7, mid_x, spacing_y * 3);
+        placerJoueur(ui->l8, mid_x, spacing_y * 4);
+        placerJoueur(ui->l9, mid_x, spacing_y * 5);
+
+        // Attaque (1)
+        placerJoueur(ui->l10, att_x, spacing_y * 3);
     }
 
-    // ❗ NE PAS déplacer le gardien l11
+    else if (tactique == "4-3-3") {
+        int def_x = 40;
+        int mid_x = 150;
+        int att_x = 260;
+        int spacing_y = h / 6;
+
+        // Défense (4)
+        placerJoueur(ui->l1, def_x, spacing_y * 1);
+        placerJoueur(ui->l2, def_x, spacing_y * 2);
+        placerJoueur(ui->l3, def_x, spacing_y * 3);
+        placerJoueur(ui->l4, def_x, spacing_y * 4);
+
+        // Milieu (3)
+        placerJoueur(ui->l5, mid_x, spacing_y * 2);
+        placerJoueur(ui->l6, mid_x, spacing_y * 3);
+        placerJoueur(ui->l7, mid_x, spacing_y * 4);
+
+        // Attaque (3)
+        placerJoueur(ui->l8, att_x, spacing_y * 1.5);
+        placerJoueur(ui->l9, att_x, spacing_y * 3);
+        placerJoueur(ui->l10, att_x, spacing_y * 4.5);
+    }
+
+    // Gardien : toujours fixe en bas au centre
+
+    placerJoueur(ui->l11, 20, h / 2 - ui->l11->height() / 2);
+
 }
