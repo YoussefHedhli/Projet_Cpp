@@ -11,6 +11,7 @@
 #include <QtCharts/QChart>
 #include <QtCharts/QPieSlice>
 #include <QVBoxLayout>
+#include <QSqlTableModel>
 
 
 
@@ -34,12 +35,23 @@ connect(ui->AFF, &QTableView::clicked, this, &MainWindow::on_AFF_clicked);
 connect(ui->bpdf, &QPushButton::clicked, this, &MainWindow::exporterPDF);
  connect(ui->btri, &QPushButton::clicked, this, &MainWindow::on_btri_clicked);
  connect(ui->up, &QPushButton::clicked, this, &MainWindow::on_updateButton_clicked);
+ //connect(ui->AFF, &QTableView::clicked, this, &MainWindow::on_tableView_clicked);
+
+
+
+
+ // Connecter les signaux et slots
+ /*connect(ui->AFF, SIGNAL(clicked(const QModelIndex &)),
+         this, SLOT(on_tableView_clicked(const QModelIndex &)));*/
+
+
+
     // Chargement des images
     QPixmap pix("C:/Users/MSI/Pictures/ft2.png");
     ui->label->setPixmap(pix.scaled(1200, 1100, Qt::KeepAspectRatio));
 
     QPixmap pix2("C:/Users/MSI/Pictures/dimensions-arcs-cercle-terrain-foot.png");
-    ui->label_31->setPixmap(pix2.scaled(450, 450, Qt::KeepAspectRatio));
+    ui->label_4->setPixmap(pix2.scaled(500, 500, Qt::KeepAspectRatio));
 
     QPixmap pix3("C:/Users/MSI/Pictures/A1.png");
     ui->label_6->setPixmap(pix3.scaled(100, 100, Qt::KeepAspectRatio));
@@ -334,7 +346,8 @@ void MainWindow::triParId() {
     QSqlQuery query;
     if (query.exec(sql)) {
         QSqlQueryModel *model = new QSqlQueryModel();
-        model->setQuery(query);
+        model->setQuery(std::move(query));
+
         ui->AFF->setModel(model);
     } else {
         QMessageBox::critical(this, "Erreur", "Échec de la requête : " + query.lastError().text());
@@ -357,7 +370,8 @@ void MainWindow::triParAlphabet() {
     QSqlQuery query;
     if (query.exec(sql)) {
         QSqlQueryModel *model = new QSqlQueryModel();
-        model->setQuery(query);
+        model->setQuery(std::move(query));
+
         ui->AFF->setModel(model);
     } else {
         QMessageBox::critical(this, "Erreur", "Échec de la requête : " + query.lastError().text());
@@ -532,4 +546,145 @@ void MainWindow::on_updateButton_clicked()
 
     qDebug() << "Connexion réussie.";
     qDebug() << "Requête exécutée.";
+}
+//tactique
+//remplir dynamiqement box
+void MainWindow::on_btnRecommander_clicked()
+{
+    QModelIndex index = ui->AFF->currentIndex();
+    if (!index.isValid()) {
+        QMessageBox::warning(this, "Erreur", "Veuillez sélectionner une équipe.");
+        return;
+    }
+
+    QString nomEquipe = ui->AFF->model()->data(ui->AFF->model()->index(index.row(), 0)).toString(); // Nom dans colonne 0
+    QString paysEquipe = ui->AFF->model()->data(ui->AFF->model()->index(index.row(), 2)).toString(); // Pays dans colonne 2
+
+    QString lieuMatch = getLieuMatchDeEquipe(nomEquipe);
+    QString etat = calculerEtatForme(nomEquipe);
+    QString tactique = recommanderTactique(paysEquipe, lieuMatch);
+    ui->labelTactique->setText("Tactique recommandée : " + tactique);
+    afficherTactiqueGraphique(tactique);
+
+    ui->labelTactique->setText("Tactique recommandée : " + tactique);
+}
+
+QString MainWindow::getLieuMatchDeEquipe(const QString &equipeNom)
+{
+    QSqlQuery query;
+    query.prepare("SELECT lieu FROM gs_match "
+                  "JOIN participer ON gs_match.id_m = participer.id_m "
+                  "WHERE participer.equipe = :equipe");
+    query.bindValue(":equipe", equipeNom);
+
+    if (query.exec() && query.next()) {
+        return query.value(0).toString();
+    } else {
+        qDebug() << "Erreur récupération lieu du match:" << query.lastError().text();
+    }
+    return "";
+}
+
+
+QString MainWindow::calculerEtatForme(const QString &equipeNom)
+{
+    QSqlQuery query;
+    query.prepare("SELECT etat FROM participer WHERE equipe = :equipe");
+    query.bindValue(":equipe", equipeNom);
+
+    if (query.exec() && query.next()) {
+        return query.value(0).toString();
+    } else {
+        qDebug() << "Erreur récupération état de forme:" << query.lastError().text();
+    }
+    return "Inconnue";
+}
+
+QString MainWindow::recommanderTactique(const QString &paysEquipe, const QString &lieuMatch)
+{
+    // Afficher les valeurs pour déboguer
+    qDebug() << "Pays de l'équipe:" << paysEquipe;
+    qDebug() << "Lieu du match:" << lieuMatch;
+
+    QString tactique;
+
+    if (paysEquipe == lieuMatch) {
+        // Si l'équipe est à domicile
+        tactique = "4-4-2";  // À domicile
+    } else {
+        // Si l'équipe est à l'extérieur
+        tactique = "5-4-1";  // À l'extérieur
+    }
+
+    // Afficher la tactique dans la console pour le débogage
+    qDebug() << "Tactique recommandée:" << tactique;
+
+    // Retourner la tactique recommandée sous forme de chaîne
+    return tactique;
+}
+
+
+void MainWindow::on_btnRecommander_clicked1()
+{
+    QModelIndex index = ui->AFF->currentIndex();
+    if (!index.isValid()) {
+        QMessageBox::warning(this, "Erreur", "Veuillez sélectionner une équipe.");
+        return;
+    }
+
+    QString nomEquipe = ui->AFF->model()->data(ui->AFF->model()->index(index.row(), 0)).toString();
+    QString paysEquipe = ui->AFF->model()->data(ui->AFF->model()->index(index.row(), 2)).toString();
+    QString lieuMatch = getLieuMatchDeEquipe(nomEquipe);
+    QString etat = calculerEtatForme(nomEquipe);
+    QString tactique = recommanderTactique(paysEquipe, lieuMatch);
+
+    qDebug() << "Équipe sélectionnée:" << nomEquipe;
+    qDebug() << "Pays de l'équipe:" << paysEquipe;
+    qDebug() << "Lieu du match:" << lieuMatch;
+    qDebug() << "État de forme récupéré:" << etat;
+    qDebug() << "Tactique finale:" << tactique;
+
+    ui->labelTactique->setText("Tactique recommandée : " + tactique);
+}
+void MainWindow::placerJoueur(QWidget *joueur, int x, int y)
+{
+    joueur->move(x, y);
+    joueur->show();
+}
+
+
+void MainWindow::afficherTactiqueGraphique(const QString &tactique) {
+    int w = ui->label_3->width();
+    int h = ui->label_3->height();
+
+    if (tactique == "4-4-2") {
+        placerJoueur(ui->l1, w * 1 / 6, 50);
+        placerJoueur(ui->l2, w * 2 / 6, 50);
+        placerJoueur(ui->l3, w * 4 / 6, 50);
+        placerJoueur(ui->l4, w * 5 / 6, 50);
+
+        placerJoueur(ui->l5, w * 1 / 6, 120);
+        placerJoueur(ui->l6, w * 2.5 / 6, 120);
+        placerJoueur(ui->l7, w * 3.5 / 6, 120);
+        placerJoueur(ui->l8, w * 5 / 6, 120);
+
+        placerJoueur(ui->l9, w * 2 / 6, 190);
+        placerJoueur(ui->l10, w * 4 / 6, 190);
+    }
+    else if (tactique == "5-4-1") {
+        placerJoueur(ui->l1, w * 1 / 7, 40);
+        placerJoueur(ui->l2, w * 2 / 7, 40);
+        placerJoueur(ui->l3, w * 3 / 7, 40);
+        placerJoueur(ui->l4, w * 4 / 7, 40);
+        placerJoueur(ui->l5, w * 5 / 7, 40);
+
+        placerJoueur(ui->l6, w * 1.5 / 6, 110);
+        placerJoueur(ui->l7, w * 2.5 / 6, 110);
+        placerJoueur(ui->l8, w * 3.5 / 6, 110);
+        placerJoueur(ui->l9, w * 4.5 / 6, 110);
+
+        placerJoueur(ui->l10, w * 3 / 6, 180);
+    }
+
+    // ❗ NE PAS déplacer le gardien l11
 }

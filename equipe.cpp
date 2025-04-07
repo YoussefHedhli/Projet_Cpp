@@ -88,7 +88,8 @@ QSqlQueryModel* Equipe::rechercher(const QString& keyword) {
     query.bindValue(":keyword", "%" + keyword + "%");
     query.exec();
 
-    model->setQuery(query);
+    model->setQuery(std::move(query));
+
 
     if (model->lastError().isValid()) {
         qDebug() << "Erreur lors de la recherche de l'équipe:" << model->lastError().text();

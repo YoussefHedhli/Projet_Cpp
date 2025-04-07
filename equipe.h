@@ -34,6 +34,7 @@ public:
     QSqlQueryModel* rechercher(const QString& keyword);  // Rechercher une équipe
     QSqlQueryModel* trierParId(bool asc);  // Trier par ID
     QSqlQueryModel* trierParNom(bool asc); // Trier par nom
+    QString getTactique() const;
 };
 
 #endif // EQUIPE_H
