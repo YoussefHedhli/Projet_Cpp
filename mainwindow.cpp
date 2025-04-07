@@ -336,7 +336,7 @@ void MainWindow::triParId() {
     // Check if descending is selected
     bool descending = ui->checkdesc->isChecked();
 
-    // SQL query to sort by ID
+    // SQL query to sort by IDeeeee
     QString sql = "SELECT * FROM GS_EQUIPE ORDER BY ID_E";
     if (descending)
         sql += " DESC";
