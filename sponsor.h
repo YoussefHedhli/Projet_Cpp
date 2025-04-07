@@ -38,12 +38,37 @@ private slots:
     void on_supprimer_clicked(); // Slot pour le bouton "Supprimer"
     void on_tableWidget_cellClicked(int row, int column); // Slot pour le clic sur une ligne du tableau
 
+    void on_recherche_clicked();
+
+    void on_tri_clicked();
+
+
+    void on_annuler_clicked();
+
+    void on_statistique_clicked();
+
+    void on_pdf_clicked();
+    void loadSponsorRanking();
+
+
+    void on_btnRemoveImage_clicked();
+
+    void on_btnLoadImage_clicked();
+
 private:
     Ui::sponsor *ui; // Interface utilisateur
     int id_s; // Attributs de la classe
     QString nom_org, produit, contribution;
 
     void afficherSponsors(); // Méthode pour afficher les sponsors dans le QTableWidget
+    void trier();
+    void rechercher();
+    void annuler();
+    void generatePdfForSponsor(const QString& sponsor);
+    void saveSponsorImage(const QString &sponsorName, const QByteArray &imageData);
+        void loadSponsorImage(const QString &sponsorName);
+        QString getSelectedSponsor() const;
+        QByteArray imageToByteArray(const QString &filePath);
 };
 
 #endif // SPONSOR_H
