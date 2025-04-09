@@ -17,30 +17,7 @@ Simulation::Simulation(QWidget *parent) :
 
 {
     ui->setupUi(this);
-    goalCheer = new QMediaPlayer(this);
-    whistleEnd = new QMediaPlayer(this);
-    fansCheering = new QMediaPlayer(this);
-    whistleStart = new QMediaPlayer(this);
-
-    audioOutput = new QAudioOutput(this);  // One output for all
-    audioOutput->setVolume(0.5);
-
-    goalCheer->setAudioOutput(audioOutput);
-    whistleEnd->setAudioOutput(audioOutput);
-    fansCheering->setAudioOutput(audioOutput);
-    whistleStart->setAudioOutput(audioOutput);
-
-    // Set source files
-    goalCheer->setSource(QUrl::fromLocalFile("C:/Users/AMEN WORKSTATION/Downloads/goal.mp3"));
-    whistleEnd->setSource(QUrl::fromLocalFile("C:/Users/AMEN WORKSTATION/Downloads/end.mp3"));
-    fansCheering->setSource(QUrl::fromLocalFile("C:/Users/AMEN WORKSTATION/Downloads/fans.mp3"));
-    whistleStart->setSource(QUrl::fromLocalFile("C:/Users/AMEN WORKSTATION/Downloads/start.mp3"));
-
-    // Make fansCheering loop infinitely
-    fansCheering->setLoops(QMediaPlayer::Infinite);
-
     ui->FieldLabel->setStyleSheet("border-image: url(C:/Users/AMEN WORKSTATION/Downloads/360_F_293127241_bMzrEAk3zhehEnsLw6y4k3HfFewopUPG.jpg);");
- // Lower volume for constant cheering
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &Simulation::updatePositions);
     saveInitialPositions();
@@ -80,18 +57,15 @@ void Simulation::paintEvent(QPaintEvent *event)
 
 void Simulation::on_Start_clicked() {
     if (!isGameRunning) {
-        whistleStart->play();  // Play whistle at the start
-        fansCheering->play();  // Start fans cheering sound
-        timer->start(100);
-        matchTime = 15;
-        ui->chrono->display(matchTime);
-        matchTimer->start(1000);
+        timer->start(100);  // Start player movement timer
+        matchTime = 15;  // Reset match time to 15 seconds
+        ui->chrono->display(matchTime);  // Update LCD display
+        matchTimer->start(1000);  // Start match timer (counts every second)
         isGameRunning = true;
         isPaused = false;
         qDebug() << "Game starting!";
     }
 }
-
 void Simulation::updateMatchTime() {
     if (matchTime > 0) {
         matchTime--;  // Decrease time
@@ -124,12 +98,16 @@ void Simulation::updatePositions() {
     if (isBlueTurn) {
         movePlayersTowardsBall(2, 11);
         moveAttackers(9, 11, ui->GOAL);
+        moveDefenders(12, 16, ui->Ball);  // Red team defends
     } else {
         movePlayersTowardsBall(12, 21);
         moveRedAttackers();
+        moveDefenders(2, 6, ui->Ball);  // Blue team defends
     }
+
     checkGoalScored();
 }
+
 
 void Simulation::movePlayersTowardsBall(int start, int end) {
     QLabel *ball = ui->Ball;
@@ -145,6 +123,51 @@ void Simulation::movePlayersTowardsBall(int start, int end) {
         }
     }
 }
+
+void Simulation::moveDefenders(int start, int end, QLabel *target) {
+    for (int i = start; i <= end; ++i) {
+        QLabel *defender = findChild<QLabel*>(QString("Player%1").arg(i));
+        if (defender) {
+            int ballX = target->x();
+            int ballY = target->y();
+            int defX = defender->x();
+            int defY = defender->y();
+
+            int moveX = 0, moveY = 0;
+
+            // Calculate direction toward ball
+            int dx = ballX - defX;
+            int dy = ballY - defY;
+
+            float distance = std::sqrt(dx * dx + dy * dy);
+            float speedFactor = QRandomGenerator::global()->bounded(15, 36) / 10.0f; // ✅ Correct and clear
+             // vary speed for realism
+
+            if (distance > 0) {
+                moveX = static_cast<int>((dx / distance) * speedFactor);
+                moveY = static_cast<int>((dy / distance) * speedFactor);
+            }
+
+            // Simulate repositioning: defenders adjust their shape occasionally
+            if (QRandomGenerator::global()->bounded(10) < 3) { // 30% chance
+                moveX += QRandomGenerator::global()->bounded(-2, 3);
+                moveY += QRandomGenerator::global()->bounded(-2, 3);
+            }
+
+            // Add slight unpredictability
+            if (QRandomGenerator::global()->bounded(100) < 5) { // 5% rare sudden shift
+                moveX += QRandomGenerator::global()->bounded(-4, 5);
+                moveY += QRandomGenerator::global()->bounded(-4, 5);
+            }
+
+            defender->move(defX + moveX, defY + moveY);
+        }
+    }
+}
+
+
+
+
 
 void Simulation::moveAttackers(int start, int end, QLabel *goal) {
     for (int i = start; i <= end; ++i) {
@@ -244,11 +267,9 @@ void Simulation::checkGoalScored() {
         score++;
         scoreLabel->setText(QString::number(score));
         goalProcessed = true;
-        goalCheer->play();  // Play goal cheer sound
         QTimer::singleShot(500, this, &Simulation::switchTurn);
     }
 }
-
 
 void Simulation::saveInitialPositions() {
     QList<QLabel*> elements = findChildren<QLabel*>();
@@ -286,6 +307,10 @@ void Simulation::switchTurn() {
     }
 }
 
+
+
+
+
 void Simulation::endMatch() {
     matchTime--;
     ui->chrono->display(matchTime);
@@ -293,13 +318,10 @@ void Simulation::endMatch() {
         matchTimer->stop();
         timer->stop();
         isGameRunning = false;
-        fansCheering->stop();  // Stop fans cheering at end
-        whistleEnd->play();  // Play end whistle
         resetPlayers();
         qDebug() << "Match ended!";
     }
 }
-
 
 void Simulation::resetPlayers() {
     for (auto it = initialPositions.begin(); it != initialPositions.end(); ++it) {

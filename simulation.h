@@ -47,8 +47,12 @@ private:
     void paintEvent(QPaintEvent *event);
     void movePlayersTowardsBall(int start, int end);
     void moveAttackers(int start, int end, QLabel *goal);
+    void moveDefenders(int start, int end, QLabel *target);
+    bool checkInterception(int defenderStart, int defenderEnd);
+    void interceptionHappened();
     void shootBall(QLabel *shooter, QLabel *goal);
-
+    void moveDefendersTowardsBall(int start, int end);
+    void checkInterception(); // no parameters now
     void checkGoalScored();
     void passBall(QLabel *player, int ballX, int ballY);
     void movePlayerTowardsGoal(QLabel *player);
