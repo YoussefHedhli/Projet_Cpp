@@ -37,11 +37,16 @@ private:
     QMap<QLabel*, QPoint> initialPositions;
     QTimer *matchTimer;  // Declare match timer
     int matchTime;
-    QMediaPlayer *goalCheer;
-    QMediaPlayer *whistleEnd;
-    QMediaPlayer *fansCheering;
-    QMediaPlayer *whistleStart;
-    QAudioOutput *audioOutput;
+    int currentHalf = 1; // 1 or 2
+    bool isTieBreaker = false; // true if going to penalties
+    int penaltyRound = 0;
+    int bluePenGoals = 0;
+    int redPenGoals = 0;
+    bool isBluePenaltyTurn = true;
+    bool gameInterrupted = false;
+
+
+
 
     // Updated function signatures with parameters
     void paintEvent(QPaintEvent *event);
@@ -67,6 +72,10 @@ private:
     void resetGame();
     void endMatch();
     void resetPlayers();
+    void startPenalties();
+    void takeNextPenalty();
+    void showFinalResult();
+    void showPenaltyResult();
 };
 
 #endif // SIMULATION_H

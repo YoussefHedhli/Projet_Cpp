@@ -855,7 +855,7 @@ QPushButton:hover {
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="label">
+  <widget class="QLabel" name="penalty">
    <property name="geometry">
     <rect>
      <x>840</x>
@@ -868,7 +868,7 @@ QPushButton:hover {
     <string>penalty</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_2">
+  <widget class="QLabel" name="penalty1">
    <property name="geometry">
     <rect>
      <x>370</x>
@@ -897,7 +897,7 @@ QPushButton:hover {
   <widget class="QLabel" name="keeper1">
    <property name="geometry">
     <rect>
-     <x>320</x>
+     <x>340</x>
      <y>360</y>
      <width>63</width>
      <height>20</height>
@@ -941,8 +941,8 @@ QPushButton:hover {
   <zorder>frame</zorder>
   <zorder>GOAL</zorder>
   <zorder>GOAL1</zorder>
-  <zorder>label</zorder>
-  <zorder>label_2</zorder>
+  <zorder>penalty</zorder>
+  <zorder>penalty1</zorder>
   <zorder>keeper</zorder>
   <zorder>keeper1</zorder>
  </widget>

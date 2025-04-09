@@ -15,6 +15,7 @@ Simulation::Simulation(QWidget *parent) :
     isBlueTurn(true), // Blue team starts first
     matchTime(15)// 15 seconds match time
 
+
 {
     ui->setupUi(this);
     ui->FieldLabel->setStyleSheet("border-image: url(C:/Users/AMEN WORKSTATION/Downloads/360_F_293127241_bMzrEAk3zhehEnsLw6y4k3HfFewopUPG.jpg);");
@@ -68,18 +69,103 @@ void Simulation::on_Start_clicked() {
 }
 void Simulation::updateMatchTime() {
     if (matchTime > 0) {
-        matchTime--;  // Decrease time
-        ui->chrono->display(matchTime);  // Update LCD display
+        matchTime--;
+        ui->chrono->display(matchTime);
     }
 
-    if (matchTime == 0) {  // Match ends after 15 seconds
-        matchTimer->stop();  // Stop countdown
-        timer->stop();  // Stop player movement
+    if (matchTime == 0) {
+        matchTimer->stop();
+        timer->stop();
         isGameRunning = false;
-        qDebug() << "Match Over!";
-        resetGame();  // Now reset everything
+
+        if (currentHalf == 1) {
+            currentHalf = 2;
+            matchTime = 15;
+            ui->chrono->display(matchTime);
+            resetGame();
+            QTimer::singleShot(2000, [this]() {
+                qDebug() << "Starting second half!";
+                timer->start(100);
+                matchTimer->start(1000);
+                isGameRunning = true;
+            });
+        } else {
+            qDebug() << "Second half ended!";
+            if (blueScore == redScore) {
+                isTieBreaker = true;
+                startPenalties();
+            } else {
+                showFinalResult();
+            }
+        }
     }
 }
+
+void Simulation::startPenalties() {
+    qDebug() << "Starting penalty shootout!";
+    QTimer::singleShot(2000, this, &Simulation::takeNextPenalty);
+}
+
+
+void Simulation::takeNextPenalty() {
+    QLabel *ball = ui->Ball;
+    QLabel *shooter = isBluePenaltyTurn ? ui->Player10 : ui->Player15;
+    QLabel *target = isBluePenaltyTurn ? ui->penalty1 : ui->penalty;
+    QLabel *keeper = isBluePenaltyTurn ? ui->Player22 : ui->Player1;
+    QLabel *savePos = isBluePenaltyTurn ? ui->keeper : ui->keeper1;
+
+    shooter->move(target->x() - 100, target->y());
+    ball->move(shooter->pos());
+    keeper->move(savePos->pos());
+
+    QTimer::singleShot(1000, [=]() {
+        bool keeperSaves = QRandomGenerator::global()->bounded(100) < 40;
+        bool isMiss = QRandomGenerator::global()->bounded(4) == 0;
+
+        if (keeperSaves) {
+            ball->move(savePos->x() + 50, savePos->y());
+            qDebug() << (isBluePenaltyTurn ? "Blue" : "Red") << "penalty saved!";
+        } else if (isMiss) {
+            ball->move(target->x() + QRandomGenerator::global()->bounded(-50, 50), target->y() + QRandomGenerator::global()->bounded(-30, 30));
+            qDebug() << (isBluePenaltyTurn ? "Blue" : "Red") << "missed the penalty!";
+        } else {
+            ball->move(target->pos());
+            if (isBluePenaltyTurn) bluePenGoals++;
+            else redPenGoals++;
+            qDebug() << (isBluePenaltyTurn ? "Blue" : "Red") << "scored!";
+        }
+
+        penaltyRound++;
+
+        if (penaltyRound >= 10 && bluePenGoals != redPenGoals) {
+            showPenaltyResult();
+        } else if (penaltyRound >= 6 && qAbs(bluePenGoals - redPenGoals) > (5 - penaltyRound / 2)) {
+            // No way to catch up
+            showPenaltyResult();
+        } else {
+            isBluePenaltyTurn = !isBluePenaltyTurn;
+            QTimer::singleShot(2000, this, &Simulation::takeNextPenalty);
+        }
+    });
+}
+
+void Simulation::showFinalResult() {
+    QString winner = (blueScore > redScore) ? "Blue team wins!" : "Red team wins!";
+    qDebug() << winner;
+    // You can use QMessageBox or QLabel here to display it
+}
+
+void Simulation::showPenaltyResult() {
+    QString winner;
+    if (bluePenGoals > redPenGoals)
+        winner = "Blue team wins on penalties!";
+    else
+        winner = "Red team wins on penalties!";
+
+    qDebug() << winner;
+    // Optionally reset after a delay
+}
+
 
 
 void Simulation::on_Resume_clicked() {
@@ -160,11 +246,6 @@ void Simulation::moveDefenders(int start, int end, QLabel *target) {
 }
 
 
-
-
-
-
-
 void Simulation::moveAttackers(int start, int end, QLabel *goal) {
     for (int i = start; i <= end; ++i) {
         QLabel *attacker = findChild<QLabel*>(QString("Player%1").arg(i));
@@ -241,44 +322,46 @@ void Simulation::movePlayerTowardsGoal(QLabel *player) {
 }
 
 void Simulation::shootBall(QLabel *shooter, QLabel *goal) {
-    bool isMiss = (QRandomGenerator::global()->bounded(2) == 0);
     QLabel *ball = ui->Ball;
-
-    // Decide keeper logic
     QLabel *keeper = isBlueTurn ? ui->Player22 : ui->Player1;
     QLabel *savePosition = isBlueTurn ? ui->keeper : ui->keeper1;
 
-    bool keeperSaves = QRandomGenerator::global()->bounded(100) < 100; // 100% save rate for testing
+    // Chance of keeper saving (40%)
+    bool keeperSaves = QRandomGenerator::global()->bounded(100) < 40;
+
+    // Chance to miss (25%)
+    bool isMiss = QRandomGenerator::global()->bounded(4) == 0;
 
     if (keeperSaves) {
+        // Keeper moves to save position, ball moves far from goal
         keeper->move(savePosition->pos());
-        ball->move(keeper->x(), keeper->y());
-
-        // ✅ No goal — so no checkGoalScored()
+        ball->move(savePosition->x() + 50, savePosition->y());  // ✅ Move ball clearly outside goal
+        qDebug() << "Keeper saved!";
+        goalProcessed = true;  // ✅ Block goal detection
         QTimer::singleShot(500, this, &Simulation::switchTurn);
         return;
     }
 
     if (isMiss) {
-        int missOffsetX = QRandomGenerator::global()->bounded(-50, 50);
-        int missOffsetY = QRandomGenerator::global()->bounded(20, 80);
+        int missOffsetX = QRandomGenerator::global()->bounded(-60, 60);
+        int missOffsetY = QRandomGenerator::global()->bounded(-30, 30);
         ball->move(goal->x() + missOffsetX, goal->y() + missOffsetY);
-
-        // ✅ No goal — so no checkGoalScored()
+        qDebug() << "Shot missed!";
+        goalProcessed = true;  // ✅ Block goal detection
         QTimer::singleShot(500, this, &Simulation::switchTurn);
         return;
     }
 
-    // ✅ Only here is it a goal
+    // Only this case is on target
     ball->move(goal->x(), goal->y());
-    checkGoalScored(); // This will call switchTurn internally
+    qDebug() << "Shot on target!";
+    checkGoalScored();  // ✅ Only called for valid shots
 }
-
-
 
 
 void Simulation::checkGoalScored() {
     if (goalProcessed) return;
+
     QLabel *goal = isBlueTurn ? ui->GOAL : ui->GOAL1;
     QLabel *scoreLabel = isBlueTurn ? ui->scoreb : ui->scorer;
     int &score = isBlueTurn ? blueScore : redScore;
@@ -287,9 +370,11 @@ void Simulation::checkGoalScored() {
         score++;
         scoreLabel->setText(QString::number(score));
         goalProcessed = true;
+        qDebug() << "Goal scored by" << (isBlueTurn ? "Blue" : "Red") << "!";
         QTimer::singleShot(500, this, &Simulation::switchTurn);
     }
 }
+
 
 void Simulation::saveInitialPositions() {
     QList<QLabel*> elements = findChildren<QLabel*>();
@@ -311,21 +396,23 @@ void Simulation::resetGame() {
 
 
 void Simulation::switchTurn() {
-    resetGame();  // Reset players' positions but don't stop the match timer
+    resetGame();  // Reset player positions
+
+    goalProcessed = false;  // ✅ Reset goal status here
 
     QTimer::singleShot(1000, this, [this]() {
-        isBlueTurn = !isBlueTurn;  // Switch team turn
+        isBlueTurn = !isBlueTurn;  // Switch turn
         isGameRunning = true;
         isPaused = false;
         timer->start(100);
-        qDebug() << "Switching turn!";
+        qDebug() << "Switching turn to" << (isBlueTurn ? "Blue" : "Red") << "team!";
     });
 
-    // 🔥 Ensure the match timer keeps running
     if (!matchTimer->isActive()) {
-        matchTimer->start(1000);  // Ensure the timer is active
+        matchTimer->start(1000);
     }
 }
+
 
 
 
