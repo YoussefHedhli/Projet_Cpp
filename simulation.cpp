@@ -242,16 +242,40 @@ void Simulation::movePlayerTowardsGoal(QLabel *player) {
 
 void Simulation::shootBall(QLabel *shooter, QLabel *goal) {
     bool isMiss = (QRandomGenerator::global()->bounded(2) == 0);
-    if (isMiss) {
-        int missOffsetX = QRandomGenerator::global()->bounded(-50, 50);
-        int missOffsetY = QRandomGenerator::global()->bounded(20, 80);
-        ui->Ball->move(goal->x() + missOffsetX, goal->y() + missOffsetY);
+    QLabel *ball = ui->Ball;
+
+    // Decide keeper logic
+    QLabel *keeper = isBlueTurn ? ui->Player22 : ui->Player1;
+    QLabel *savePosition = isBlueTurn ? ui->keeper : ui->keeper1;
+
+    bool keeperSaves = QRandomGenerator::global()->bounded(100) < 100; // 100% save rate for testing
+
+    if (keeperSaves) {
+        keeper->move(savePosition->pos());
+        ball->move(keeper->x(), keeper->y());
+
+        // ✅ No goal — so no checkGoalScored()
         QTimer::singleShot(500, this, &Simulation::switchTurn);
         return;
     }
-    ui->Ball->move(goal->x(), goal->y());
-    checkGoalScored();
+
+    if (isMiss) {
+        int missOffsetX = QRandomGenerator::global()->bounded(-50, 50);
+        int missOffsetY = QRandomGenerator::global()->bounded(20, 80);
+        ball->move(goal->x() + missOffsetX, goal->y() + missOffsetY);
+
+        // ✅ No goal — so no checkGoalScored()
+        QTimer::singleShot(500, this, &Simulation::switchTurn);
+        return;
+    }
+
+    // ✅ Only here is it a goal
+    ball->move(goal->x(), goal->y());
+    checkGoalScored(); // This will call switchTurn internally
 }
+
+
+
 
 void Simulation::checkGoalScored() {
     if (goalProcessed) return;
