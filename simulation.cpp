@@ -98,7 +98,8 @@ void Simulation::updatePositions() {
     if (isBlueTurn) {
         movePlayersTowardsBall(2, 11);
         moveAttackers(9, 11, ui->GOAL);
-        moveDefenders(12, 16, ui->Ball);  // Red team defends
+        moveDefenders(12, 21, ui->Ball); // 👈 This will handle Player12 to Player22
+          // Red team defends
     } else {
         movePlayersTowardsBall(12, 21);
         moveRedAttackers();
@@ -125,45 +126,40 @@ void Simulation::movePlayersTowardsBall(int start, int end) {
 }
 
 void Simulation::moveDefenders(int start, int end, QLabel *target) {
+    int speed = 5;  // You can tweak this value for faster/slower defenders
+
     for (int i = start; i <= end; ++i) {
         QLabel *defender = findChild<QLabel*>(QString("Player%1").arg(i));
-        if (defender) {
-            int ballX = target->x();
-            int ballY = target->y();
-            int defX = defender->x();
-            int defY = defender->y();
-
-            int moveX = 0, moveY = 0;
-
-            // Calculate direction toward ball
-            int dx = ballX - defX;
-            int dy = ballY - defY;
-
-            float distance = std::sqrt(dx * dx + dy * dy);
-            float speedFactor = QRandomGenerator::global()->bounded(15, 36) / 10.0f; // ✅ Correct and clear
-             // vary speed for realism
-
-            if (distance > 0) {
-                moveX = static_cast<int>((dx / distance) * speedFactor);
-                moveY = static_cast<int>((dy / distance) * speedFactor);
-            }
-
-            // Simulate repositioning: defenders adjust their shape occasionally
-            if (QRandomGenerator::global()->bounded(10) < 3) { // 30% chance
-                moveX += QRandomGenerator::global()->bounded(-2, 3);
-                moveY += QRandomGenerator::global()->bounded(-2, 3);
-            }
-
-            // Add slight unpredictability
-            if (QRandomGenerator::global()->bounded(100) < 5) { // 5% rare sudden shift
-                moveX += QRandomGenerator::global()->bounded(-4, 5);
-                moveY += QRandomGenerator::global()->bounded(-4, 5);
-            }
-
-            defender->move(defX + moveX, defY + moveY);
+        if (!defender) {
+            qDebug() << "Missing label: Player" << i;
+            continue;
         }
+
+        int dx = target->x() - defender->x();
+        int dy = target->y() - defender->y();
+        int distance = std::sqrt(dx * dx + dy * dy);
+
+        // If already at the target, skip movement
+        if (distance == 0)
+            continue;
+
+        // Normalize direction and apply speed
+        int moveX = (dx * speed) / distance;
+        int moveY = (dy * speed) / distance;
+
+        // New position
+        int newX = defender->x() + moveX;
+        int newY = defender->y() + moveY;
+
+        // Move the defender
+        defender->move(newX, newY);
+
+        // Debug output
+        qDebug() << defender->objectName() << "moved to:" << newX << newY << "Δ:" << moveX << moveY;
     }
 }
+
+
 
 
 
