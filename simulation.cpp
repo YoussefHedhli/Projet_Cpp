@@ -13,7 +13,8 @@ Simulation::Simulation(QWidget *parent) :
     redScore(0),
     goalProcessed(false),
     isBlueTurn(true), // Blue team starts first
-    matchTime(15)// 15 seconds match time
+    matchTime(15),// 15 seconds match time
+    matchEnded(false)
 
 
 {
@@ -56,12 +57,12 @@ void Simulation::paintEvent(QPaintEvent *event)
     QDialog::paintEvent(event);  // Ensure the parent class paintEvent is called
 }
 
+
+
 void Simulation::on_Start_clicked() {
-    if (!isGameRunning) {
-        timer->start(100);  // Start player movement timer
-        matchTime = 15;  // Reset match time to 15 seconds
-        ui->chrono->display(matchTime);  // Update LCD display
-        matchTimer->start(1000);  // Start match timer (counts every second)
+    if (!isGameRunning && matchTime > 0) {  // Only allow start if time remains
+        timer->start(100);
+        matchTimer->start(1000);
         isGameRunning = true;
         isPaused = false;
         qDebug() << "Game starting!";
@@ -96,24 +97,32 @@ void Simulation::updateMatchTime() {
                 startPenalties();
             } else {
                 showFinalResult();
+                // Disable further gameplay
+                isGameRunning = false;
+                matchEnded = true;
             }
         }
     }
-}
+    }
 
 void Simulation::startPenalties() {
     qDebug() << "Starting penalty shootout!";
-    QTimer::singleShot(2000, this, &Simulation::takeNextPenalty);
+    bluePenGoals = 0;
+    redPenGoals = 0;
+    isBluePenaltyTurn = true; // Blue always starts first
+
+    // Take first penalty (Blue team)
+    takePenalty(true);
 }
 
-
-void Simulation::takeNextPenalty() {
+void Simulation::takePenalty(bool isBlueTurn) {
     QLabel *ball = ui->Ball;
-    QLabel *shooter = isBluePenaltyTurn ? ui->Player10 : ui->Player15;
-    QLabel *target = isBluePenaltyTurn ? ui->penalty1 : ui->penalty;
-    QLabel *keeper = isBluePenaltyTurn ? ui->Player22 : ui->Player1;
-    QLabel *savePos = isBluePenaltyTurn ? ui->keeper : ui->keeper1;
+    QLabel *shooter = isBlueTurn ? ui->Player10 : ui->Player15;
+    QLabel *target = isBlueTurn ? ui->penalty1 : ui->penalty;
+    QLabel *keeper = isBlueTurn ? ui->Player22 : ui->Player1;
+    QLabel *savePos = isBlueTurn ? ui->keeper : ui->keeper1;
 
+    // Position shooter and ball
     shooter->move(target->x() - 100, target->y());
     ball->move(shooter->pos());
     keeper->move(savePos->pos());
@@ -124,30 +133,34 @@ void Simulation::takeNextPenalty() {
 
         if (keeperSaves) {
             ball->move(savePos->x() + 50, savePos->y());
-            qDebug() << (isBluePenaltyTurn ? "Blue" : "Red") << "penalty saved!";
+            qDebug() << (isBlueTurn ? "Blue" : "Red") << "penalty saved!";
         } else if (isMiss) {
-            ball->move(target->x() + QRandomGenerator::global()->bounded(-50, 50), target->y() + QRandomGenerator::global()->bounded(-30, 30));
-            qDebug() << (isBluePenaltyTurn ? "Blue" : "Red") << "missed the penalty!";
+            ball->move(target->x() + QRandomGenerator::global()->bounded(-50, 50),
+                       target->y() + QRandomGenerator::global()->bounded(-30, 30));
+            qDebug() << (isBlueTurn ? "Blue" : "Red") << "missed the penalty!";
         } else {
             ball->move(target->pos());
-            if (isBluePenaltyTurn) bluePenGoals++;
-            else redPenGoals++;
-            qDebug() << (isBluePenaltyTurn ? "Blue" : "Red") << "scored!";
+            if (isBlueTurn) {
+                bluePenGoals++;
+            } else {
+                redPenGoals++;
+            }
+            qDebug() << (isBlueTurn ? "Blue" : "Red") << "scored!";
         }
 
-        penaltyRound++;
-
-        if (penaltyRound >= 10 && bluePenGoals != redPenGoals) {
-            showPenaltyResult();
-        } else if (penaltyRound >= 6 && qAbs(bluePenGoals - redPenGoals) > (5 - penaltyRound / 2)) {
-            // No way to catch up
-            showPenaltyResult();
+        // After this penalty, check if we need to take the next one
+        if (isBlueTurn) {
+            // Blue just shot, now Red's turn
+            QTimer::singleShot(2000, [this]() {
+                takePenalty(false);
+            });
         } else {
-            isBluePenaltyTurn = !isBluePenaltyTurn;
-            QTimer::singleShot(2000, this, &Simulation::takeNextPenalty);
+            // Both teams have shot, show final result
+            QTimer::singleShot(2000, this, &Simulation::showPenaltyResult);
         }
     });
 }
+
 
 void Simulation::showFinalResult() {
     QString winner = (blueScore > redScore) ? "Blue team wins!" : "Red team wins!";

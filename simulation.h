@@ -44,6 +44,10 @@ private:
     int redPenGoals = 0;
     bool isBluePenaltyTurn = true;
     bool gameInterrupted = false;
+    bool isPenaltyShootout;
+    QLabel* currentPenaltyShooter;
+    QLabel* currentPenaltyTarget;
+    bool matchEnded;
 
 
 
@@ -73,7 +77,7 @@ private:
     void endMatch();
     void resetPlayers();
     void startPenalties();
-    void takeNextPenalty();
+    void takePenalty(bool isBlueTurn);
     void showFinalResult();
     void showPenaltyResult();
 };
