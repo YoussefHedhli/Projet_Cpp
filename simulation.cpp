@@ -109,56 +109,128 @@ void Simulation::startPenalties() {
     qDebug() << "Starting penalty shootout!";
     bluePenGoals = 0;
     redPenGoals = 0;
-    isBluePenaltyTurn = true; // Blue always starts first
+    totalPenaltiesTaken = 0;
+    isBluePenaltyTurn = true;
 
-    // Take first penalty (Blue team)
-    takePenalty(true);
+    setupPenalty(true); // Call setup, not takePenalty directly
 }
 
-void Simulation::takePenalty(bool isBlueTurn) {
-    QLabel *ball = ui->Ball;
-    QLabel *shooter = isBlueTurn ? ui->Player10 : ui->Player15;
-    QLabel *target = isBlueTurn ? ui->penalty1 : ui->penalty;
-    QLabel *keeper = isBlueTurn ? ui->Player22 : ui->Player1;
-    QLabel *savePos = isBlueTurn ? ui->keeper : ui->keeper1;
+void Simulation::setupPenalty(bool isBlueTurn) {
+    if (isBlueTurn) {
+        currentPenaltyShooter = ui->Player10;
+        currentPenaltyTarget = ui->GOAL;
 
-    // Position shooter and ball
-    shooter->move(target->x() - 100, target->y());
-    ball->move(shooter->pos());
-    keeper->move(savePos->pos());
+        ui->Ball->move(ui->penalty->pos());
 
-    QTimer::singleShot(1000, [=]() {
-        bool keeperSaves = QRandomGenerator::global()->bounded(100) < 40;
-        bool isMiss = QRandomGenerator::global()->bounded(4) == 0;
+        // Shooter stands to the left of the ball
+        int shooterX = ui->penalty->x() - currentPenaltyShooter->width() - 10;
+        int shooterY = ui->penalty->y();
+        currentPenaltyShooter->move(shooterX, shooterY);
+    } else {
+        currentPenaltyShooter = ui->Player15;
+        currentPenaltyTarget = ui->GOAL1;
 
-        if (keeperSaves) {
-            ball->move(savePos->x() + 50, savePos->y());
-            qDebug() << (isBlueTurn ? "Blue" : "Red") << "penalty saved!";
-        } else if (isMiss) {
-            ball->move(target->x() + QRandomGenerator::global()->bounded(-50, 50),
-                       target->y() + QRandomGenerator::global()->bounded(-30, 30));
-            qDebug() << (isBlueTurn ? "Blue" : "Red") << "missed the penalty!";
-        } else {
-            ball->move(target->pos());
+        ui->Ball->move(ui->penalty1->pos());
+
+        // ✅ Shooter stands in front of the ball (further away from goal)
+        int shooterX = ui->penalty1->x() + ui->Ball->width() + 10;
+        int shooterY = ui->penalty1->y();
+        currentPenaltyShooter->move(shooterX, shooterY);
+    }
+
+    // Goalkeeper placement
+    QLabel* keeper = isBlueTurn ? ui->Player22 : ui->Player1;
+    QLabel* keeperPos = isBlueTurn ? ui->keeper : ui->keeper1;
+    keeper->move(keeperPos->pos());
+
+    // Delay, then kick
+    QTimer::singleShot(1000, [this, isBlueTurn]() {
+        kickBall(isBlueTurn);
+    });
+}
+
+
+void Simulation::kickBall(bool isBlueTurn) {
+    currentPenaltyShooter->move(ui->Ball->x() - 20, ui->Ball->y());
+
+    QTimer::singleShot(400, [this, isBlueTurn]() {
+        bool isGoal = QRandomGenerator::global()->bounded(100) < 60;
+
+        if (isGoal) {
+            ui->Ball->move(currentPenaltyTarget->pos());
             if (isBlueTurn) {
                 bluePenGoals++;
+                ui->scoreb->setText(QString::number(blueScore + bluePenGoals));
             } else {
                 redPenGoals++;
+                ui->scorer->setText(QString::number(redScore + redPenGoals));
             }
-            qDebug() << (isBlueTurn ? "Blue" : "Red") << "scored!";
+            qDebug() << (isBlueTurn ? "Blue" : "Red") << "scores!";
+        } else {
+            int missX = currentPenaltyTarget->x() + QRandomGenerator::global()->bounded(-50, 50);
+            int missY = currentPenaltyTarget->y() + QRandomGenerator::global()->bounded(20, 100);
+            ui->Ball->move(missX, missY);
+            qDebug() << (isBlueTurn ? "Blue" : "Red") << "misses!";
         }
 
-        // After this penalty, check if we need to take the next one
+        // Count penalties
+        if (isBlueTurn) bluePenaltiesTaken++;
+        else redPenaltiesTaken++;
+
+        // Continue if both teams have taken fewer than 3
+        QTimer::singleShot(2000, [this]() {
+            if (bluePenaltiesTaken < 3 || redPenaltiesTaken < 3) {
+                // Alternate turns
+                isBluePenaltyTurn = !isBluePenaltyTurn;
+                setupPenalty(isBluePenaltyTurn);
+            } else {
+                showFinalResult();
+            }
+        });
+    });
+}
+
+
+
+
+
+void Simulation::takePenalty(bool isBlueTurn) {
+    // Determine if the shot is successful (60% chance to score)
+    bool isGoal = QRandomGenerator::global()->bounded(100) < 60;
+
+    if (isGoal) {
+        // Ball goes to goal
+        ui->Ball->move(currentPenaltyTarget->pos());
         if (isBlueTurn) {
-            // Blue just shot, now Red's turn
-            QTimer::singleShot(2000, [this]() {
-                takePenalty(false);
-            });
+            bluePenGoals++;
+            ui->scoreb->setText(QString::number(blueScore + bluePenGoals));
         } else {
-            // Both teams have shot, show final result
-            QTimer::singleShot(2000, this, &Simulation::showPenaltyResult);
+            redPenGoals++;
+            ui->scorer->setText(QString::number(redScore + redPenGoals));
+        }
+        qDebug() << (isBlueTurn ? "Blue" : "Red") << "team scores penalty!";
+    } else {
+        // Ball goes wide or saved
+        int missX = currentPenaltyTarget->x() + QRandomGenerator::global()->bounded(-50, 50);
+        int missY = currentPenaltyTarget->y() + QRandomGenerator::global()->bounded(20, 100);
+        ui->Ball->move(missX, missY);
+        qDebug() << (isBlueTurn ? "Blue" : "Red") << "team misses penalty!";
+    }
+
+    // Move to next penalty or end shootout
+    QTimer::singleShot(2000, [this, isBlueTurn]() {
+        totalPenaltiesTaken++;
+
+        if (totalPenaltiesTaken >= maxPenalties * 2) {
+            // All penalties taken
+            showFinalResult();
+        } else {
+            // Switch turn
+            bool nextTurnIsBlue = !isBlueTurn;
+            setupPenalty(nextTurnIsBlue);
         }
     });
+
 }
 
 
@@ -169,14 +241,24 @@ void Simulation::showFinalResult() {
 }
 
 void Simulation::showPenaltyResult() {
-    QString winner;
-    if (bluePenGoals > redPenGoals)
-        winner = "Blue team wins on penalties!";
-    else
-        winner = "Red team wins on penalties!";
+    isPenaltyShootout = false;
 
-    qDebug() << winner;
-    // Optionally reset after a delay
+    QString result;
+    if (bluePenGoals > redPenGoals) {
+        result = "Blue team wins on penalties!";
+        blueScore += bluePenGoals; // Update final score
+    } else if (redPenGoals > bluePenGoals) {
+        result = "Red team wins on penalties!";
+        redScore += redPenGoals; // Update final score
+    } else {
+        result = "Match ends in a draw!";
+    }
+
+    qDebug() << result;
+    // You can show this result in a QMessageBox or on the UI
+
+    // Reset all players to their positions
+    resetGame();
 }
 
 

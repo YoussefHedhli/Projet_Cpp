@@ -48,6 +48,12 @@ private:
     QLabel* currentPenaltyShooter;
     QLabel* currentPenaltyTarget;
     bool matchEnded;
+    int totalPenaltiesTaken = 0;
+    const int maxPenalties = 5; // can be increased later
+    int bluePenaltiesTaken = 0;
+    int redPenaltiesTaken = 0;
+
+
 
 
 
@@ -80,6 +86,8 @@ private:
     void takePenalty(bool isBlueTurn);
     void showFinalResult();
     void showPenaltyResult();
+    void setupPenalty(bool isBlueTurn);
+    void kickBall(bool isBlueTurn);
 };
 
 #endif // SIMULATION_H
