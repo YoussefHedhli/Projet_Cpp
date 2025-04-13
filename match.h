@@ -34,6 +34,10 @@ public:
     void setDate(QString);
     void setLieu(QString);
     void setEtat(QString);
+    QVector<QVector<QString>> getMatchesByDate(const QString &selectedDate);
+    QMap<QDate, QList<QString>> getMatchStatesPerDate();
+
+
 };
 
 #endif // MATCH_H

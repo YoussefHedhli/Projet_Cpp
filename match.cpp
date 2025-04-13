@@ -145,27 +145,29 @@ QVector<QVector<QString>> Match::getMatchesByDate(const QString &selectedDate) {
 
 QMap<QDate, QList<QString>> Match::getMatchStatesPerDate() {
     QMap<QDate, QList<QString>> map;
-    QSqlQuery query("SELECT date_match, etat FROM matches");
+    QSqlQuery query("SELECT DATEM, ETAT FROM GS_MATCH");
+
     while (query.next()) {
         QString dateStr = query.value(0).toString();
         QString etat = query.value(1).toString();
-        qDebug() << "Raw date from DB:" << dateStr << "| Etat:" << etat;
 
-        QDateTime dt = QDateTime::fromString(dateStr, "yyyy-MM-dd HH:mm:ss");
-        if (!dt.isValid()) {
-            dt = QDateTime::fromString(dateStr, "yyyy-MM-dd");
-        }
-        QDate date = dt.date();
+        QDateTime datetime = QDateTime::fromString(dateStr, Qt::ISODate);
+        QDate date = datetime.date();
+
+        qDebug() << "Date:" << date << "Etat:" << etat;
 
         if (date.isValid()) {
             map[date].append(etat);
-            qDebug() << "Parsed date:" << date << "| Etat:" << etat;
         } else {
             qDebug() << "Invalid date:" << dateStr;
         }
     }
+
     return map;
 }
+
+
+
 
 
 

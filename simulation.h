@@ -52,6 +52,7 @@ private:
     const int maxPenalties = 5; // can be increased later
     int bluePenaltiesTaken = 0;
     int redPenaltiesTaken = 0;
+    bool inSuddenDeath = false;
 
 
 
@@ -88,6 +89,7 @@ private:
     void showPenaltyResult();
     void setupPenalty(bool isBlueTurn);
     void kickBall(bool isBlueTurn);
+    void checkPenaltyShootoutState();
 };
 
 #endif // SIMULATION_H

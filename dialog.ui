@@ -858,27 +858,27 @@ QPushButton:hover {
   <widget class="QLabel" name="penalty">
    <property name="geometry">
     <rect>
-     <x>840</x>
-     <y>360</y>
+     <x>830</x>
+     <y>370</y>
      <width>63</width>
      <height>20</height>
     </rect>
    </property>
    <property name="text">
-    <string>penalty</string>
+    <string/>
    </property>
   </widget>
   <widget class="QLabel" name="penalty1">
    <property name="geometry">
     <rect>
-     <x>370</x>
+     <x>400</x>
      <y>360</y>
      <width>63</width>
      <height>20</height>
     </rect>
    </property>
    <property name="text">
-    <string>penalty 1</string>
+    <string/>
    </property>
   </widget>
   <widget class="QLabel" name="keeper">
@@ -891,7 +891,7 @@ QPushButton:hover {
     </rect>
    </property>
    <property name="text">
-    <string>keeper</string>
+    <string/>
    </property>
   </widget>
   <widget class="QLabel" name="keeper1">
@@ -904,7 +904,7 @@ QPushButton:hover {
     </rect>
    </property>
    <property name="text">
-    <string>keeper1</string>
+    <string/>
    </property>
   </widget>
   <zorder>label_pic</zorder>

@@ -27,8 +27,7 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
-    displayStatistics();
-    highlightMatchDates();
+    displayStatistics();  
     QTextCharFormat testFormat;
     testFormat.setBackground(Qt::yellow);
     ui->calendar->setDateTextFormat(QDate::currentDate(), testFormat); // test highlight today
@@ -55,6 +54,10 @@ MainWindow::MainWindow(QWidget *parent)
     updateMatchDisplay();
     displayStatistics();
     highlightMatchDates();
+    ui->calendar->setSelectedDate(QDate::currentDate().addDays(1));
+    ui->calendar->setSelectedDate(QDate::currentDate());
+
+
 
 
 }
@@ -434,22 +437,27 @@ void MainWindow::onCalendarDateSelected(const QDate &date) {
 }
 
 void MainWindow::highlightMatchDates() {
-     qDebug() << "Highlighting match dates...";
+    qDebug() << "Highlighting match dates...";
     QMap<QDate, QList<QString>> etatsPerDate = m.getMatchStatesPerDate();
 
     for (auto it = etatsPerDate.begin(); it != etatsPerDate.end(); ++it) {
         const QDate& date = it.key();
         const QList<QString>& etats = it.value();
 
-        // Choose color based on the highest-priority etat
+        // Normalize etats: trim and convert to lowercase
+        QList<QString> normalizedEtats;
+        for (const QString &etat : etats) {
+            normalizedEtats.append(etat.trimmed().toLower());
+        }
+
         QColor color;
-        if (etats.contains("Postponed")) {
+        if (normalizedEtats.contains("postponed")) {
             color = Qt::gray;
-        } else if (etats.contains("Didn't start")) {
+        } else if (normalizedEtats.contains("didn't start")) {
             color = Qt::red;
-        } else if (etats.contains("Started")) {
+        } else if (normalizedEtats.contains("started")) {
             color = Qt::blue;
-        } else if (etats.contains("Ended")) {
+        } else if (normalizedEtats.contains("ended")) {
             color = Qt::green;
         } else {
             continue;
@@ -458,14 +466,11 @@ void MainWindow::highlightMatchDates() {
         QTextCharFormat format;
         format.setBackground(color);
         ui->calendar->setDateTextFormat(date, format);
-        qDebug() << "Highlighting match dates...";
-        for (auto it = etatsPerDate.begin(); it != etatsPerDate.end(); ++it) {
-            qDebug() << "Date:" << it.key().toString("yyyy-MM-dd") << "Etats:" << it.value();
 
-        }
-
+        qDebug() << "Date:" << date.toString("yyyy-MM-dd") << "Etats:" << normalizedEtats;
     }
 }
+
 
 
 
