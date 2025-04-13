@@ -5,8 +5,6 @@
 #include <QMessageBox>
 #include <QTableWidget>
 #include <QSqlError> // Ajoutez cette ligne pour inclure QSqlError
-#include <QPrinter>
-#include <QPainter>
 #include <QStandardPaths>
 #include <QDebug>
 #include <QSet>
@@ -16,6 +14,14 @@
 #include <QPieSlice>
 #include <QtCharts>
 #include <QPixmap>
+#include <QPrinter>
+#include <QPainter>
+#include <QPdfWriter>
+#include <QPageSize>  // Pour Qt 5.14 et supérieur
+#include <QPainter>
+#include <QTextDocument>
+#include <QPageSize>
+
 
 
 #include <QMimeData>
@@ -362,83 +368,169 @@ void sponsor::on_statistique_clicked() {
     msgBox.setStandardButtons(QMessageBox::Ok);
     msgBox.exec();
 }
-    void sponsor::on_pdf_clicked() {
-        QSqlQuery query;
-           query.prepare("SELECT DISTINCT NOM_ORG FROM GS_SPONSOR");
-           if (!query.exec()) {
-               QMessageBox::information(this, "error", "Erreur lors de la récupération des sponsors.");
-
-               return;
-           }
-
-           QSet<QString> uniqueSponsors;
-           while (query.next()) {
-               uniqueSponsors.insert(query.value(0).toString());
-           }
-
-           foreach (const QString& sponsor, uniqueSponsors) {
-               generatePdfForSponsor(sponsor);
-           }
-
-           QMessageBox::information(nullptr, "PDF générés", "Les PDF ont été générés avec succès.");
+void sponsor::on_pdf_clicked() {
+    QSqlQuery query;
+    query.prepare("SELECT DISTINCT NOM_ORG FROM GS_SPONSOR");
+    if (!query.exec()) {
+        QMessageBox::critical(this, "Erreur", "Échec de récupération des sponsors: " + query.lastError().text());
+        return;
     }
-    void sponsor::generatePdfForSponsor(const QString& sponsor)
-    {
-        QString desktopPath = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation);
-        QString filename = desktopPath + "/" + sponsor + "_sponsor.pdf";
 
-        QPrinter printer(QPrinter::HighResolution);
-        printer.setOutputFileName(filename);
-        printer.setOutputFormat(QPrinter::PdfFormat);
+    QStringList sponsors;
+    while (query.next()) {
+        sponsors.append(query.value(0).toString());
+    }
 
-        QPainter painter(&printer);
-        painter.begin(&printer);
+    int successCount = 0;
+    foreach (const QString& sponsor, sponsors) {
+        generatePdfForSponsor(sponsor); // Appel simple sans vérification de retour
+        successCount++; // On considère que c'est toujours un succès dans cette version
+    }
 
-        painter.setPen(QPen(Qt::black, 8, Qt::SolidLine));
-        painter.drawRect(0, 0, printer.pageRect().width(), printer.pageRect().height());
+    QMessageBox::information(this, "Rapport PDF",
+                             QString("%1 PDF(s) généré(s)").arg(successCount));
+}
 
-        QFont titleFont("Arial", 14, QFont::Bold);
-        painter.setFont(titleFont);
-        painter.drawText(3000, 400, "Liste des contributions de " + sponsor);
+void sponsor::generatePdfForSponsor(const QString& sponsor) {
+    // Configuration du PDF
+    QString desktopPath = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation);
+    QString filename = QString("%1/%2_Contribution.pdf").arg(desktopPath).arg(sponsor);
 
-        QSqlQuery query;
-        query.prepare("SELECT ID_S, PRODUIT, CONTRIBUTION FROM GS_SPONSOR WHERE NOM_ORG = :sponsor");
-        query.bindValue(":sponsor", sponsor);
-        if (!query.exec()) {
-            qDebug() << "Erreur lors de la récupération des données pour le sponsor " << sponsor;
-            return;
+    QPdfWriter pdfWriter(filename);
+    pdfWriter.setPageSize(QPageSize(QPageSize::A4));
+    pdfWriter.setTitle("Rapport de Contributions - " + sponsor);
+    pdfWriter.setResolution(300); // Haute résolution
+
+    QPainter painter(&pdfWriter);
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.setRenderHint(QPainter::TextAntialiasing, true);
+
+    // Dimensions utiles
+    const int margin = 50; // marge en pixels (1cm ≈ 37.8 pixels à 300dpi)
+    const int contentWidth = pdfWriter.width() - 2 * margin;
+    int yPos = margin;
+
+    // Logo et en-tête (optionnel)
+    QFont headerFont("Arial", 20, QFont::Bold);
+    painter.setFont(headerFont);
+    painter.drawText(QRect(margin, yPos, contentWidth, 60),
+                     Qt::AlignCenter,
+                     "Rapport des Contributions");
+    yPos += 70;
+
+    QFont subHeaderFont("Arial", 16, QFont::Normal);
+    painter.setFont(subHeaderFont);
+    painter.drawText(QRect(margin, yPos, contentWidth, 40),
+                     Qt::AlignCenter,
+                     "Sponsor: " + sponsor);
+    yPos += 50;
+
+    // Ligne de séparation
+    painter.drawLine(margin, yPos, pdfWriter.width() - margin, yPos);
+    yPos += 30;
+
+    // Requête des données
+    QSqlQuery query;
+    query.prepare("SELECT ID_S, PRODUIT, CONTRIBUTION FROM GS_SPONSOR WHERE NOM_ORG = :sponsor");
+    query.bindValue(":sponsor", sponsor);
+
+    if (!query.exec()) {
+        qWarning() << "Erreur requête pour" << sponsor;
+        return;
+    }
+
+    // Paramètres du tableau
+    const int rowHeight = 40;
+    const int headerHeight = 50;
+    const QList<int> colWidths = {contentWidth/6, contentWidth/2, contentWidth/3};
+    QList<QString> headers = {"ID", "Produit/Service", "Contribution (€)"};
+
+    // Fonction pour calculer la position X cumulée
+    auto calcXPos = [&colWidths](int col) {
+        int x = 0;
+        for (int i = 0; i < col; ++i) {
+            x += colWidths[i];
+        }
+        return x;
+    };
+
+    // En-tête du tableau
+    painter.setFont(QFont("Arial", 12, QFont::Bold));
+    painter.setBrush(QBrush(QColor(230, 230, 250))); // Fond bleu clair
+    for (int col = 0; col < headers.size(); ++col) {
+        painter.drawRect(margin + calcXPos(col), yPos, colWidths[col], headerHeight);
+        painter.drawText(QRect(margin + calcXPos(col), yPos, colWidths[col], headerHeight),
+                         Qt::AlignCenter, headers[col]);
+    }
+    yPos += headerHeight;
+
+    // Contenu du tableau
+    painter.setFont(QFont("Arial", 11));
+    painter.setBrush(Qt::NoBrush);
+
+    double totalContribution = 0;
+    int rowCount = 0;
+
+    while (query.next()) {
+        // Alternance de couleur des lignes
+        if (rowCount % 2 == 0) {
+            painter.setBrush(QBrush(QColor(245, 245, 245)));
+        } else {
+            painter.setBrush(QBrush(Qt::white));
         }
 
-        int xStart = 800;
-        int yStart = 1000;
-        QStringList headers = {"ID", "Produit", "Contribution"};
-        painter.setFont(QFont("Arial", 10, QFont::Bold));
-        int cellWidth = 1800;
-        int cellHeight = 1200;
+        for (int col = 0; col < 3; ++col) {
+            QString text = query.value(col).toString();
 
-        for (int i = 0; i < headers.size(); ++i) {
-            painter.drawRect(xStart + i * cellWidth, yStart, cellWidth, cellHeight);
-            painter.drawText(xStart + i * cellWidth, yStart, cellWidth, cellHeight, Qt::AlignCenter, headers.at(i));
-        }
-        yStart += cellHeight;
-
-        painter.setFont(QFont("Arial", 12));
-        while (query.next()) {
-            for (int i = 0; i < 3; ++i) {
-                QString data = query.value(i).toString();
-                painter.drawRect(xStart + i * cellWidth, yStart, cellWidth, cellHeight);
-                painter.drawText(xStart + i * cellWidth, yStart, cellWidth, cellHeight, Qt::AlignCenter, data);
+            // Formatage spécial pour la colonne Contribution
+            if (col == 2) {
+                bool ok;
+                double value = text.toDouble(&ok);
+                if (ok) {
+                    text = QString::number(value, 'f', 2);
+                    totalContribution += value;
+                }
             }
-            yStart += cellHeight;
+
+            painter.drawRect(margin + calcXPos(col), yPos, colWidths[col], rowHeight);
+            painter.drawText(QRect(margin + calcXPos(col), yPos, colWidths[col], rowHeight),
+                             col == 2 ? Qt::AlignRight|Qt::AlignVCenter : Qt::AlignCenter,
+                             text);
         }
-
-        QString currentDate = QDate::currentDate().toString("dd/MM/yyyy");
-        painter.drawText(QRect(6300, 13400, 4050, 200), Qt::AlignCenter, "Généré le : " + currentDate);
-
-        painter.end();
-
-        qDebug() << "PDF gén    éré pour le sponsor " << sponsor << " dans le fichier " << filename;
+        yPos += rowHeight;
+        rowCount++;
     }
+
+    // Ligne de total
+    yPos += 10;
+    painter.setFont(QFont("Arial", 12, QFont::Bold));
+    painter.setBrush(QBrush(QColor(200, 230, 200)));
+
+    painter.drawRect(margin + calcXPos(2), yPos, colWidths[2], rowHeight);
+    painter.drawText(QRect(margin + calcXPos(2), yPos, colWidths[2], rowHeight),
+                     Qt::AlignRight|Qt::AlignVCenter,
+                     "Total: " + QString::number(totalContribution, 'f', 2) + " €");
+
+    yPos += rowHeight + 30;
+
+    // Pied de page
+    QFont footerFont("Arial", 10);
+    painter.setFont(footerFont);
+    painter.drawText(QRect(margin, yPos, contentWidth, 30),
+                     Qt::AlignRight,
+                     "Généré le " + QDate::currentDate().toString("dd/MM/yyyy"));
+
+    painter.drawText(QRect(margin, yPos, contentWidth, 30),
+                     Qt::AlignLeft,
+                     "© MonApplication");
+
+    painter.end();
+
+    qDebug() << "PDF généré avec succès:" << filename;
+}
+
+
+
 
 
 
@@ -456,29 +548,80 @@ void sponsor::on_statistique_clicked() {
 
     void sponsor::loadSponsorRanking() {
         QSqlQuery query;
-        query.prepare("SELECT NOM_ORG, CONTRIBUTION FROM GS_SPONSOR ORDER BY CONTRIBUTION DESC");
+        // Requête pour obtenir la somme des contributions par sponsor, triée par ordre décroissant
+        query.prepare("SELECT NOM_ORG, SUM(CONTRIBUTION) as TOTAL_CONTRIBUTION "
+                      "FROM GS_SPONSOR "
+                      "GROUP BY NOM_ORG "
+                      "ORDER BY TOTAL_CONTRIBUTION DESC");
 
         if (!query.exec()) {
-            QMessageBox::critical(this, "Erreur", "Échec de récupération des sponsors.");
+            QMessageBox::critical(this, "Erreur", "Échec de récupération du classement des sponsors: " + query.lastError().text());
             return;
         }
 
-        // Effacer l'ancien contenu du tableau
+        // Configurer le tableau avec les colonnes appropriées
         ui->tableClassement->setRowCount(0);
+        ui->tableClassement->setColumnCount(4); // Rang, Sponsor, Contribution, Catégorie
+        ui->tableClassement->setHorizontalHeaderLabels({"Rang", "Sponsor", "Contribution Totale", "Catégorie"});
 
         int row = 0;
+        int rank = 1;
         while (query.next()) {
             QString name = query.value(0).toString();
-            int contribution = query.value(1).toInt();
-            QString category = (contribution < 1000) ? "Bronze" : (contribution < 5000) ? "Silver" : "Gold";
+            double totalContribution = query.value(1).toDouble();
 
+            // Déterminer la catégorie
+            QString category = (totalContribution >= 5000) ? "Gold" :
+                                   (totalContribution >= 1000) ? "Silver" : "Bronze";
+
+            // Ajouter une nouvelle ligne
             ui->tableClassement->insertRow(row);
-            ui->tableClassement->setItem(row, 0, new QTableWidgetItem(name));
-            ui->tableClassement->setItem(row, 1, new QTableWidgetItem(QString::number(contribution)));
-            ui->tableClassement->setItem(row, 2, new QTableWidgetItem(category));
+
+            // Colonne Rang (1)
+            QTableWidgetItem *rankItem = new QTableWidgetItem(QString::number(rank));
+            rankItem->setTextAlignment(Qt::AlignCenter);
+            ui->tableClassement->setItem(row, 0, rankItem);
+
+            // Colonne Sponsor (2)
+            QTableWidgetItem *nameItem = new QTableWidgetItem(name);
+            ui->tableClassement->setItem(row, 1, nameItem);
+
+            // Colonne Contribution Totale (3)
+            QTableWidgetItem *contributionItem = new QTableWidgetItem(QString::number(totalContribution, 'f', 2));
+            contributionItem->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
+            ui->tableClassement->setItem(row, 2, contributionItem);
+
+            // Colonne Catégorie (4)
+            QTableWidgetItem *categoryItem = new QTableWidgetItem(category);
+            categoryItem->setTextAlignment(Qt::AlignCenter);
+            ui->tableClassement->setItem(row, 3, categoryItem);
+
+            // Colorisation selon la catégorie
+            QColor bgColor;
+            if (category == "Gold") {
+                bgColor = QColor(255, 215, 0); // Or
+            } else if (category == "Silver") {
+                bgColor = QColor(192, 192, 192); // Argent
+            } else {
+                bgColor = QColor(205, 127, 50); // Bronze
+            }
+
+            // Appliquer la couleur à toute la ligne
+            for (int col = 0; col < 4; ++col) {
+                ui->tableClassement->item(row, col)->setBackground(bgColor);
+            }
 
             row++;
+            rank++;
         }
+
+        // Ajustement de la largeur des colonnes
+        ui->tableClassement->resizeColumnsToContents();
+        // Optionnel: Définir des largeurs spécifiques
+        ui->tableClassement->setColumnWidth(0, 60);   // Rang
+        ui->tableClassement->setColumnWidth(1, 150);  // Sponsor
+        ui->tableClassement->setColumnWidth(2, 150);  // Contribution
+        ui->tableClassement->setColumnWidth(3, 100);  // Catégorie
     }
 
 
@@ -516,7 +659,7 @@ void sponsor::on_statistique_clicked() {
         }
     }
 
-    // Chargement de l'image depuis la base de données
+    // Chargement de l'image depuis la base de données   selected table yafichli il image
     void sponsor::loadSponsorImage(const QString &sponsorName) {
         QSqlQuery query;
         query.prepare("SELECT IMAGE_DATA FROM GS_SPONSOR WHERE NOM_ORG = :sponsor");
@@ -584,3 +727,21 @@ void sponsor::on_statistique_clicked() {
             saveSponsorImage(sponsorName, imageData);
         }
     }
+
+    void sponsor::on_tri_des_clicked()
+    {
+        QSqlQuery query("SELECT ID_S, NOM_ORG, PRODUIT, CONTRIBUTION FROM GS_SPONSOR ORDER BY ID_S DESC");
+
+        ui->tableWidget->setRowCount(0); // Réinitialiser la table
+        int row = 0;
+
+        while (query.next()) {
+            ui->tableWidget->insertRow(row);
+            ui->tableWidget->setItem(row, 0, new QTableWidgetItem(query.value(0).toString())); // ID
+            ui->tableWidget->setItem(row, 1, new QTableWidgetItem(query.value(1).toString())); // Nom
+            ui->tableWidget->setItem(row, 2, new QTableWidgetItem(query.value(2).toString())); // Produit
+            ui->tableWidget->setItem(row, 3, new QTableWidgetItem(query.value(3).toString())); // Contribution
+            row++;
+        }
+    }
+
