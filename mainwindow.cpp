@@ -28,6 +28,11 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
     displayStatistics();
+    highlightMatchDates();
+    QTextCharFormat testFormat;
+    testFormat.setBackground(Qt::yellow);
+    ui->calendar->setDateTextFormat(QDate::currentDate(), testFormat); // test highlight today
+
 
 
     Connection c;
@@ -49,6 +54,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->calendar, &QCalendarWidget::clicked, this, &MainWindow::onCalendarDateSelected);
     updateMatchDisplay();
     displayStatistics();
+    highlightMatchDates();
+
 
 }
 
@@ -103,7 +110,7 @@ void MainWindow::updateMatchDisplay() {
 void MainWindow::addMatchToDatabase() {
     QString dateInput = ui->lineEditDate->text().trimmed();
     QString lieu = ui->lineEditLieu->text().trimmed();
-    QString etat = ui->comboEtat->currentText();
+    QString etat = ui->etats->currentText();
     QString equipe1 = ui->lineEditTeam1->text().trimmed();
     QString equipe2 = ui->lineEditTeam2->text().trimmed();
 
@@ -155,7 +162,7 @@ void MainWindow::on_tableWidget_itemSelectionChanged() {
     ui->lineEditTeam2->setText(ui->tableWidget->item(row, 2)->text());
     ui->lineEditDate->setText(ui->tableWidget->item(row, 3)->text());
     ui->lineEditLieu->setText(ui->tableWidget->item(row, 4)->text());
-    ui->comboEtat->setCurrentText(ui->tableWidget->item(row, 5)->text());
+    ui->etats->setCurrentText(ui->tableWidget->item(row, 5)->text());
 }
 void MainWindow::on_btnModifier_clicked() {
     modifyMatch();
@@ -174,7 +181,7 @@ void MainWindow::modifyMatch() {
     QString newEquipe2 = ui->lineEditTeam2->text().trimmed();
     QString newDate = ui->lineEditDate->text().trimmed();
     QString newLieu = ui->lineEditLieu->text().trimmed();
-    QString newEtat = ui->comboEtat->currentText();
+    QString newEtat = ui->etats->currentText();
 
     if (newEquipe1.isEmpty() || newEquipe2.isEmpty() || newDate.isEmpty() || newLieu.isEmpty() || newEtat.isEmpty()) {
         QMessageBox::warning(this, "Erreur", "Veuillez remplir tous les champs !");
@@ -423,5 +430,42 @@ void MainWindow::onCalendarDateSelected(const QDate &date) {
             ui->tableWidget->setItem(row, col, new QTableWidgetItem(data[row][col]));
         }
     }
+      highlightMatchDates();
 }
+
+void MainWindow::highlightMatchDates() {
+     qDebug() << "Highlighting match dates...";
+    QMap<QDate, QList<QString>> etatsPerDate = m.getMatchStatesPerDate();
+
+    for (auto it = etatsPerDate.begin(); it != etatsPerDate.end(); ++it) {
+        const QDate& date = it.key();
+        const QList<QString>& etats = it.value();
+
+        // Choose color based on the highest-priority etat
+        QColor color;
+        if (etats.contains("Postponed")) {
+            color = Qt::gray;
+        } else if (etats.contains("Didn't start")) {
+            color = Qt::red;
+        } else if (etats.contains("Started")) {
+            color = Qt::blue;
+        } else if (etats.contains("Ended")) {
+            color = Qt::green;
+        } else {
+            continue;
+        }
+
+        QTextCharFormat format;
+        format.setBackground(color);
+        ui->calendar->setDateTextFormat(date, format);
+        qDebug() << "Highlighting match dates...";
+        for (auto it = etatsPerDate.begin(); it != etatsPerDate.end(); ++it) {
+            qDebug() << "Date:" << it.key().toString("yyyy-MM-dd") << "Etats:" << it.value();
+
+        }
+
+    }
+}
+
+
 

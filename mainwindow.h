@@ -34,6 +34,7 @@ private slots:
     void displayStatistics();
     void on_sim_clicked();
     void onCalendarDateSelected(const QDate &date);
+    void highlightMatchDates();
 
 
 private:

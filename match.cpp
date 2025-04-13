@@ -2,6 +2,7 @@
 #include <QDebug>
 #include <QSqlError>
 #include <QRandomGenerator>
+#include <QDate>
 
 Match::Match() {}
 
@@ -141,6 +142,32 @@ QVector<QVector<QString>> Match::getMatchesByDate(const QString &selectedDate) {
 
     return matches;
 }
+
+QMap<QDate, QList<QString>> Match::getMatchStatesPerDate() {
+    QMap<QDate, QList<QString>> map;
+    QSqlQuery query("SELECT date_match, etat FROM matches");
+    while (query.next()) {
+        QString dateStr = query.value(0).toString();
+        QString etat = query.value(1).toString();
+        qDebug() << "Raw date from DB:" << dateStr << "| Etat:" << etat;
+
+        QDateTime dt = QDateTime::fromString(dateStr, "yyyy-MM-dd HH:mm:ss");
+        if (!dt.isValid()) {
+            dt = QDateTime::fromString(dateStr, "yyyy-MM-dd");
+        }
+        QDate date = dt.date();
+
+        if (date.isValid()) {
+            map[date].append(etat);
+            qDebug() << "Parsed date:" << date << "| Etat:" << etat;
+        } else {
+            qDebug() << "Invalid date:" << dateStr;
+        }
+    }
+    return map;
+}
+
+
 
 
 
