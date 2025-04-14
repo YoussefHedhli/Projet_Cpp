@@ -24,6 +24,7 @@ private slots:
     void on_Resume_clicked();
     void on_Pause_clicked();
     void updatePositions();
+    void on_pens_clicked();
 
 private:
     Ui::Dialog *ui;
@@ -53,6 +54,10 @@ private:
     int bluePenaltiesTaken = 0;
     int redPenaltiesTaken = 0;
     bool inSuddenDeath = false;
+    int savedBlueScore = blueScore;
+    int savedRedScore = redScore;
+    bool isMatchStarted = false;
+
 
 
 
@@ -90,6 +95,8 @@ private:
     void setupPenalty(bool isBlueTurn);
     void kickBall(bool isBlueTurn);
     void checkPenaltyShootoutState();
+    void hideMatchPlayersForPenalties();
+
 };
 
 #endif // SIMULATION_H

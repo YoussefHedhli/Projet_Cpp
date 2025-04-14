@@ -62,6 +62,11 @@ void Simulation::paintEvent(QPaintEvent *event)
 
 
 void Simulation::on_Start_clicked() {
+    if (isPenaltyShootout) return; // Don't start match if pens are on
+
+    isMatchStarted = true;
+    ui->pens->setEnabled(false);
+
     if (!isGameRunning && matchTime > 0) {  // Only allow start if time remains
         timer->start(100);
         matchTimer->start(1000);
@@ -107,19 +112,56 @@ void Simulation::updateMatchTime() {
     }
     }
 
+void Simulation::on_pens_clicked() {
+    qDebug() << "Pens button clicked!";
+
+    if (isMatchStarted) return;
+
+    isPenaltyShootout = true;
+    ui->Start->setEnabled(false);
+    startPenalties();
+}
+
+void Simulation::hideMatchPlayersForPenalties() {
+    // Hide or move all players except Player10 (blue shooter), Player15 (red shooter), and the keepers
+    QList<QLabel*> allPlayers = {
+        ui->Player1, ui->Player2, ui->Player3, ui->Player4, ui->Player5,
+        ui->Player6, ui->Player7, ui->Player8, ui->Player9, ui->Player10,
+        ui->Player11, ui->Player12, ui->Player13, ui->Player14, ui->Player15,
+        ui->Player16, ui->Player17, ui->Player18, ui->Player19, ui->Player20,
+        ui->Player21, ui->Player22
+    };
+
+    for (QLabel* player : allPlayers) {
+        player->hide();
+    }
+
+    // Show only the shooters and keepers
+    ui->Player10->show(); // blue shooter
+    ui->Player15->show(); // red shooter
+    ui->Player1->show();  // red keeper
+    ui->Player22->show(); // blue keeper
+}
+
 void Simulation::startPenalties() {
     qDebug() << "Starting penalty shootout!";
+
     bluePenGoals = 0;
     redPenGoals = 0;
     totalPenaltiesTaken = 0;
     isBluePenaltyTurn = true;
 
-    // Set displayed score to 0-0 for the shootout
+    hideMatchPlayersForPenalties(); // 👈 Add this line!
+
+    // Reset display scores
     ui->scoreb->setText("0");
     ui->scorer->setText("0");
 
-    setupPenalty(true); // Start with blue
+    setupPenalty(true);
 }
+
+
+
 
 
 
@@ -198,10 +240,6 @@ void Simulation::kickBall(bool isBlueTurn) {
     });
 }
 
-
-
-
-
 void Simulation::takePenalty(bool isBlueTurn) {
     bool isGoal = QRandomGenerator::global()->bounded(100) < 60;
 
@@ -231,24 +269,33 @@ void Simulation::checkPenaltyShootoutState() {
     int remainingBlue = 5 - bluePenaltiesTaken;
     int remainingRed = 5 - redPenaltiesTaken;
 
-    // Before sudden death: stop if one team can't catch up
+    // 🔹 Before sudden death
     if (!inSuddenDeath) {
+        // Stop early if one team can't catch up
         if ((bluePenGoals > redPenGoals + remainingRed) ||
-            (redPenGoals > bluePenGoals + remainingBlue) ||
-            (bluePenaltiesTaken == 5 && redPenaltiesTaken == 5)) {
+            (redPenGoals > bluePenGoals + remainingBlue)) {
+            showPenaltyResult();
+            return;
+        }
 
+        // If both have taken 5, and it's a draw → sudden death
+        if (bluePenaltiesTaken == 5 && redPenaltiesTaken == 5) {
             if (bluePenGoals == redPenGoals) {
                 inSuddenDeath = true;
                 qDebug() << "Entering Sudden Death!";
             } else {
-                showPenaltyResult(); // Ends it
+                showPenaltyResult();
                 return;
             }
         }
-    } else {
-        // Sudden death logic
+    }
+
+    // 🔸 In sudden death (after 5-5)
+    else {
+        // Both must take equal number of pens in sudden death
         if (bluePenaltiesTaken > 5 && redPenaltiesTaken > 5) {
-            if (bluePenGoals != redPenGoals) {
+            if (bluePenaltiesTaken == redPenaltiesTaken &&
+                bluePenGoals != redPenGoals) {
                 showPenaltyResult();
                 return;
             }
@@ -259,6 +306,7 @@ void Simulation::checkPenaltyShootoutState() {
     isBluePenaltyTurn = !isBluePenaltyTurn;
     setupPenalty(isBluePenaltyTurn);
 }
+
 
 
 
@@ -277,23 +325,23 @@ void Simulation::showFinalResult() {
     resetGame();
 }
 
-
 void Simulation::showPenaltyResult() {
-    isPenaltyShootout = false;
     QString result;
 
-    if (bluePenGoals > redPenGoals)
+    if (bluePenGoals > redPenGoals) {
         result = "Blue team wins on penalties!";
-    else if (redPenGoals > bluePenGoals)
+    } else if (redPenGoals > bluePenGoals) {
         result = "Red team wins on penalties!";
-    else
-        result = "Match ends in a draw!"; // only happens in rare cases
+    } else {
+        result = "Match ends in a draw after penalties!";
+    }
 
     qDebug() << result;
-    QMessageBox::information(nullptr, "Penalty Result", result);
-
+    // Optionally show on UI too
     resetGame();
 }
+
+
 
 
 

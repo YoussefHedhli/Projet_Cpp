@@ -858,8 +858,8 @@ QPushButton:hover {
   <widget class="QLabel" name="penalty">
    <property name="geometry">
     <rect>
-     <x>830</x>
-     <y>370</y>
+     <x>850</x>
+     <y>360</y>
      <width>63</width>
      <height>20</height>
     </rect>
@@ -897,7 +897,7 @@ QPushButton:hover {
   <widget class="QLabel" name="keeper1">
    <property name="geometry">
     <rect>
-     <x>340</x>
+     <x>350</x>
      <y>360</y>
      <width>63</width>
      <height>20</height>
@@ -905,6 +905,32 @@ QPushButton:hover {
    </property>
    <property name="text">
     <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pens">
+   <property name="geometry">
+    <rect>
+     <x>560</x>
+     <y>610</y>
+     <width>161</width>
+     <height>29</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton{
+border: 2px solid #808080;
+border-radius: 10px;
+padding: 0 8px;              /* Padding inside the button */
+    background: #808080;         /* Grey background */
+    color: white;                /* White text color */
+}
+
+QPushButton:hover {
+    background-color: #505050;   /* Darker grey on hover */
+} </string>
+   </property>
+   <property name="text">
+    <string>Go Directly to pens</string>
    </property>
   </widget>
   <zorder>label_pic</zorder>
@@ -945,6 +971,7 @@ QPushButton:hover {
   <zorder>penalty1</zorder>
   <zorder>keeper</zorder>
   <zorder>keeper1</zorder>
+  <zorder>pens</zorder>
  </widget>
  <resources/>
  <connections/>
