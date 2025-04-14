@@ -11,6 +11,16 @@
 #include <QtCharts/QChart>
 #include <QtCharts/QPieSlice>
 #include <QVBoxLayout>
+#include <QSqlTableModel>
+#include <QProcess>
+#include <QTextStream>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QDebug>
 
 
 
@@ -22,7 +32,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 afficherEquipes();
 
-    afficherStatistiquesPaysGraph();
+    afficherStatistiques();
+
 
 
     // Connexion du bouton "Ajouter" à la méthode ajouterEquipe
@@ -32,18 +43,45 @@ connect(ui->bsupp, &QPushButton::clicked, this, &MainWindow::supprimerEquipe);
 connect(ui->AFF, &QTableView::clicked, this, &MainWindow::on_AFF_clicked);
     connect(ui->Rech, &QPushButton::clicked, this, &MainWindow::rechercherEquipe);
 connect(ui->bpdf, &QPushButton::clicked, this, &MainWindow::exporterPDF);
+<<<<<<< HEAD
+
+ connect(ui->up, &QPushButton::clicked, this, &MainWindow::on_updateButton_clicked);
+ //connect(ui->AFF, &QTableView::clicked, this, &MainWindow::on_tableView_clicked);
+ //connect(ui->combotri, SIGNAL(currentIndexChanged(int)), this, SLOT(on_combotri_currentIndexChanged(int)));
+
+ // Connecter le signal de changement de texte à ta fonction d’affichage
+ connect(ui->comboTactique, &QComboBox::currentTextChanged, this, [&]() {
+     // Appel de la méthode afficherTactiqueGraphique depuis l'instance Equipe
+     equipe.afficherTactiqueGraphique(ui->comboTactique->currentText()
+, ui->label_4, {ui->l1, ui->l2, ui->l3, ui->l4, ui->l5, ui->l6, ui->l7, ui->l8, ui->l9, ui->l10, ui->l11});
+
+
+ });
+ /*connect(ui->tacticButton, &QPushButton::clicked, this, [this]() {
+     QString teamName = ui->linerech->text();  // Récupère le nom de l'équipe de l'interface utilisateur
+     getTacticFromPython(teamName);
+ });
+*/
+ // Dans le constructeur MainWindow :
+ connect(ui->combotri, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &MainWindow::onComboTriChanged);
+
+
+
+
+=======
  connect(ui->btri, &QPushButton::clicked, this, &MainWindow::on_btri_clicked);
 <<<<<<< HEAD
  connect(ui->up, &QPushButton::clicked, this, &MainWindow::on_updateButton_clicked);
 =======
 
 >>>>>>> ab0bf032062a63f601f25ec60cb258c7aea77f06
+>>>>>>> 4067b2bfdb027ba2b62b2274bf6919838bc54e25
     // Chargement des images
     QPixmap pix("C:/Users/MSI/Pictures/ft2.png");
     ui->label->setPixmap(pix.scaled(1200, 1100, Qt::KeepAspectRatio));
 
     QPixmap pix2("C:/Users/MSI/Pictures/dimensions-arcs-cercle-terrain-foot.png");
-    ui->label_31->setPixmap(pix2.scaled(450, 450, Qt::KeepAspectRatio));
+    ui->label_4->setPixmap(pix2.scaled(500, 500, Qt::KeepAspectRatio));
 
     QPixmap pix3("C:/Users/MSI/Pictures/A1.png");
     ui->label_6->setPixmap(pix3.scaled(100, 100, Qt::KeepAspectRatio));
@@ -51,43 +89,28 @@ connect(ui->bpdf, &QPushButton::clicked, this, &MainWindow::exporterPDF);
     // Affiche toutes les équipes dès l'ouverture
     afficherEquipes();
 }
+
 MainWindow::~MainWindow()
 {
     delete ui;
 }
 
-void MainWindow::ajouterEquipe() {
-
+void MainWindow::ajouterEquipe()
+{
     int id = ui->idline->text().toInt();
+    QString nom = ui->nomline->text();
+    QString pays = ui->payline->text();
+    QString tactique = ui->comboTactique->currentText(); // OU lineEdit si tu utilises un champ texte
 
-    if ( id <= 0) {
-        QMessageBox::warning(this, "Erreur", "L'ID doit être un nombre entier positif.");
-        return;
-    }
-
-    QString nom = ui->nomline->text().trimmed();
-    QString pays = ui->payline->text().trimmed();
-
-    if (nom.isEmpty() || pays.isEmpty()) {
-        QMessageBox::warning(this, "Champs vides", "Veuillez remplir tous les champs.");
-        return;
-    }
-
-    // Expression régulière mise à jour : entre 2 et 15 caractères requis
-    QRegularExpression regex("^[A-Za-zÀ-ÖØ-öø-ÿ\\s-]{2,15}$");
-    if (!regex.match(nom).hasMatch() || !regex.match(pays).hasMatch()) {
-        QMessageBox::warning(this, "Erreur", "Le nom et le pays doivent contenir entre 2 et 15 lettres uniquement.");
-        return;
-    }
-
-    Equipe e(id, nom, pays);
+    Equipe e(id, nom, pays, tactique); // ✅ Avec tactique !
     if (e.ajouter()) {
-        QMessageBox::information(this, "Succès", "L'équipe a été ajoutée avec succès !");
-        afficherEquipes();
+        QMessageBox::information(this, "Succès", "Équipe ajoutée !");
+        afficherEquipes(); // Rafraîchir le tableau
     } else {
-        QMessageBox::critical(this, "Erreur", "Échec de l'ajout de l'équipe.");
+        QMessageBox::warning(this, "Erreur", "Échec de l'ajout.");
     }
 }
+
 
 
 
@@ -140,7 +163,7 @@ void MainWindow::supprimerEquipe() {
     }
 }
 
-
+//appel de modifier
 void MainWindow::modifierEquipe() {
     // Vérifier si une ligne est sélectionnée
     QModelIndex index = ui->AFF->selectionModel()->currentIndex();
@@ -183,7 +206,10 @@ void MainWindow::modifierEquipe() {
     }
 
     // Modifier l'équipe dans la base de données
-    Equipe e(id, nom, pays);
+    QString tactique = ui->comboTactique->currentText()
+;  // Ou comboBox->currentText()
+    Equipe e(id, nom, pays, tactique);
+
     if (e.modifier(id)) {
         QMessageBox::information(this, "Succès", "L'équipe a été modifiée avec succès.");
         afficherEquipes();  // Mettre à jour l'affichage
@@ -209,259 +235,60 @@ void MainWindow::on_AFF_clicked(const QModelIndex &index) {
     // Debug : Afficher dans la console
     qDebug() << "Équipe sélectionnée - Nom:" << nom << ", Pays:" << pays;
 }
+//appel de recherche
 void MainWindow::rechercherEquipe() {
     QString recherche = ui->linerech->text().trimmed();
-ui->linerech->clear();
+    ui->linerech->clear();
+
     // Si la recherche est vide, afficher toutes les équipes
     if (recherche.isEmpty()) {
         afficherEquipes();
         return;
     }
 
-    // Préparer le modèle et la requête
-    QSqlQueryModel *model = new QSqlQueryModel();
-    QSqlQuery query;
+    // Appeler la méthode rechercherEquipe dans Equipe
+    QSqlQueryModel* model = Equipe::rechercherEquipe(recherche);
 
-    // Assurez-vous que les noms de colonnes sont corrects et insensibles à la casse
-    query.prepare("SELECT * FROM GS_EQUIPE WHERE UPPER(\"NOM_E\") LIKE UPPER(:recherche) OR UPPER(\"PAYS\") LIKE UPPER(:recherche)");
-
-    // Ajouter le paramètre avec des jokers pour une recherche partielle
-    query.bindValue(":recherche", "%" + recherche + "%");
-
-    // Exécuter la requête et vérifier les erreurs
-    if (query.exec()) {
-        model->setQuery(std::move(query));  // Utiliser std::move pour éviter l'erreur de copie
+    if (model) {
         ui->AFF->setModel(model);
-    } else {
-        QString errorMsg = "Échec de la recherche : " + query.lastError().text();
-        QMessageBox::critical(this, "Erreur", errorMsg);
-
     }
 }
-//pdf
+/*
+void MainWindow::rechercherEquipe() {
+    QString recherche = ui->linerech->text().trimmed();
+
+    QSqlQueryModel* model = Equipe::rechercherEquipe(recherche);
+
+    if (model->rowCount() == 0) {
+        QMessageBox::information(this, "Info",
+                                 "Équipe non trouvée en base. Recherche en ligne...");
+        getTacticFromWeb(recherche);
+    } else {
+        ui->AFF->setModel(model);
+    }
+}*/
+// appel pdf
 void MainWindow::exporterPDF() {
-    QString fileName = QFileDialog::getSaveFileName(this, "Exporter en PDF", "", "Fichiers PDF (*.pdf)");
-    if (fileName.isEmpty()) return;
+    // Assurez-vous que 'tableView' et 'fileName' sont correctement définis
+    equipe.exporterPDF(ui->AFF);
 
-    QPdfWriter writer(fileName);
-    writer.setPageSize(QPageSize(QPageSize::A4));
-    writer.setResolution(300);  // Améliore la qualité
-    QPainter painter(&writer);
-
-    // Charger le logo
-    QImage logo("C:/Users/MSI/Pictures/A1.png");  // Remplace par le chemin correct si nécessaire
-    if (!logo.isNull()) {
-        painter.drawImage(QRect(50, 50, 200, 200), logo);  // Ajuste la position et la taille
-    }
-
-    // Titre du PDF
-    painter.setFont(QFont("Helvetica", 20, QFont::Bold));
-    painter.drawText(QRect(0, 50, writer.width(), 100), Qt::AlignCenter, "Liste des équipes");
-
-    // Souligner le titre
-    painter.drawLine(200, 200, writer.width() - 200, 200);
-
-    // Position initiale pour le tableau
-    int x = 200;
-    int y = 300;
-    int rowHeight = 200;
-    int colWidth = 700;
-
-    // Définir la police en gras pour l'en-tête
-    painter.setFont(QFont("Helvetica", 12, QFont::Bold));
-
-    // Dessiner les bordures et centrer le texte dans chaque cellule
-    painter.drawRect(x, y, colWidth, rowHeight);
-    painter.drawText(QRect(x, y, colWidth, rowHeight), Qt::AlignCenter, "ID");
-
-    painter.drawRect(x + colWidth, y, colWidth, rowHeight);
-    painter.drawText(QRect(x + colWidth, y, colWidth, rowHeight), Qt::AlignCenter, "Nom");
-
-    painter.drawRect(x + 2 * colWidth, y, colWidth, rowHeight);
-    painter.drawText(QRect(x + 2 * colWidth, y, colWidth, rowHeight), Qt::AlignCenter, "Pays");
-
-    y += rowHeight;
-
-    // Récupérer les données du QTableView
-    QAbstractItemModel *model = ui->AFF->model();
-    if (!model) {
-        QMessageBox::warning(this, "Erreur", "Aucun modèle de données trouvé !");
-        return;
-    }
-
-    painter.setFont(QFont("Helvetica", 10));
-
-    for (int row = 0; row < model->rowCount(); ++row) {
-        QString id = model->data(model->index(row, 0)).toString();
-        QString nom = model->data(model->index(row, 1)).toString();
-        QString pays = model->data(model->index(row, 2)).toString();
-
-        // ID
-
-
-        painter.drawRect(x, y, colWidth, rowHeight);
-         painter.drawText(QRect(x, y, colWidth, rowHeight), Qt::AlignCenter, id);
-
-        // Nom
-        painter.drawRect(x + colWidth, y, colWidth, rowHeight);
-       painter.drawText(QRect(x + colWidth, y, colWidth, rowHeight), Qt::AlignCenter, nom);
-        // Pays
-        painter.drawRect(x + 2 * colWidth, y, colWidth, rowHeight);
-        painter.drawText(QRect(x + 2 * colWidth, y, colWidth, rowHeight), Qt::AlignCenter, pays);
-     y += rowHeight;
-
-        // Passe à une nouvelle page si nécessaire
-        if (y > writer.height() - 100) {
-            writer.newPage();
-            y = 200;  // Revenir en haut pour la nouvelle page
-        }
-    }
-
-
-    painter.end();
-    QMessageBox::information(this, "Succès", "Exportation PDF terminée !");
 }
 
 
-// Function to sort by ID
-void MainWindow::triParId() {
-    // Check if descending is selected
-    bool descending = ui->checkdesc->isChecked();
 
-    // SQL query to sort by ID
-    QString sql = "SELECT * FROM GS_EQUIPE ORDER BY ID_E";
-    if (descending)
-        sql += " DESC";
-
-    qDebug() << "ID Sort Query:" << sql;
-
-    QSqlQuery query;
-    if (query.exec(sql)) {
-        QSqlQueryModel *model = new QSqlQueryModel();
-        model->setQuery(query);
-        ui->AFF->setModel(model);
-    } else {
-        QMessageBox::critical(this, "Erreur", "Échec de la requête : " + query.lastError().text());
-        qDebug() << "Query Error:" << query.lastError().text();
-    }
-}
-
-// Function to sort alphabetically by NOM_E
-void MainWindow::triParAlphabet() {
-    bool descending = ui->checkdesc->isChecked();
-
-    // Compatible with SQLite and MySQL
-    QString sql = "SELECT * FROM GS_EQUIPE ORDER BY LOWER(NOM_E)";
-    if (descending) {
-        sql += " DESC";
-    }
-
-    qDebug() << "Alphabet Sort Query:" << sql;
-
-    QSqlQuery query;
-    if (query.exec(sql)) {
-        QSqlQueryModel *model = new QSqlQueryModel();
-        model->setQuery(query);
-        ui->AFF->setModel(model);
-    } else {
-        QMessageBox::critical(this, "Erreur", "Échec de la requête : " + query.lastError().text());
-        qDebug() << "Query Error:" << query.lastError().text();
-    }
-}
-
-// Sort by ID when clicking on btri
-void MainWindow::on_btri_clicked() {
-    triParId();
-}
-
-// Sort alphabetically when clicking on btri2
-void MainWindow::on_btri2_clicked() {
-    triParAlphabet();
-}
-
-//stat
-void MainWindow::afficherStatistiquesPaysGraph()
-{
-    // Créer un QPieSeries pour le graphique en secteurs
-    QPieSeries *series = new QPieSeries();
-
-    // Créer la requête SQL pour récupérer les données depuis la table GS_EQUIPE
-    QSqlQuery query;
-    query.prepare("SELECT pays, COUNT(*) FROM GS_EQUIPE GROUP BY pays");
-
-    // Exécuter la requête
-    if (!query.exec()) {
-        QMessageBox::critical(this, "Erreur SQL", "Impossible de récupérer les données : " + query.lastError().text());
-        return;
-    }
-
-    // Calculer le total des équipes
-    double totalEquipes = 0;
-    while (query.next()) {
-        int nombreEquipes = query.value(1).toInt();
-        totalEquipes += nombreEquipes;
-    }
-
-    // Revenir à la première ligne de la requête
-    query.first();
-
-    // Ajouter les résultats de la requête à la série
-    while (query.next()) {
-        QString pays = query.value(0).toString();  // Récupérer le nom du pays
-        int nombreEquipes = query.value(1).toInt();  // Récupérer le nombre d'équipes pour ce pays
-        QPieSlice *slice = series->append(pays, nombreEquipes);  // Ajouter les données à la série
-
-        // Calcul du pourcentage pour chaque pays
-        double pourcentage = (nombreEquipes / totalEquipes) * 100;
-
-        // Créer un label formaté avec le pourcentage
-        QString label = QString("%1\n%2%").arg(pays).arg(pourcentage, 0, 'f', 1); // Par exemple: "Pays A\n45.0%"
-
-        // Affecter le label avec le pourcentage
-        slice->setLabel(label);
-        slice->setLabelVisible(true); // Rendre le label visible
-
-        // Personnalisation de l'apparence du label (facultatif)
-        slice->setLabelBrush(Qt::black);  // Définir la couleur du texte du label
-    }
-
-    // Créer un graphique avec le QPieSeries
-    QChart *chart = new QChart();
-    chart->addSeries(series);
-    chart->setTitle("Répartition des équipes par pays");
-
-    // Créer un QChartView pour afficher le graphique
-    QChartView *chartView = new QChartView(chart);
-    chartView->setRenderHint(QPainter::Antialiasing);
-
-    // Créer un QLabel pour afficher le pourcentage en dehors du graphique (zone de texte)
-    QLabel *pourcentageLabel = new QLabel("Sélectionner un secteur pour voir le pourcentage", this);
-    pourcentageLabel->setAlignment(Qt::AlignCenter);
-
-    // Connecter un signal pour détecter la sélection d'un secteur
-    connect(series, &QPieSeries::clicked, [this, pourcentageLabel, totalEquipes](QPieSlice *slice) {
-        // Récupérer le nombre d'équipes pour le pays du slice sélectionné
-        int nombreEquipes = slice->value();
-
-        // Calculer le pourcentage
-        double pourcentage = (nombreEquipes / totalEquipes) * 100;
-
-        // Mettre à jour le label avec le pourcentage
-        QString label = QString("Pourcentage de %1: %2%").arg(slice->label()).arg(pourcentage, 0, 'f', 1);
-        pourcentageLabel->setText(label); // Afficher le pourcentage dans la zone de texte
-    });
-
-    // Accéder à la QFrame dans laquelle afficher le graphique (par exemple frameStatistiques)
+//appel stat
+void MainWindow::afficherStatistiques() {
+    // Trouver la QFrame où afficher les statistiques (par exemple, "stat")
     QFrame *stat = findChild<QFrame*>("stat");
     if (stat) {
-        QVBoxLayout *layout = new QVBoxLayout();
-        layout->addWidget(chartView);
-        layout->addWidget(pourcentageLabel); // Ajouter le label en dessous du graphique
-        stat->setLayout(layout); // Ajouter le QChartView et le QLabe au layout de la QFrame
+        // Appeler la méthode de Equipe pour afficher les statistiques dans cette QFrame
+        Equipe::afficherStatistiquesPaysGraph(stat);
     } else {
         QMessageBox::critical(this, "Erreur", "La frame pour les statistiques n'a pas été trouvée.");
     }
 }
+<<<<<<< HEAD
+=======
 <<<<<<< HEAD
 //etat de forme
 void MainWindow::on_updateButton_clicked()
@@ -476,60 +303,39 @@ void MainWindow::on_updateButton_clicked()
         db.setUserName("projet");
         db.setPassword("remontada");
     }
+>>>>>>> 4067b2bfdb027ba2b62b2274bf6919838bc54e25
 
-    // Vérifier si la connexion s'ouvre correctement
-    if (!db.open()) {
-        QMessageBox::warning(this, "Erreur", "Impossible de se connecter à la base de données");
-        return;
-    }
 
-    // Préparer la requête SQL avec protection contre la division par zéro
-    QSqlQuery query;
-    query.prepare("SELECT IDEQUIPE_P, "
-                  "COUNT(CASE WHEN SCORE = 'V' THEN 1 END) AS Victoires, "
-                  "COUNT(CASE WHEN SCORE = 'N' THEN 1 END) AS Nuls, "
-                  "COUNT(CASE WHEN SCORE = 'D' THEN 1 END) AS Defaites, "
-                  "(COUNT(CASE WHEN SCORE = 'V' THEN 1 END) * 3 + COUNT(CASE WHEN SCORE = 'N' THEN 1 END)) / "
-                  "NULLIF(COUNT(CASE WHEN SCORE IN ('V', 'N', 'D') THEN 1 END), 0) AS Forme "
-                  "FROM participer "
-                  "GROUP BY IDEQUIPE_P");
+//appel etat de forme
 
-    // Exécuter la requête et vérifier les erreurs
-    if (!query.exec()) {
-        QMessageBox::warning(this, "Erreur", "Erreur dans l'exécution de la requête : " + query.lastError().text());
-        return;
-    }
+void MainWindow::on_updateButton_clicked() {
+    // Créer une instance de la classe Equipe
+    Equipe equipe;
+
+    // Récupérer les résultats de l'état de forme
+    QList<QList<QVariant>> resultats = equipe.calculerEtatDeForme();
 
     // Nettoyer le tableau avant de le remplir
     ui->table->clearContents();
     ui->table->setRowCount(0);
 
-    // Variables pour calculer la forme moyenne
-    double totalForme = 0;
-    int countForme = 0;
-
     // Ajouter les nouvelles données au QTableWidget
     int row = 0;
-    while (query.next()) {
+    for (const auto& ligne : resultats) {
         ui->table->insertRow(row);
-        ui->table->setItem(row, 0, new QTableWidgetItem(query.value(0).toString()));  // IDEQUIPE_P
-        ui->table->setItem(row, 1, new QTableWidgetItem(query.value(1).toString()));  // Victoires
-        ui->table->setItem(row, 2, new QTableWidgetItem(query.value(2).toString()));  // Nuls
-        ui->table->setItem(row, 3, new QTableWidgetItem(query.value(3).toString()));  // Defaites
-        ui->table->setItem(row, 4, new QTableWidgetItem(query.value(4).toString()));  // Forme
-
-        // Calculer la forme moyenne
-        totalForme += query.value(4).toDouble();
-        countForme++;
-
+        ui->table->setItem(row, 0, new QTableWidgetItem(ligne[0].toString()));  // IDEQUIPE_P
+        ui->table->setItem(row, 1, new QTableWidgetItem(ligne[1].toString()));  // Victoires
+        ui->table->setItem(row, 2, new QTableWidgetItem(ligne[2].toString()));  // Nuls
+        ui->table->setItem(row, 3, new QTableWidgetItem(ligne[3].toString()));  // Defaites
+        ui->table->setItem(row, 4, new QTableWidgetItem(ligne[4].toString()));  // Forme
         row++;
     }
 
-    // Vérifier s'il y a des résultats
-    if (row > 0 && countForme > 0) {
-        double formeMoyenne = totalForme / countForme;
-        QString formeText = "Forme moyenne: " + QString::number(formeMoyenne, 'f', 2);
-        qDebug() << "Valeur de Forme moyenne:" << formeMoyenne; // Debug
+    // Calculer la forme moyenne
+    double formeMoyenne = equipe.calculerFormeMoyenne(resultats);
+    QString formeText = "Forme moyenne: " + QString::number(formeMoyenne, 'f', 2);
+
+    if (row > 0) {
         ui->lforme->setText(formeText);
     } else {
         ui->lforme->setText("Aucune donnée disponible");
@@ -538,5 +344,130 @@ void MainWindow::on_updateButton_clicked()
     qDebug() << "Connexion réussie.";
     qDebug() << "Requête exécutée.";
 }
+<<<<<<< HEAD
+
+//appel tactique
+void MainWindow::on_btnTactique_clicked()
+{
+    QString tactiqueChoisie = ui->comboTactique->currentText();
+
+    // Créer une instance de la classe Equipe
+    Equipe equipe;
+
+    // Créer une liste des labels des joueurs
+    QList<QLabel*> joueurs = {
+        ui->l1, ui->l2, ui->l3, ui->l4, ui->l5, ui->l6, ui->l7, ui->l8, ui->l9, ui->l10, ui->l11
+    };
+
+    // Appeler la méthode pour afficher la tactique
+    equipe.afficherTactiqueGraphique(tactiqueChoisie, ui->label_4, joueurs);
+}
+void MainWindow::onComboTriChanged(int index) {
+    QString selectedText = ui->combotri->itemText(index);
+    Equipe e;
+    QSqlQueryModel* model = nullptr;
+
+    if (selectedText == "Tri par ID (croissant)") {
+        model = e.trierParId(true);  // Utilise votre méthode existante
+    }
+    else if (selectedText == "Tri par ID (décroissant)") {
+        model = e.trierParId(false);
+    }
+    else if (selectedText == "Tri alphabétique (A-Z)") {
+        model = e.triParAlphabet(true);
+    }
+    else if (selectedText == "Tri alphabétique (Z-A)") {
+        model = e.triParAlphabet(false);
+    }
+
+    if (model) {
+        ui->AFF->setModel(model);
+    }
+}
+/*
+void MainWindow::getTacticFromPython(const QString& teamName)
+{
+    // Créer un QProcess pour exécuter le script Python
+    QProcess *process = new QProcess(this);
+
+    // Définir le chemin vers Python et le script
+    QString program = "python"; // Ou "python3" si nécessaire
+    QStringList arguments;
+    arguments << "C:/chemin/vers/free_football_tactics.py" << teamName;  // Met le chemin complet vers ton fichier Python
+
+    // Exécuter le processus
+    process->start(program, arguments);
+    process->waitForFinished();
+
+    // Lire la sortie du processus
+    QString output = process->readAllStandardOutput();
+
+    // Afficher la sortie dans un QLabel ou une QTextEdit (par exemple)
+    ui->tacticsDisplay->setText(output);  // `tacticsDisplay` étant un QLabel ou un QTextEdit dans ton interface utilisateur
+}
+
+void MainWindow::getTacticFromWeb(const QString& teamName) {
+    // Appelle uniquement la fonction de scraping
+    scrapeTransfermarkt(teamName);
+}
+
+
+
+
+void MainWindow::scrapeTransfermarkt(const QString& teamName) {
+    QString formattedName = teamName.toLower().replace(' ', '-');
+    QString url = "https://www.transfermarkt.com/" + formattedName + "/startseite/verein/";
+
+    QProcess pythonScript;
+    QString scriptPath = QCoreApplication::applicationDirPath() + "/scrape_tactics.py";
+
+    // Vérifier que le script existe
+    if (!QFile::exists(scriptPath)) {
+        qDebug() << "Erreur: Fichier Python introuvable" << scriptPath;
+        ui->labelTactique->setText("Erreur: Script manquant");
+        return;
+    }
+
+    pythonScript.start("python", QStringList() << scriptPath << url);
+
+    if (!pythonScript.waitForStarted(3000)) {
+        qDebug() << "Erreur démarrage:" << pythonScript.errorString();
+        ui->labelTactique->setText("Erreur démarrage Python");
+        return;
+    }
+
+    if (!pythonScript.waitForFinished(10000)) { // Timeout de 10s
+        qDebug() << "Timeout script Python";
+        pythonScript.kill();
+        ui->labelTactique->setText("Timeout script");
+        return;
+    }
+
+    QString output = pythonScript.readAllStandardOutput().trimmed();
+    QString error = pythonScript.readAllStandardError().trimmed();
+
+    if (!error.isEmpty()) {
+        qDebug() << "Erreur Python:" << error;
+    }
+
+    if (!output.isEmpty() && output != "4-4-2") {
+        ui->labelTactique->setText("Formation: " + output);
+        qDebug() << "Formation trouvée:" << output;
+
+        // Mettre à jour la comboBox si nécessaire
+        int index = ui->comboTactique->findText(output);
+        if (index >= 0) {
+            ui->comboTactique->setCurrentIndex(index);
+        }
+    } else {
+        ui->labelTactique->setText("Formation par défaut: 4-4-2");
+        ui->comboTactique->setCurrentText("4-4-2");
+        qDebug() << "Utilisation formation par défaut";
+    }
+}
+*/
+
+=======
 =======
 >>>>>>> ab0bf032062a63f601f25ec60cb258c7aea77f06
+>>>>>>> 4067b2bfdb027ba2b62b2274bf6919838bc54e25
