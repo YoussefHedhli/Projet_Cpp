@@ -1,7 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 #include <QTableView>
-
+#include "Equipe.h"
 #include <QMainWindow>
 #include <QSqlDatabase>
 #include <QSqlQuery>
@@ -13,8 +13,8 @@
 #include <QtCharts/QBarSeries>
 #include <QtCharts/QChart>
 #include <QtCharts/QBarCategoryAxis>
-
-
+#include <QComboBox>
+#include <QPixmap>
 
 
 namespace Ui {
@@ -28,6 +28,11 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    // mainwindow.h
+public slots:
+    void exporterPDF();
+
+    //void on_tableView_clicked(const QModelIndex &index);
 
 private slots:
     void ajouterEquipe();
@@ -36,20 +41,42 @@ private slots:
      void modifierEquipe();
      void on_AFF_clicked(const QModelIndex &index);
      void rechercherEquipe();
+
+     //void exporterPDF();
+
+    void on_updateButton_clicked();
+
      void exporterPDF();
      void triParId();            // Sort by ID (ascending/descending)
      void triParAlphabet();      // Sort alphabetically (ascending/descending)
-<<<<<<< HEAD
-void on_updateButton_clicked();
-=======
 
->>>>>>> ab0bf032062a63f601f25ec60cb258c7aea77f06
+void on_updateButton_clicked();
+
      // Button click handlers
-     void on_btri_clicked();     //  triParId() when clicking "btri"
-     void on_btri2_clicked();
-void afficherStatistiquesPaysGraph();
+
+     void afficherStatistiques();
+     //void on_btnRecommander_clicked(); // Bouton recommander
+
+    //void on_btnRecommander_clicked1();
+      void onComboTriChanged(int index);
+
+
+     // void getTacticFromPython(const QString& teamName);
+      //void getTacticFromWeb(const QString& teamName);
+      //void scrapeTransfermarkt(const QString& teamName);
+
+
+
+
 private:
     Ui::MainWindow *ui;
+    QString nom;
+    Equipe equipe;
+void on_combotri_currentIndexChanged(int index);
+
+void trierEquipes(const QString &critere);
+    void on_btnTactique_clicked();
+    void on_comboTrii_currentIndexChanged(const QString &tri);
 
 
 };
