@@ -41,16 +41,22 @@ MainWindow::MainWindow(QWidget *parent)
     } else {
         QMessageBox::critical(this, "Database", "Échec de connexion !");
     }
-
+    ui->tri->addItem("ID Ascending");
+    ui->tri->addItem("ID Descending");
+    ui->tri->addItem("A-Z");
+    ui->tri->addItem("Z-A");
+    ui->tri->addItem("Date Ascending");
+    ui->tri->addItem("Date Descending");
+    connect(ui->tri, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &MainWindow::onSortOptionChanged);
     connect(ui->btnAjouter, &QPushButton::clicked, this, &MainWindow::addMatchToDatabase);
     connect(ui->btnSupprimer, &QPushButton::clicked, this, &MainWindow::deleteMatch);
     connect(ui->btnModifier, &QPushButton::clicked, this, &MainWindow::modifyMatch);
     connect(ui->tableWidget, &QTableWidget::itemSelectionChanged, this, &MainWindow::on_tableWidget_itemSelectionChanged);
     connect(ui->recherche, &QPushButton::clicked, this, &MainWindow::searchMatch);
-    connect(ui->tri, &QPushButton::clicked, this, &MainWindow::sortMatchesByID);
     connect(ui->pdfButton, &QPushButton::clicked, this, &MainWindow::generatePDF);
     connect(ui->sim, &QPushButton::clicked, this, &MainWindow::on_sim_clicked);
     connect(ui->calendar, &QCalendarWidget::clicked, this, &MainWindow::onCalendarDateSelected);
+    connect(ui->calendar, &QCalendarWidget::clicked, this, &MainWindow::onCalendarDateHovered);
     updateMatchDisplay();
     displayStatistics();
     highlightMatchDates();
@@ -222,9 +228,11 @@ void MainWindow::searchMatch() {
     }
 }
 
-void MainWindow::sortMatchesByID() {
-    QVector<QVector<QString>> data = m.trierParID();
+void MainWindow::sortMatches(const QString& sortOption) {
+    // Call the trierPar function with the selected sorting option to get the sorted data
+    QVector<QVector<QString>> data = m.trierPar(sortOption);
 
+    // Update the UI with the sorted data
     ui->tableWidget->setRowCount(data.size());
     ui->tableWidget->setColumnCount(6);
     ui->tableWidget->setHorizontalHeaderLabels({"ID", "Equipe 1", "Equipe 2", "Date", "Lieu", "État"});
@@ -235,6 +243,26 @@ void MainWindow::sortMatchesByID() {
         }
     }
 }
+    void MainWindow::onSortOptionChanged(int index) {
+        // Get the current sorting option from the ComboBox
+        QString sortOption = ui->tri->currentText();
+
+        // Call the trierPar function with the selected sorting option
+        QVector<QVector<QString>> data = m.trierPar(sortOption);
+
+        // Update the table with sorted data
+        ui->tableWidget->setRowCount(data.size());
+        ui->tableWidget->setColumnCount(6);  // Ensure the table has 6 columns
+        ui->tableWidget->setHorizontalHeaderLabels({"ID", "Equipe 1", "Equipe 2", "Date", "Lieu", "État"});
+
+        // Fill the table with sorted data
+        for (int row = 0; row < data.size(); ++row) {
+            for (int col = 0; col < 6; ++col) {
+                ui->tableWidget->setItem(row, col, new QTableWidgetItem(data[row][col]));
+            }
+        }
+    }
+
 void MainWindow::generatePDF() {
     QString filePath = QDir::currentPath() + "/matches_list.pdf";
     QPdfWriter writer(filePath);
@@ -438,36 +466,61 @@ void MainWindow::onCalendarDateSelected(const QDate &date) {
 
 void MainWindow::highlightMatchDates() {
     qDebug() << "Highlighting match dates...";
-    QMap<QDate, QList<QString>> etatsPerDate = m.getMatchStatesPerDate();
 
-    for (auto it = etatsPerDate.begin(); it != etatsPerDate.end(); ++it) {
-        const QDate& date = it.key();
-        const QList<QString>& etats = it.value();
+    // Iterate through each date with matches
+    for (int i = 0; i < ui->calendar->selectedDate().daysInMonth(); ++i) {
+        QDate currentDate = ui->calendar->selectedDate().addDays(i);
 
-        // Normalize etats: trim and convert to lowercase
-        QList<QString> normalizedEtats;
-        for (const QString &etat : etats) {
-            normalizedEtats.append(etat.trimmed().toLower());
+        // Highlighting the dates based on the match state
+        QMap<QDate, QList<QString>> etatsPerDate = m.getMatchStatesPerDate();
+
+        // Normalize etats and assign color
+        for (auto it = etatsPerDate.begin(); it != etatsPerDate.end(); ++it) {
+            const QDate& date = it.key();
+            const QList<QString>& etats = it.value();
+            QList<QString> normalizedEtats;
+            for (const QString &etat : etats) {
+                normalizedEtats.append(etat.trimmed().toLower());
+            }
+
+            QColor color;
+            if (normalizedEtats.contains("postponed")) {
+                color = Qt::gray;
+            } else if (normalizedEtats.contains("didn't start")) {
+                color = Qt::red;
+            } else if (normalizedEtats.contains("started")) {
+                color = Qt::blue;
+            } else if (normalizedEtats.contains("ended")) {
+                color = Qt::green;
+            } else {
+                continue;
+            }
+
+            QTextCharFormat format;
+            format.setBackground(color);
+            ui->calendar->setDateTextFormat(date, format);
+
+            qDebug() << "Date:" << date.toString("yyyy-MM-dd") << "Etats:" << normalizedEtats;
         }
+    }
+}
 
-        QColor color;
-        if (normalizedEtats.contains("postponed")) {
-            color = Qt::gray;
-        } else if (normalizedEtats.contains("didn't start")) {
-            color = Qt::red;
-        } else if (normalizedEtats.contains("started")) {
-            color = Qt::blue;
-        } else if (normalizedEtats.contains("ended")) {
-            color = Qt::green;
-        } else {
-            continue;
+void MainWindow::onCalendarDateHovered(const QDate &date) {
+    // Query the database for the match info for the hovered date
+    QVector<QVector<QString>> data = m.getMatchesByDate(date.toString("yyyy-MM-dd"));
+
+    if (!data.isEmpty()) {
+        QString matchInfo;
+        for (const QVector<QString>& match : data) {
+            QString equipe1 = match[1];  // Team 1
+            QString equipe2 = match[2];  // Team 2
+            QString time = match[3];     // Time
+            matchInfo += QString("Match: %1 vs %2 – %3\n").arg(equipe1).arg(equipe2).arg(time);
         }
-
-        QTextCharFormat format;
-        format.setBackground(color);
-        ui->calendar->setDateTextFormat(date, format);
-
-        qDebug() << "Date:" << date.toString("yyyy-MM-dd") << "Etats:" << normalizedEtats;
+        // Show the match info as a tooltip on hover
+        ui->calendar->setToolTip(matchInfo);
+    } else {
+        ui->calendar->setToolTip("No matches on this date.");
     }
 }
 

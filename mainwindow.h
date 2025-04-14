@@ -6,6 +6,7 @@
 #include <QtCharts>
 
 
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -29,12 +30,14 @@ private slots:
     void modifyMatch();
     void on_tableWidget_itemSelectionChanged(); // Slot declaration for item selection change
     void searchMatch();
-    void sortMatchesByID();
+    void sortMatches(const QString& sortOption);
     void generatePDF();
     void displayStatistics();
     void on_sim_clicked();
     void onCalendarDateSelected(const QDate &date);
     void highlightMatchDates();
+    void onSortOptionChanged(int index);
+    void onCalendarDateHovered(const QDate &date);
 
 
 private:

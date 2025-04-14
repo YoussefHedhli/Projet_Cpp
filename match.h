@@ -22,7 +22,7 @@ public:
     bool supprimer(int);
     QVector<QVector<QString>> afficher();
     QVector<QVector<QString>> rechercher(QString team);
-    QVector<QVector<QString>> trierParID();
+    QVector<QVector<QString>> trierPar(const QString& sortOption);
     bool modifier(int id);
 
     // Getters & Setters

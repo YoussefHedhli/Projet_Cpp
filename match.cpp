@@ -85,8 +85,27 @@ QVector<QVector<QString>> Match::afficher() {
 }
 
 
-QVector<QVector<QString>> Match::trierParID() {
-    QSqlQuery query("SELECT ID_M, EQUIPE1, EQUIPE2, DATEM, LIEU, ETAT FROM GS_MATCH ORDER BY ID_M ASC");
+QVector<QVector<QString>> Match::trierPar(const QString& sortOption) {
+    QString orderByClause;
+
+    // Determine the sorting order based on the selected option
+    if (sortOption == "ID Ascending") {
+        orderByClause = "ORDER BY ID_M ASC";
+    } else if (sortOption == "ID Descending") {
+        orderByClause = "ORDER BY ID_M DESC";
+    } else if (sortOption == "A-Z") {
+        orderByClause = "ORDER BY EQUIPE1 ASC";  // Sort by Team 1 (Equipe 1)
+    } else if (sortOption == "Z-A") {
+        orderByClause = "ORDER BY EQUIPE1 DESC";  // Sort by Team 1 (Equipe 1)
+    } else if (sortOption == "Date Ascending") {
+        orderByClause = "ORDER BY DATEM ASC";  // Sort by Date
+    } else if (sortOption == "Date Descending") {
+        orderByClause = "ORDER BY DATEM DESC";  // Sort by Date
+    }
+
+    // Construct the SQL query with dynamic ORDER BY clause
+    QString queryStr = QString("SELECT ID_M, EQUIPE1, EQUIPE2, DATEM, LIEU, ETAT FROM GS_MATCH %1").arg(orderByClause);
+    QSqlQuery query(queryStr);
 
     QVector<QVector<QString>> data;
     while (query.next()) {
@@ -101,6 +120,7 @@ QVector<QVector<QString>> Match::trierParID() {
     }
     return data;
 }
+
 
 
 bool Match::modifier(int id) {

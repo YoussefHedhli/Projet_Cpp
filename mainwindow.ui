@@ -581,33 +581,6 @@ QPushButton:hover {
      <string>Recherche</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="tri">
-    <property name="geometry">
-     <rect>
-      <x>550</x>
-      <y>90</y>
-      <width>83</width>
-      <height>29</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QPushButton {
-    border: 2px solid #808080;   /* Grey border */
-    border-radius: 10px;         /* Round the corners */
-    padding: 0 8px;              /* Padding inside the button */
-    background: #808080;         /* Grey background */
-    color: white;                /* White text color */
-}
-
-QPushButton:hover {
-    background-color: #505050;   /* Darker grey on hover */
-}
-</string>
-    </property>
-    <property name="text">
-     <string>Tri par ID</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="btnModifier">
     <property name="geometry">
      <rect>
@@ -747,6 +720,16 @@ QPushButton:hover {
      </rect>
     </property>
    </widget>
+   <widget class="QComboBox" name="tri">
+    <property name="geometry">
+     <rect>
+      <x>550</x>
+      <y>90</y>
+      <width>82</width>
+      <height>28</height>
+     </rect>
+    </property>
+   </widget>
    <zorder>label_8</zorder>
    <zorder>label_pic</zorder>
    <zorder>Mailing</zorder>
@@ -754,13 +737,13 @@ QPushButton:hover {
    <zorder>frame</zorder>
    <zorder>btnSupprimer</zorder>
    <zorder>recherche</zorder>
-   <zorder>tri</zorder>
    <zorder>btnModifier</zorder>
    <zorder>tableWidget</zorder>
    <zorder>formulere</zorder>
    <zorder>rechtxt</zorder>
    <zorder>calendar</zorder>
    <zorder>stat</zorder>
+   <zorder>tri</zorder>
   </widget>
  </widget>
  <resources/>
