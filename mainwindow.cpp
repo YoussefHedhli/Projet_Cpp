@@ -24,16 +24,28 @@
 #include <numeric> // For std::accumulate
 #include "simulation.h"
 
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::MainWindow) {
+MainWindow::MainWindow(Arduino* a, QWidget *parent)
+    : QMainWindow(parent),
+    ui(new Ui::MainWindow),
+    arduino(a)  // Save the pointer
+{
+    qDebug() << "MainWindow: Constructor called.";
     ui->setupUi(this);
     displayStatistics();  
     QTextCharFormat testFormat;
     testFormat.setBackground(Qt::yellow);
     ui->calendar->setDateTextFormat(QDate::currentDate(), testFormat); // test highlight today
 
-
-
+   /* arduino = new Arduino();
+    int status = arduino->connect_arduino();
+    if (status == 0) {
+        qDebug() << "Arduino connected successfully.";
+    } else {
+        qDebug() << "Arduino connection failed.";
+        // Optional: show warning message, but DON'T exit or stop the app
+        QMessageBox::warning(this, "Arduino", "Connexion Arduino échouée.\nL'application va continuer sans Arduino.");
+    }
+*/
     Connection c;
     bool connectionSuccess = c.createconnect();
     if (connectionSuccess) {
@@ -73,9 +85,10 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::on_sim_clicked() {
-    Simulation *simulationWindow = new Simulation(this);
+    Simulation *simulationWindow = new Simulation(arduino, this);  // Pass the Arduino pointer
     simulationWindow->exec();  // Open as a modal dialog
 }
+
 
     void MainWindow::paintEvent(QPaintEvent *event)
 {

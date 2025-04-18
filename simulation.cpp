@@ -6,13 +6,15 @@
 #include <QMessageBox>
 #include <QSerialPort>
 #include <QSerialPortInfo>
-//#include "arduino.h"
+#include "arduino.h"
 
 
 
-Simulation::Simulation(QWidget *parent) :
+Simulation::Simulation(Arduino* a, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Dialog),
+    serialPort(nullptr), // assign passed Arduino pointer here
+    arduino(a),
     isPaused(false),
     isGameRunning(false),
     blueScore(0),
@@ -25,8 +27,6 @@ Simulation::Simulation(QWidget *parent) :
 
 {
     ui->setupUi(this);
-    arduino = nullptr;
-    serialPort = nullptr;
     ui->FieldLabel->setStyleSheet("border-image: url(C:/Users/AMEN WORKSTATION/Downloads/360_F_293127241_bMzrEAk3zhehEnsLw6y4k3HfFewopUPG.jpg);");
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &Simulation::updatePositions);
@@ -34,8 +34,12 @@ Simulation::Simulation(QWidget *parent) :
     matchTimer = new QTimer(this);
     connect(matchTimer, &QTimer::timeout, this, &Simulation::updateMatchTime);  
     matchTime = 15;  // Set match duration to 15 seconds
-    ui->chrono->display(matchTime); // Initialize LCD display
-
+    ui->chrono->display(matchTime);// Initialize LCD display
+    if (arduino && arduino->getserial()->isOpen()) {
+        qDebug() << "Simulation: Using shared Arduino instance (connected).";
+    } else {
+        qDebug() << "Simulation: Arduino instance not connected.";
+    }
 }
 
 Simulation::~Simulation() {
@@ -65,37 +69,15 @@ void Simulation::paintEvent(QPaintEvent *event)
     QDialog::paintEvent(event);  // Ensure the parent class paintEvent is called
 }
 void Simulation::initSerial() {
-    // Check if the Arduino connection is already established
     if (arduino && arduino->getserial()->isOpen()) {
         qDebug() << "Arduino already connected and serial port is open.";
-        return;  // No need to connect again
+        return;  // ✅ Already connected, do nothing
     }
 
-    qDebug() << "Searching for available serial ports...";
-    foreach (const QSerialPortInfo &info, QSerialPortInfo::availablePorts()) {
-        qDebug() << "Port Name:" << info.portName()
-        << "| Description:" << info.description()
-        << "| Manufacturer:" << info.manufacturer();
-    }
-
-    // Only initialize the Arduino object if it's not already initialized
-    if (!arduino) {
-        arduino = new Arduino();
-    }
-
-    // Try connecting only if the serial port is not open
-    if (!arduino->getserial()->isOpen()) {
-        int connectStatus = arduino->connect_arduino();
-
-        if (connectStatus == 0) {
-            qDebug() << "Arduino connected successfully on port:" << arduino->getarduino_port_name();
-        } else if (connectStatus == 1) {
-            qDebug() << "Failed to connect to Arduino: Could not open serial port.";
-        } else if (connectStatus == -1) {
-            qDebug() << "Arduino not available (vendor/product ID mismatch).";
-        }
-    }
+    qDebug() << "Serial port not open in Simulation. No reconnection attempted.";
+    // ❌ Do NOT attempt to connect here again. Just skip.
 }
+
 
 
 void Simulation::updateLCD() {
@@ -111,15 +93,12 @@ void Simulation::updateLCD() {
 
     // Send the data to Arduino using Arduino class
     if (arduino && arduino->getserial()->isOpen()) {
-        arduino->write_to_arduino(fullText.toUtf8());
+        arduino->write_to_arduino((fullText + "\n").toUtf8());
         qDebug() << "Sent to Arduino:" << fullText;  // Debug message to verify data sent
     } else {
         qDebug() << "Error: Serial port is not open.";
     }
 }
-
-
-
 
 void Simulation::stopUpdating() {
     if (timer) {
@@ -157,6 +136,7 @@ void Simulation::updateMatchTime() {
     if (matchTime > 0) {
         matchTime--;
         ui->chrono->display(matchTime);
+        updateLCD();
     }
 
     if (matchTime == 0) {
@@ -168,6 +148,7 @@ void Simulation::updateMatchTime() {
             currentHalf = 2;
             matchTime = 15;
             ui->chrono->display(matchTime);
+            updateLCD();
             resetGame();
             QTimer::singleShot(2000, [this]() {
                 qDebug() << "Starting second half!";

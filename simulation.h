@@ -18,7 +18,7 @@ class Simulation : public QDialog
     Q_OBJECT
 
 public:
-    explicit Simulation(QWidget *parent = nullptr);
+    explicit Simulation(Arduino* a, QWidget *parent = nullptr);
     ~Simulation();
 
 private slots:
@@ -32,7 +32,7 @@ private:
     Ui::Dialog *ui;
     QPushButton *Start;
     QSerialPort *serialPort;
-    Arduino *arduino = nullptr;  // Already done? Just make sure it's initialized to nullptr
+    Arduino *arduino;  // Already done? Just make sure it's initialized to nullptr
     QTimer *timer;
     bool isPaused;
     bool isGameRunning;

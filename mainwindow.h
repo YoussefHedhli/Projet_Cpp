@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "match.h"
 #include <QtCharts>
+#include "arduino.h"
 
 
 
@@ -18,7 +19,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = nullptr);
+    explicit MainWindow(Arduino* a , QWidget *parent = nullptr);
     ~MainWindow();
 
 private slots:
@@ -43,6 +44,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     Match m;
+    Arduino* arduino;
 };
 
 #endif // MAINWINDOW_H
