@@ -4,6 +4,10 @@
 #include <QDebug>
 #include <QSoundEffect>
 #include <QMessageBox>
+#include <QSerialPort>
+#include <QSerialPortInfo>
+//#include "arduino.h"
+
 
 
 Simulation::Simulation(QWidget *parent) :
@@ -21,12 +25,14 @@ Simulation::Simulation(QWidget *parent) :
 
 {
     ui->setupUi(this);
+    arduino = nullptr;
+    serialPort = nullptr;
     ui->FieldLabel->setStyleSheet("border-image: url(C:/Users/AMEN WORKSTATION/Downloads/360_F_293127241_bMzrEAk3zhehEnsLw6y4k3HfFewopUPG.jpg);");
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &Simulation::updatePositions);
     saveInitialPositions();
     matchTimer = new QTimer(this);
-    connect(matchTimer, &QTimer::timeout, this, &Simulation::updateMatchTime);
+    connect(matchTimer, &QTimer::timeout, this, &Simulation::updateMatchTime);  
     matchTime = 15;  // Set match duration to 15 seconds
     ui->chrono->display(matchTime); // Initialize LCD display
 
@@ -58,23 +64,95 @@ void Simulation::paintEvent(QPaintEvent *event)
     // Optionally, you can also use QPainter for other custom drawing if needed
     QDialog::paintEvent(event);  // Ensure the parent class paintEvent is called
 }
+void Simulation::initSerial() {
+    // Check if the Arduino connection is already established
+    if (arduino && arduino->getserial()->isOpen()) {
+        qDebug() << "Arduino already connected and serial port is open.";
+        return;  // No need to connect again
+    }
+
+    qDebug() << "Searching for available serial ports...";
+    foreach (const QSerialPortInfo &info, QSerialPortInfo::availablePorts()) {
+        qDebug() << "Port Name:" << info.portName()
+        << "| Description:" << info.description()
+        << "| Manufacturer:" << info.manufacturer();
+    }
+
+    // Only initialize the Arduino object if it's not already initialized
+    if (!arduino) {
+        arduino = new Arduino();
+    }
+
+    // Try connecting only if the serial port is not open
+    if (!arduino->getserial()->isOpen()) {
+        int connectStatus = arduino->connect_arduino();
+
+        if (connectStatus == 0) {
+            qDebug() << "Arduino connected successfully on port:" << arduino->getarduino_port_name();
+        } else if (connectStatus == 1) {
+            qDebug() << "Failed to connect to Arduino: Could not open serial port.";
+        } else if (connectStatus == -1) {
+            qDebug() << "Arduino not available (vendor/product ID mismatch).";
+        }
+    }
+}
+
+
+void Simulation::updateLCD() {
+    // Format the score and time data
+    QString scoreLine = "Blue: " + QString::number(blueScore) + " Red: " + QString::number(redScore);
+    int minutes = matchTime / 60;
+    int seconds = matchTime % 60;
+    QString timeLine = QString("%1:%2")
+                           .arg(minutes, 2, 10, QChar('0'))
+                           .arg(seconds, 2, 10, QChar('0'));
+
+    QString fullText = scoreLine + "|" + timeLine;
+
+    // Send the data to Arduino using Arduino class
+    if (arduino && arduino->getserial()->isOpen()) {
+        arduino->write_to_arduino(fullText.toUtf8());
+        qDebug() << "Sent to Arduino:" << fullText;  // Debug message to verify data sent
+    } else {
+        qDebug() << "Error: Serial port is not open.";
+    }
+}
 
 
 
+
+void Simulation::stopUpdating() {
+    if (timer) {
+        timer->stop();
+        qDebug() << "Stopped timer.";
+    }
+
+    if (arduino) {
+        arduino->close_arduino();
+        qDebug() << "Closed Arduino connection.";
+    }
+}
 void Simulation::on_Start_clicked() {
+    qDebug() << "Start button clicked.";
+
     if (isPenaltyShootout) return; // Don't start match if pens are on
 
     isMatchStarted = true;
     ui->pens->setEnabled(false);
 
     if (!isGameRunning && matchTime > 0) {  // Only allow start if time remains
+        qDebug() << "Starting the game.";
         timer->start(100);
         matchTimer->start(1000);
         isGameRunning = true;
         isPaused = false;
-        qDebug() << "Game starting!";
+        qDebug() << "Game started!";
     }
+
+    initSerial();  // Initialize serial communication if needed
 }
+
+
 void Simulation::updateMatchTime() {
     if (matchTime > 0) {
         matchTime--;
@@ -159,11 +237,6 @@ void Simulation::startPenalties() {
 
     setupPenalty(true);
 }
-
-
-
-
-
 
 void Simulation::setupPenalty(bool isBlueTurn) {
     if (isBlueTurn) {
@@ -340,12 +413,6 @@ void Simulation::showPenaltyResult() {
     // Optionally show on UI too
     resetGame();
 }
-
-
-
-
-
-
 void Simulation::on_Resume_clicked() {
     isPaused = false;
     qDebug() << "Game resumed!";
@@ -362,7 +429,7 @@ void Simulation::updatePositions() {
     if (isBlueTurn) {
         movePlayersTowardsBall(2, 11);
         moveAttackers(9, 11, ui->GOAL);
-        moveDefenders(12, 21, ui->Ball); // 👈 This will handle Player12 to Player22
+        moveDefenders(12, 21, ui->Ball); // This will handle Player12 to Player22
           // Red team defends
     } else {
         movePlayersTowardsBall(12, 21);
@@ -513,9 +580,9 @@ void Simulation::shootBall(QLabel *shooter, QLabel *goal) {
     if (keeperSaves) {
         // Keeper moves to save position, ball moves far from goal
         keeper->move(savePosition->pos());
-        ball->move(savePosition->x() + 50, savePosition->y());  // ✅ Move ball clearly outside goal
+        ball->move(savePosition->x() + 50, savePosition->y());  // Move ball clearly outside goal
         qDebug() << "Keeper saved!";
-        goalProcessed = true;  // ✅ Block goal detection
+        goalProcessed = true;  // Block goal detection
         QTimer::singleShot(500, this, &Simulation::switchTurn);
         return;
     }
@@ -525,7 +592,7 @@ void Simulation::shootBall(QLabel *shooter, QLabel *goal) {
         int missOffsetY = QRandomGenerator::global()->bounded(-30, 30);
         ball->move(goal->x() + missOffsetX, goal->y() + missOffsetY);
         qDebug() << "Shot missed!";
-        goalProcessed = true;  // ✅ Block goal detection
+        goalProcessed = true;  // Block goal detection
         QTimer::singleShot(500, this, &Simulation::switchTurn);
         return;
     }
@@ -533,7 +600,7 @@ void Simulation::shootBall(QLabel *shooter, QLabel *goal) {
     // Only this case is on target
     ball->move(goal->x(), goal->y());
     qDebug() << "Shot on target!";
-    checkGoalScored();  // ✅ Only called for valid shots
+    checkGoalScored();  // Only called for valid shots
 }
 
 
@@ -601,6 +668,7 @@ void Simulation::endMatch() {
         resetPlayers();
         qDebug() << "Match ended!";
     }
+    stopUpdating();
 }
 
 void Simulation::resetPlayers() {

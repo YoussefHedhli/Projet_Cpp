@@ -6,7 +6,9 @@
 #include <QDialog>
 #include <QTimer>
 #include <QLabel>
-
+#include <QSerialPort>
+#include <QSerialPortInfo>
+#include "arduino.h"
 namespace Ui {
 class Dialog;
 }
@@ -28,6 +30,9 @@ private slots:
 
 private:
     Ui::Dialog *ui;
+    QPushButton *Start;
+    QSerialPort *serialPort;
+    Arduino *arduino = nullptr;  // Already done? Just make sure it's initialized to nullptr
     QTimer *timer;
     bool isPaused;
     bool isGameRunning;
@@ -96,6 +101,9 @@ private:
     void kickBall(bool isBlueTurn);
     void checkPenaltyShootoutState();
     void hideMatchPlayersForPenalties();
+    void initSerial();
+    void updateLCD();
+    void stopUpdating();
 
 };
 
