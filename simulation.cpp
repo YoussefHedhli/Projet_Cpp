@@ -6,6 +6,7 @@
 #include <QMessageBox>
 #include <QSerialPort>
 #include <QSerialPortInfo>
+#include <QCloseEvent>
 #include "arduino.h"
 
 
@@ -666,3 +667,12 @@ void Simulation::resetPlayers() {
     }
     goalProcessed = false;
 }
+
+void Simulation::closeEvent(QCloseEvent *event) {
+    if (arduino && arduino->isConnected()) {
+        arduino->write_to_arduino("RESET\n");
+        qDebug() << "Sent RESET to Arduino";
+    }
+    QDialog::closeEvent(event);  // Call base class implementation
+}
+

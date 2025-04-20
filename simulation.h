@@ -28,6 +28,10 @@ private slots:
     void updatePositions();
     void on_pens_clicked();
 
+protected:
+    void closeEvent(QCloseEvent *event) override;
+
+
 private:
     Ui::Dialog *ui;
     QPushButton *Start;
@@ -62,13 +66,6 @@ private:
     int savedBlueScore = blueScore;
     int savedRedScore = redScore;
     bool isMatchStarted = false;
-
-
-
-
-
-
-
     // Updated function signatures with parameters
     void paintEvent(QPaintEvent *event);
     void movePlayersTowardsBall(int start, int end);
