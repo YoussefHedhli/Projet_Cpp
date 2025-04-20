@@ -78,4 +78,10 @@ void Arduino::write_to_arduino( QByteArray d)
     }
 
 
+
+
+}
+
+bool Arduino::isConnected() const {
+    return serial->isOpen();
 }

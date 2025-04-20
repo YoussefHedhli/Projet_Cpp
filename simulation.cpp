@@ -133,6 +133,10 @@ void Simulation::on_Start_clicked() {
 
 
 void Simulation::updateMatchTime() {
+    if (isPaused || !isGameRunning) {
+        return;  // 🔒 Don't update time or LCD if the game is paused
+    }
+
     if (matchTime > 0) {
         matchTime--;
         ui->chrono->display(matchTime);
@@ -163,13 +167,12 @@ void Simulation::updateMatchTime() {
                 startPenalties();
             } else {
                 showFinalResult();
-                // Disable further gameplay
-                isGameRunning = false;
                 matchEnded = true;
             }
         }
     }
-    }
+}
+
 
 void Simulation::on_pens_clicked() {
     qDebug() << "Pens button clicked!";
@@ -397,12 +400,17 @@ void Simulation::showPenaltyResult() {
 void Simulation::on_Resume_clicked() {
     isPaused = false;
     qDebug() << "Game resumed!";
+    updateLCD();  // 🟢 Refresh the LCD with real-time data
 }
 
 void Simulation::on_Pause_clicked() {
     isPaused = true;
     qDebug() << "Game paused!";
+    if (arduino && arduino->isConnected()) {
+        arduino->write_to_arduino("PAUSED\n");
+    }
 }
+
 
 void Simulation::updatePositions() {
     if (isPaused || !isGameRunning) return;
