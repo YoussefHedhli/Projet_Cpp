@@ -190,12 +190,6 @@ void Match::updateMatchScore(bool isMatchCancelled, int scoreTeamA, int scoreTea
 {
     QSqlQuery query;
 
-    // If the match is cancelled, we set score to 0
-    if (isMatchCancelled) {
-        scoreTeamA = 0;
-        scoreTeamB = 0;
-    }
-
     // Debugging: Ensure the function is being called correctly and scores are being passed
     qDebug() << "Updating match score: Match Cancelled? " << isMatchCancelled
              << " Score Team A: " << scoreTeamA << " Score Team B: " << scoreTeamB;
@@ -220,17 +214,19 @@ void Match::updateMatchScore(bool isMatchCancelled, int scoreTeamA, int scoreTea
         return;
     }
 
+    // Prepare the score field as a string, either "cancelled" or the actual score in format "scoreA-scoreB"
+    QString scoreString;
+    if (isMatchCancelled) {
+        scoreString = "cancelled";  // Set "cancelled" if the match is cancelled
+    } else {
+        scoreString = QString::number(scoreTeamA) + "-" + QString::number(scoreTeamB);  // Format score as "scoreA-scoreB"
+    }
+
     // Insert the match score into the 'participer' table with valid random IDs
     query.prepare("INSERT INTO participer (IDMATCH_P, IDEQUIPE_P, score) VALUES (?, ?, ?)");
     query.addBindValue(randomMatchID); // Match ID from GS_MATCH
     query.addBindValue(randomEquipID); // Team ID from GS_EQUIPE
-    query.addBindValue(scoreTeamA);    // Score for team A
-    query.addBindValue(scoreTeamB);    // Score for team B
-
-    // If the match is cancelled, ensure that score is set to 0
-    if (isMatchCancelled) {
-        query.addBindValue(0);  // Set score to 0 for both teams if match is cancelled
-    }
+    query.addBindValue(scoreString);   // Score (either "cancelled" or "scoreA-scoreB")
 
     if (!query.exec()) {
         qDebug() << "Error inserting match score into participer: " << query.lastError().text();
