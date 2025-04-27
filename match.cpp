@@ -186,6 +186,61 @@ QMap<QDate, QList<QString>> Match::getMatchStatesPerDate() {
     return map;
 }
 
+void Match::updateMatchScore(bool isMatchCancelled, int scoreTeamA, int scoreTeamB)
+{
+    QSqlQuery query;
+
+    // If the match is cancelled, we set score to 0
+    if (isMatchCancelled) {
+        scoreTeamA = 0;
+        scoreTeamB = 0;
+    }
+
+    // Debugging: Ensure the function is being called correctly and scores are being passed
+    qDebug() << "Updating match score: Match Cancelled? " << isMatchCancelled
+             << " Score Team A: " << scoreTeamA << " Score Team B: " << scoreTeamB;
+
+    // Generate random match and team IDs to insert them into the tables (only for testing purposes)
+    int randomMatchID = QRandomGenerator::global()->bounded(1000); // Random match ID
+    int randomEquipID = QRandomGenerator::global()->bounded(1000); // Random team ID
+
+    // Insert random match into GS_MATCH to ensure IDMATCH_P is valid
+    query.prepare("INSERT INTO GS_MATCH (ID_M) VALUES (?)");
+    query.addBindValue(randomMatchID);
+    if (!query.exec()) {
+        qDebug() << "Error inserting match into GS_MATCH: " << query.lastError().text();
+        return;
+    }
+
+    // Insert random team into GS_EQUIPE to ensure IDEQUIP_P is valid
+    query.prepare("INSERT INTO GS_EQUIPE (ID_E) VALUES (?)");
+    query.addBindValue(randomEquipID);
+    if (!query.exec()) {
+        qDebug() << "Error inserting team into GS_EQUIPE: " << query.lastError().text();
+        return;
+    }
+
+    // Insert the match score into the 'participer' table with valid random IDs
+    query.prepare("INSERT INTO participer (IDMATCH_P, IDEQUIPE_P, score) VALUES (?, ?, ?)");
+    query.addBindValue(randomMatchID); // Match ID from GS_MATCH
+    query.addBindValue(randomEquipID); // Team ID from GS_EQUIPE
+    query.addBindValue(scoreTeamA);    // Score for team A
+    query.addBindValue(scoreTeamB);    // Score for team B
+
+    // If the match is cancelled, ensure that score is set to 0
+    if (isMatchCancelled) {
+        query.addBindValue(0);  // Set score to 0 for both teams if match is cancelled
+    }
+
+    if (!query.exec()) {
+        qDebug() << "Error inserting match score into participer: " << query.lastError().text();
+    } else {
+        qDebug() << "Match score successfully updated!";
+    }
+}
+
+
+
 
 
 

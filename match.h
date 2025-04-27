@@ -36,6 +36,7 @@ public:
     void setEtat(QString);
     QVector<QVector<QString>> getMatchesByDate(const QString &selectedDate);
     QMap<QDate, QList<QString>> getMatchStatesPerDate();
+    static void updateMatchScore(bool isMatchCancelled, int scoreTeamA, int scoreTeamB);
 
 
 };

@@ -8,6 +8,7 @@
 #include <QSerialPortInfo>
 #include <QCloseEvent>
 #include "arduino.h"
+#include "match.h"
 
 
 
@@ -144,8 +145,27 @@ void Simulation::checkArduinoData()
         qDebug() << "Arduino start button pressed!";
         on_Start_clicked(); // Simulate UI Start button click
     }
-}
+    else if (message == "CANCEL_BUTTON") {
+        qDebug() << "Arduino cancel button pressed!";
 
+        // Pause the simulation logic here (similar to clicking the Pause button)
+        if (isGameRunning) {
+            isGameRunning = false;  // Stop the game logic
+            timer->stop();          // Stop the match timer
+            matchTimer->stop();     // Stop the match time updates
+            qDebug() << "Simulation paused in the background.";
+        }
+
+        // Show warning message box and wait for the user to click OK
+        QMessageBox::warning(this, "Simulation Cancelled", "The simulation has been cancelled.");
+
+        // Call method to update the score in the database with cancellation
+        Match::updateMatchScore(true, 0, 0);  // Canceled match with no score
+
+        // Close the window after the user clicks OK
+        close();  // Close the simulation window
+    }
+}
 
 
 void Simulation::updateMatchTime() {
@@ -184,6 +204,7 @@ void Simulation::updateMatchTime() {
             } else {
                 showFinalResult();
                 matchEnded = true;
+                Match::updateMatchScore(false, blueScore, redScore);
             }
         }
     }
