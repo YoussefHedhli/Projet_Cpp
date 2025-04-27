@@ -30,10 +30,11 @@ Simulation::Simulation(Arduino* a, QWidget *parent) :
     ui->setupUi(this);
     ui->FieldLabel->setStyleSheet("border-image: url(C:/Users/AMEN WORKSTATION/Downloads/360_F_293127241_bMzrEAk3zhehEnsLw6y4k3HfFewopUPG.jpg);");
     timer = new QTimer(this);
+  connect(ui->Start, &QPushButton::clicked, this, &Simulation::on_Start_clicked);
     connect(timer, &QTimer::timeout, this, &Simulation::updatePositions);
     saveInitialPositions();
     matchTimer = new QTimer(this);
-    connect(matchTimer, &QTimer::timeout, this, &Simulation::updateMatchTime);  
+    connect(matchTimer, &QTimer::timeout, this, &Simulation::updateMatchTime);
     matchTime = 15;  // Set match duration to 15 seconds
     ui->chrono->display(matchTime);// Initialize LCD display
     if (arduino && arduino->getserial()->isOpen()) {
@@ -41,6 +42,9 @@ Simulation::Simulation(Arduino* a, QWidget *parent) :
     } else {
         qDebug() << "Simulation: Arduino instance not connected.";
     }
+    QTimer *arduinoTimer = new QTimer(this);
+    connect(arduinoTimer, &QTimer::timeout, this, &Simulation::checkArduinoData);
+    arduinoTimer->start(100);
 }
 
 Simulation::~Simulation() {
@@ -91,7 +95,6 @@ void Simulation::updateLCD() {
                            .arg(seconds, 2, 10, QChar('0'));
 
     QString fullText = scoreLine + "|" + timeLine;
-
     // Send the data to Arduino using Arduino class
     if (arduino && arduino->getserial()->isOpen()) {
         arduino->write_to_arduino((fullText + "\n").toUtf8());
@@ -131,6 +134,18 @@ void Simulation::on_Start_clicked() {
 
     initSerial();  // Initialize serial communication if needed
 }
+
+void Simulation::checkArduinoData()
+{
+    QByteArray data = arduino->read_from_arduino();
+    QString message = QString::fromUtf8(data).trimmed();
+
+    if (message == "START_BUTTON") {
+        qDebug() << "Arduino start button pressed!";
+        on_Start_clicked(); // Simulate UI Start button click
+    }
+}
+
 
 
 void Simulation::updateMatchTime() {
@@ -420,7 +435,7 @@ void Simulation::updatePositions() {
         movePlayersTowardsBall(2, 11);
         moveAttackers(9, 11, ui->GOAL);
         moveDefenders(12, 21, ui->Ball); // This will handle Player12 to Player22
-          // Red team defends
+            // Red team defends
     } else {
         movePlayersTowardsBall(12, 21);
         moveRedAttackers();
@@ -675,4 +690,3 @@ void Simulation::closeEvent(QCloseEvent *event) {
     }
     QDialog::closeEvent(event);  // Call base class implementation
 }
-

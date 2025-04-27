@@ -66,6 +66,7 @@ private:
     int savedBlueScore = blueScore;
     int savedRedScore = redScore;
     bool isMatchStarted = false;
+
     // Updated function signatures with parameters
     void paintEvent(QPaintEvent *event);
     void movePlayersTowardsBall(int start, int end);
@@ -101,7 +102,7 @@ private:
     void initSerial();
     void updateLCD();
     void stopUpdating();
-
+    void checkArduinoData();
 };
 
 #endif // SIMULATION_H
