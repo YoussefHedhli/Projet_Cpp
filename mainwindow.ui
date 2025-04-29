@@ -119,6 +119,13 @@ QPushButton:hover {
       <y>220</y>
       <width>411</width>
       <height>351</height>
+      <x>590</x>
+      <y>240</y>
+      <width>391</width>
+      <x>580</x>
+      <y>230</y>
+      <width>411</width>
+      <height>341</height>
      </rect>
     </property>
     <property name="currentIndex">
@@ -1012,6 +1019,12 @@ QPushButton:hover {
     <property name="geometry">
      <rect>
       <x>260</x>
+      <y>320</y>
+      <width>311</width>
+      <height>271</height>
+      <y>330</y>
+      <width>311</width>
+      <height>261</height>
       <y>320</y>
       <width>311</width>
       <height>271</height>

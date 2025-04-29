@@ -367,7 +367,7 @@ void Equipe::afficherStatistiquesPaysGraph(QFrame* stat) {
 
 QList<QList<QVariant>> Equipe::calculerEtatDeForme() {
     QSqlDatabase db;
-    if (QSqlDatabase::contains("qt_sql_default_connection")) {
+  /*  if (QSqlDatabase::contains("qt_sql_default_connection")) {
         db = QSqlDatabase::database("qt_sql_default_connection");
     } else {
         db = QSqlDatabase::addDatabase("QODBC");
@@ -380,7 +380,7 @@ QList<QList<QVariant>> Equipe::calculerEtatDeForme() {
         QMessageBox::warning(nullptr, "Erreur", "Impossible de se connecter à la base de données");
         return {};
     }
-
+*/
     QSqlQuery query;
     query.prepare("SELECT IDEQUIPE_P, "
                   "COUNT(CASE WHEN SCORE = 'V' THEN 1 END) AS Victoires, "

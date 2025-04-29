@@ -30,7 +30,7 @@ public:
     ~MainWindow();
     // mainwindow.h
 public slots:
-    void exporterPDF();
+    //void exporterPDF();
 
     //void on_tableView_clicked(const QModelIndex &index);
 
@@ -41,9 +41,17 @@ private slots:
      void modifierEquipe();
      void on_AFF_clicked(const QModelIndex &index);
      void rechercherEquipe();
+
      //void exporterPDF();
 
     void on_updateButton_clicked();
+
+     void exporterPDF();
+     //void triParId();            // Sort by ID (ascending/descending)
+     //void triParAlphabet();      // Sort alphabetically (ascending/descending)
+
+
+
      // Button click handlers
 
      void afficherStatistiques();

@@ -44,6 +44,7 @@ connect(ui->AFF, &QTableView::clicked, this, &MainWindow::on_AFF_clicked);
     connect(ui->Rech, &QPushButton::clicked, this, &MainWindow::rechercherEquipe);
 connect(ui->bpdf, &QPushButton::clicked, this, &MainWindow::exporterPDF);
 
+
  connect(ui->up, &QPushButton::clicked, this, &MainWindow::on_updateButton_clicked);
  //connect(ui->AFF, &QTableView::clicked, this, &MainWindow::on_tableView_clicked);
  //connect(ui->combotri, SIGNAL(currentIndexChanged(int)), this, SLOT(on_combotri_currentIndexChanged(int)));
@@ -66,6 +67,11 @@ connect(ui->bpdf, &QPushButton::clicked, this, &MainWindow::exporterPDF);
 
 
 
+
+
+ //connect(ui->btri, &QPushButton::clicked, this, &MainWindow::on_btri_clicked);
+
+ connect(ui->up, &QPushButton::clicked, this, &MainWindow::on_updateButton_clicked);
 
     // Chargement des images
     QPixmap pix("C:/Users/MSI/Pictures/ft2.png");
@@ -208,7 +214,7 @@ void MainWindow::modifierEquipe() {
         QMessageBox::critical(this, "Erreur", "Échec de la modification de l'équipe.");
     }
 }
-void MainWindow::on_AFF_clicked(const QModelIndex &index) {
+/*void MainWindow::on_AFF_clicked(const QModelIndex &index) {
     if (!index.isValid()) {
         QMessageBox::warning(this, "Erreur", "Sélection invalide.");
         return;
@@ -225,7 +231,30 @@ void MainWindow::on_AFF_clicked(const QModelIndex &index) {
 
     // Debug : Afficher dans la console
     qDebug() << "Équipe sélectionnée - Nom:" << nom << ", Pays:" << pays;
+}*/
+void MainWindow::on_AFF_clicked(const QModelIndex &index) {
+    if (!index.isValid()) {
+        QMessageBox::warning(this, "Erreur", "Sélection invalide.");
+        return;
+    }
+
+    // Récupérer les valeurs de la ligne sélectionnée
+    QAbstractItemModel *model = ui->AFF->model();
+    QString nom = model->data(model->index(index.row(), 1)).toString();
+    QString pays = model->data(model->index(index.row(), 2)).toString();
+    QString tactique = model->data(model->index(index.row(), 3)).toString(); // Assurez-vous que la tactique est dans la bonne colonne
+
+    // Afficher les valeurs dans les champs
+    ui->nomline->setText(nom);
+    ui->payline->setText(pays);
+
+    // Debug : Afficher dans la console
+    qDebug() << "Équipe sélectionnée - Nom:" << nom << ", Pays:" << pays << ", Tactique:" << tactique;
+
+    // Appel de la méthode pour afficher la tactique graphique de l'équipe sélectionnée
+    equipe.afficherTactiqueGraphique(tactique, ui->label_4, {ui->l1, ui->l2, ui->l3, ui->l4, ui->l5, ui->l6, ui->l7, ui->l8, ui->l9, ui->l10, ui->l11});
 }
+
 //appel de recherche
 void MainWindow::rechercherEquipe() {
     QString recherche = ui->linerech->text().trimmed();
@@ -283,7 +312,7 @@ void MainWindow::afficherStatistiques() {
 //appel etat de forme
 
 void MainWindow::on_updateButton_clicked() {
-    // Créer une instance de la classe Equipe
+
     Equipe equipe;
 
     // Récupérer les résultats de l'état de forme
@@ -304,7 +333,6 @@ void MainWindow::on_updateButton_clicked() {
         ui->table->setItem(row, 4, new QTableWidgetItem(ligne[4].toString()));  // Forme
         row++;
     }
-
     // Calculer la forme moyenne
     double formeMoyenne = equipe.calculerFormeMoyenne(resultats);
     QString formeText = "Forme moyenne: " + QString::number(formeMoyenne, 'f', 2);
@@ -318,6 +346,7 @@ void MainWindow::on_updateButton_clicked() {
     qDebug() << "Connexion réussie.";
     qDebug() << "Requête exécutée.";
 }
+
 
 //appel tactique
 void MainWindow::on_btnTactique_clicked()
