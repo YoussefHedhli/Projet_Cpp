@@ -214,24 +214,7 @@ void MainWindow::modifierEquipe() {
         QMessageBox::critical(this, "Erreur", "Échec de la modification de l'équipe.");
     }
 }
-/*void MainWindow::on_AFF_clicked(const QModelIndex &index) {
-    if (!index.isValid()) {
-        QMessageBox::warning(this, "Erreur", "Sélection invalide.");
-        return;
-    }
 
-    // Récupérer les valeurs de la ligne sélectionnée
-    QAbstractItemModel *model = ui->AFF->model();
-    QString nom = model->data(model->index(index.row(), 1)).toString();
-    QString pays = model->data(model->index(index.row(), 2)).toString();
-
-    // Afficher les valeurs dans les champs
-    ui->nomline->setText(nom);
-    ui->payline->setText(pays);
-
-    // Debug : Afficher dans la console
-    qDebug() << "Équipe sélectionnée - Nom:" << nom << ", Pays:" << pays;
-}*/
 void MainWindow::on_AFF_clicked(const QModelIndex &index) {
     if (!index.isValid()) {
         QMessageBox::warning(this, "Erreur", "Sélection invalide.");
