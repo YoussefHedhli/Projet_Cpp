@@ -16,14 +16,10 @@
 #include <QTextStream>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
-
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QDebug>
-
-
-
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -31,11 +27,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 afficherEquipes();
-
     afficherStatistiques();
-
-
-
     // Connexion du bouton "Ajouter" à la méthode ajouterEquipe
     connect(ui->labelajout, &QPushButton::clicked, this, &MainWindow::ajouterEquipe);
 connect(ui->bsupp, &QPushButton::clicked, this, &MainWindow::supprimerEquipe);
@@ -43,34 +35,15 @@ connect(ui->bsupp, &QPushButton::clicked, this, &MainWindow::supprimerEquipe);
 connect(ui->AFF, &QTableView::clicked, this, &MainWindow::on_AFF_clicked);
     connect(ui->Rech, &QPushButton::clicked, this, &MainWindow::rechercherEquipe);
 connect(ui->bpdf, &QPushButton::clicked, this, &MainWindow::exporterPDF);
-
-
  connect(ui->up, &QPushButton::clicked, this, &MainWindow::on_updateButton_clicked);
- //connect(ui->AFF, &QTableView::clicked, this, &MainWindow::on_tableView_clicked);
- //connect(ui->combotri, SIGNAL(currentIndexChanged(int)), this, SLOT(on_combotri_currentIndexChanged(int)));
-
  // Connecter le signal de changement de texte à ta fonction d’affichage
  connect(ui->comboTactique, &QComboBox::currentTextChanged, this, [&]() {
      // Appel de la méthode afficherTactiqueGraphique depuis l'instance Equipe
      equipe.afficherTactiqueGraphique(ui->comboTactique->currentText()
 , ui->label_4, {ui->l1, ui->l2, ui->l3, ui->l4, ui->l5, ui->l6, ui->l7, ui->l8, ui->l9, ui->l10, ui->l11});
-
-
  });
- /*connect(ui->tacticButton, &QPushButton::clicked, this, [this]() {
-     QString teamName = ui->linerech->text();  // Récupère le nom de l'équipe de l'interface utilisateur
-     getTacticFromPython(teamName);
- });
-*/
  // Dans le constructeur MainWindow :
  connect(ui->combotri, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &MainWindow::onComboTriChanged);
-
-
-
-
-
- //connect(ui->btri, &QPushButton::clicked, this, &MainWindow::on_btri_clicked);
-
  connect(ui->up, &QPushButton::clicked, this, &MainWindow::on_updateButton_clicked);
 
     // Chargement des images
@@ -86,12 +59,10 @@ connect(ui->bpdf, &QPushButton::clicked, this, &MainWindow::exporterPDF);
     // Affiche toutes les équipes dès l'ouverture
     afficherEquipes();
 }
-
 MainWindow::~MainWindow()
 {
     delete ui;
 }
-
 void MainWindow::ajouterEquipe()
 {
     int id = ui->idline->text().toInt();
@@ -107,10 +78,6 @@ void MainWindow::ajouterEquipe()
         QMessageBox::warning(this, "Erreur", "Échec de l'ajout.");
     }
 }
-
-
-
-
 void MainWindow::afficherEquipes() {
     Equipe equipe;
     QSqlQueryModel *model = equipe.afficher();
@@ -159,7 +126,6 @@ void MainWindow::supprimerEquipe() {
         QMessageBox::critical(this, "Erreur", QString("Échec de la suppression : %1").arg(query.lastError().text()));
     }
 }
-
 //appel de modifier
 void MainWindow::modifierEquipe() {
     // Vérifier si une ligne est sélectionnée
@@ -263,9 +229,6 @@ void MainWindow::exporterPDF() {
     equipe.exporterPDF(ui->AFF);
 
 }
-
-
-
 //appel stat
 void MainWindow::afficherStatistiques() {
     // Trouver la QFrame où afficher les statistiques (par exemple, "stat")
@@ -277,8 +240,6 @@ void MainWindow::afficherStatistiques() {
         QMessageBox::critical(this, "Erreur", "La frame pour les statistiques n'a pas été trouvée.");
     }
 }
-
-
 //appel etat de forme
 
 void MainWindow::on_updateButton_clicked() {
@@ -316,8 +277,6 @@ void MainWindow::on_updateButton_clicked() {
     qDebug() << "Connexion réussie.";
     qDebug() << "Requête exécutée.";
 }
-
-
 //appel tactique
 void MainWindow::on_btnTactique_clicked()
 {
