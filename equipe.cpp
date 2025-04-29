@@ -326,7 +326,7 @@ void Equipe::afficherStatistiquesPaysGraph(QFrame* stat) {
         slice->setLabel(QString("%1\n%2%").arg(pays).arg(pourcentage, 0, 'f', 1));
         slice->setLabelBrush(Qt::black);
 
-        // 🔁 Connecter le signal de survol;
+        // 🔁 Connecter le signal de survol;;
         QObject::connect(slice, &QPieSlice::hovered, [=](bool hovered) {
             if (hovered) {
                 pourcentageLabel->setText(QString("Pays : %1 — %2% des équipes").arg(pays).arg(pourcentage, 0, 'f', 1));
