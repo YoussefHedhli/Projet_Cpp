@@ -21,8 +21,6 @@
 #include <QSqlTableModel>
 #include <QtCharts/QChartView>
 #include <QObject>
-//#include <QNetworkAccessManager>
-//#include <QNetworkReply>
 #include <QEventLoop>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -119,25 +117,7 @@ bool Equipe::supprimer(int id) {
     qDebug() << "Équipe supprimée avec succès.";
     return true;
 }
-/*
-// Rechercher une équipe par son nom
-QSqlQueryModel* Equipe::rechercher(const QString& keyword) {
-    QSqlQueryModel* model = new QSqlQueryModel();
-    QSqlQuery query;
-    query.prepare("SELECT ID_E, NOM_E, PAYS, TACTIQUE FROM GS_EQUIPE WHERE NOM_E LIKE :keyword");
 
-    query.bindValue(":keyword", "%" + keyword + "%");
-    query.exec();
-
-    model->setQuery(std::move(query));
-
-
-    if (model->lastError().isValid()) {
-        qDebug() << "Erreur lors de la recherche de l'équipe:" << model->lastError().text();
-    }
-
-    return model;
-}*/
 
 QSqlQueryModel* Equipe::trierParId(bool asc) {
     QSqlQueryModel* model = new QSqlQueryModel();
@@ -367,20 +347,7 @@ void Equipe::afficherStatistiquesPaysGraph(QFrame* stat) {
 
 QList<QList<QVariant>> Equipe::calculerEtatDeForme() {
     QSqlDatabase db;
-  /*  if (QSqlDatabase::contains("qt_sql_default_connection")) {
-        db = QSqlDatabase::database("qt_sql_default_connection");
-    } else {
-        db = QSqlDatabase::addDatabase("QODBC");
-        db.setDatabaseName("Source_Remontada");
-        db.setUserName("projet");
-        db.setPassword("remontada");
-    }
 
-    if (!db.open()) {
-        QMessageBox::warning(nullptr, "Erreur", "Impossible de se connecter à la base de données");
-        return {};
-    }
-*/
     QSqlQuery query;
     query.prepare("SELECT IDEQUIPE_P, "
                   "COUNT(CASE WHEN SCORE = 'V' THEN 1 END) AS Victoires, "
