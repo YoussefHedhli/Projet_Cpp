@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+#include "gs_equipe.h"
 #include <QApplication>
 #include <QMessageBox>
 #include "connetion.h"
@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
     Connetion c;  // Vérifie que la classe est bien "Connection" et non "Connetion"
 
     bool test = c.createconnect();
-    MainWindow w;
+    gs_equipe  w;
     if (test) {
         w.show();
         QMessageBox::information(nullptr, QObject::tr("Database Connection"),

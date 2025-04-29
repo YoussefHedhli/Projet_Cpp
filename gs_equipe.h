@@ -1,5 +1,5 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef GS_EQUIPE_H
+#define GS_EQUIPE_H
 #include <QTableView>
 #include "Equipe.h"
 #include <QMainWindow>
@@ -18,16 +18,16 @@
 
 
 namespace Ui {
-class MainWindow;
+class gs_equipe;
 }
 
-class MainWindow : public QMainWindow
+class gs_equipe  : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    explicit gs_equipe (QWidget *parent = nullptr);
+    ~gs_equipe ();
     // mainwindow.h
 public slots:
 
@@ -45,7 +45,7 @@ private slots:
 
 
 private:
-    Ui::MainWindow *ui;
+    Ui::gs_equipe  *ui;
     QString nom;
     Equipe equipe;
 void on_combotri_currentIndexChanged(int index);
@@ -57,4 +57,4 @@ void trierEquipes(const QString &critere);
 
 };
 
-#endif // MAINWINDOW_H
+#endif // GS_EQUIPE_H

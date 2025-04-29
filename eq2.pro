@@ -17,18 +17,18 @@ SOURCES += \
     arduino.cpp \
     connetion.cpp \
     equipe.cpp \
-    main.cpp \
-    mainwindow.cpp
+    gs_equipe.cpp \
+    main.cpp
 
 HEADERS += \
     arduino.h \
     connetion.h \
     equipe.h \
-    mainwindow.h
+    gs_equipe.h
 
 
 FORMS += \
-    mainwindow.ui
+    gs_equipe.ui
     TEMPLATE = app
     TARGET = berasmiwoh
 
