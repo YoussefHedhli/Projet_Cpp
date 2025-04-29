@@ -14,8 +14,6 @@
 #include <QLabel>
 #include <QFrame>
 #include <QObject>
-//#include <QNetworkAccessManager>
-//#include <QNetworkReply>
 #include <QEventLoop>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -54,14 +52,10 @@ public:
     static void exporterPDF(QTableView *tableView);
     static QSqlQueryModel* rechercherEquipe(const QString& recherche);
      static void afficherStatistiquesPaysGraph(QFrame* stat);
- //void calculerFormeEquipe(QTableWidget* table, QLabel* lforme);
      void placerJoueur(QWidget *joueur, int x, int y);
-
-     // Méthode pour afficher une tactique graphique
      void afficherTactiqueGraphique(const QString &tactique, QWidget *label, QList<QLabel*> joueurs);
      QList<QList<QVariant>> calculerEtatDeForme();
      double calculerFormeMoyenne(const QList<QList<QVariant>>& resultats);
-//void handleTacticData(const QString& formation);
 };
 
 #endif // EQUIPE_H

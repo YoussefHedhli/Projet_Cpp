@@ -30,9 +30,6 @@ public:
     ~MainWindow();
     // mainwindow.h
 public slots:
-    //void exporterPDF();
-
-    //void on_tableView_clicked(const QModelIndex &index);
 
 private slots:
     void ajouterEquipe();
@@ -41,31 +38,10 @@ private slots:
      void modifierEquipe();
      void on_AFF_clicked(const QModelIndex &index);
      void rechercherEquipe();
-
-     //void exporterPDF();
-
     void on_updateButton_clicked();
-
      void exporterPDF();
-     //void triParId();            // Sort by ID (ascending/descending)
-     //void triParAlphabet();      // Sort alphabetically (ascending/descending)
-
-
-
-     // Button click handlers
-
      void afficherStatistiques();
-     //void on_btnRecommander_clicked(); // Bouton recommander
-
-    //void on_btnRecommander_clicked1();
       void onComboTriChanged(int index);
-
-
-     // void getTacticFromPython(const QString& teamName);
-      //void getTacticFromWeb(const QString& teamName);
-      //void scrapeTransfermarkt(const QString& teamName);
-
-
 
 
 private:
