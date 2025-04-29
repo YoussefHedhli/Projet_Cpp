@@ -273,20 +273,7 @@ void MainWindow::rechercherEquipe() {
         ui->AFF->setModel(model);
     }
 }
-/*
-void MainWindow::rechercherEquipe() {
-    QString recherche = ui->linerech->text().trimmed();
 
-    QSqlQueryModel* model = Equipe::rechercherEquipe(recherche);
-
-    if (model->rowCount() == 0) {
-        QMessageBox::information(this, "Info",
-                                 "Équipe non trouvée en base. Recherche en ligne...");
-        getTacticFromWeb(recherche);
-    } else {
-        ui->AFF->setModel(model);
-    }
-}*/
 // appel pdf
 void MainWindow::exporterPDF() {
     // Assurez-vous que 'tableView' et 'fileName' sont correctement définis
