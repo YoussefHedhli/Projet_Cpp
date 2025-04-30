@@ -1,0 +1,10 @@
+release/arduino.o
+release/connection.o
+release/employe.o
+release/fennetre1.o
+release/fennetre2.o
+release/main.o
+release/mainwindow.o
+release/moc_fennetre1.o
+release/moc_fennetre2.o
+release/moc_mainwindow.o

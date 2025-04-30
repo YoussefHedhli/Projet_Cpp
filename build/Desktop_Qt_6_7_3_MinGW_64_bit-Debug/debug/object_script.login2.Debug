@@ -1,0 +1,10 @@
+debug/arduino.o
+debug/connection.o
+debug/employe.o
+debug/fennetre1.o
+debug/fennetre2.o
+debug/main.o
+debug/mainwindow.o
+debug/moc_fennetre1.o
+debug/moc_fennetre2.o
+debug/moc_mainwindow.o
