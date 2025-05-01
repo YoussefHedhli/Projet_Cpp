@@ -200,7 +200,7 @@ void gs_equipe::on_AFF_clicked(const QModelIndex &index) {
     // Appel de la méthode pour afficher la tactique graphique de l'équipe sélectionnée
     equipe.afficherTactiqueGraphique(tactique, ui->label_4, {ui->l1, ui->l2, ui->l3, ui->l4, ui->l5, ui->l6, ui->l7, ui->l8, ui->l9, ui->l10, ui->l11});
 }
-
+//
 //appel de recherche
 void gs_equipe::rechercherEquipe() {
     QString recherche = ui->linerech->text().trimmed();
