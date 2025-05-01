@@ -40,7 +40,7 @@ public:
     void setNom(const QString& nom);
     void setPays(const QString& pays);
     void settactique(const QString& tactique);
-    // Méthodess
+    // Méthodes
     bool ajouter();                // Ajouter une équipe
     QSqlQueryModel* afficher();    // Afficher toutes les équipes
     bool modifier(int id);         // Modifier une équipe
@@ -57,5 +57,5 @@ public:
      QList<QList<QVariant>> calculerEtatDeForme();
      double calculerFormeMoyenne(const QList<QList<QVariant>>& resultats);
 };
-//end
+
 #endif // EQUIPE_H
