@@ -68,7 +68,7 @@ void gs_equipe::ajouterEquipe()
     int id = ui->idline->text().toInt();
     QString nom = ui->nomline->text();
     QString pays = ui->payline->text();
-    QString tactique = ui->comboTactique->currentText(); // OU lineEdit si tu utilises un champ texte
+    QString tactique = ui->comboTactique->currentText();
 
     Equipe e(id, nom, pays, tactique);
     if (e.ajouter()) {
