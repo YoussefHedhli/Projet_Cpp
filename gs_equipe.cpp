@@ -90,7 +90,7 @@ void gs_equipe::afficherEquipes() {
     ui->AFF->horizontalHeader()->setStretchLastSection(true);
     ui->AFF->setEditTriggers(QAbstractItemView::NoEditTriggers);  // Désactive l'édition
 }
-
+//supp
 void gs_equipe::supprimerEquipe() {
     // Vérifier si une ligne est sélectionnée dans QTableView
     QModelIndex index = ui->AFF->selectionModel()->currentIndex();
