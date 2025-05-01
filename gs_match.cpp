@@ -1,5 +1,5 @@
-#include "mainwindow.h"
-#include "./ui_mainwindow.h"
+#include "gs_match.h"
+#include "./ui_gs_match.h"
 #include "connection.h"
 #include "match.h"
 #include <QMessageBox>
@@ -24,12 +24,12 @@
 #include <numeric> // For std::accumulate
 #include "simulation.h"
 
-MainWindow::MainWindow(Arduino* a, QWidget *parent)
+gs_match::gs_match(Arduino* a, QWidget *parent)
     : QMainWindow(parent),
-    ui(new Ui::MainWindow),
+    ui(new Ui::gs_match),
     arduino(a)  // Save the pointer
 {
-    qDebug() << "MainWindow: Constructor called.";
+    qDebug() << "gs_match: Constructor called.";
     ui->setupUi(this);
     displayStatistics();  
     QTextCharFormat testFormat;
@@ -59,16 +59,16 @@ MainWindow::MainWindow(Arduino* a, QWidget *parent)
     ui->tri->addItem("Z-A");
     ui->tri->addItem("Date Ascending");
     ui->tri->addItem("Date Descending");
-    connect(ui->tri, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &MainWindow::onSortOptionChanged);
-    connect(ui->btnAjouter, &QPushButton::clicked, this, &MainWindow::addMatchToDatabase);
-    connect(ui->btnSupprimer, &QPushButton::clicked, this, &MainWindow::deleteMatch);
-    connect(ui->btnModifier, &QPushButton::clicked, this, &MainWindow::modifyMatch);
-    connect(ui->tableWidget, &QTableWidget::itemSelectionChanged, this, &MainWindow::on_tableWidget_itemSelectionChanged);
-    connect(ui->recherche, &QPushButton::clicked, this, &MainWindow::searchMatch);
-    connect(ui->pdfButton, &QPushButton::clicked, this, &MainWindow::generatePDF);
-    connect(ui->sim, &QPushButton::clicked, this, &MainWindow::on_sim_clicked);
-    connect(ui->calendar, &QCalendarWidget::clicked, this, &MainWindow::onCalendarDateSelected);
-    connect(ui->calendar, &QCalendarWidget::clicked, this, &MainWindow::onCalendarDateHovered);
+    connect(ui->tri, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &::gs_match::onSortOptionChanged);
+    connect(ui->btnAjouter, &QPushButton::clicked, this, &gs_match::addMatchToDatabase);
+    connect(ui->btnSupprimer, &QPushButton::clicked, this, &gs_match::deleteMatch);
+    connect(ui->btnModifier, &QPushButton::clicked, this, &gs_match::modifyMatch);
+    connect(ui->tableWidget, &QTableWidget::itemSelectionChanged, this, &gs_match::on_tableWidget_itemSelectionChanged);
+    connect(ui->recherche, &QPushButton::clicked, this, &gs_match::searchMatch);
+    connect(ui->pdfButton, &QPushButton::clicked, this, &gs_match::generatePDF);
+    connect(ui->sim, &QPushButton::clicked, this, &gs_match::on_sim_clicked);
+    connect(ui->calendar, &QCalendarWidget::clicked, this, &gs_match::onCalendarDateSelected);
+    connect(ui->calendar, &QCalendarWidget::clicked, this, &gs_match::onCalendarDateHovered);
     updateMatchDisplay();
     displayStatistics();
     highlightMatchDates();
@@ -80,17 +80,17 @@ MainWindow::MainWindow(Arduino* a, QWidget *parent)
 
 }
 
-MainWindow::~MainWindow() {
+gs_match::~gs_match() {
     delete ui;
 }
 
-void MainWindow::on_sim_clicked() {
+void gs_match::on_sim_clicked() {
     Simulation *simulationWindow = new Simulation(arduino, this);  // Pass the Arduino pointer
     simulationWindow->exec();  // Open as a modal dialog
 }
 
 
-    void MainWindow::paintEvent(QPaintEvent *event)
+    void gs_match::paintEvent(QPaintEvent *event)
 {
     // Load background image
     QPixmap pix("C:/Users/AMEN WORKSTATION/Desktop/projet/untitled/bg.jpg");  // Use resource path if image is part of Qt resource system
@@ -113,7 +113,7 @@ void MainWindow::on_sim_clicked() {
     QMainWindow::paintEvent(event);  // Ensure the parent class paintEvent is called
 }
 
-void MainWindow::updateMatchDisplay() {
+void gs_match::updateMatchDisplay() {
     QVector<QVector<QString>> data = m.afficher(); // Fetch data from the database
 
     ui->tableWidget->setRowCount(data.size());
@@ -129,7 +129,7 @@ void MainWindow::updateMatchDisplay() {
 }
 
 
-void MainWindow::addMatchToDatabase() {
+void gs_match::addMatchToDatabase() {
     QString dateInput = ui->lineEditDate->text().trimmed();
     QString lieu = ui->lineEditLieu->text().trimmed();
     QString etat = ui->etats->currentText();
@@ -160,7 +160,7 @@ void MainWindow::addMatchToDatabase() {
     }
 }
 
-void MainWindow::deleteMatch() {
+void gs_match::deleteMatch() {
     int row = ui->tableWidget->currentRow();
     if (row == -1) {
         QMessageBox::warning(this, "Erreur", "Veuillez sélectionner un match à supprimer !");
@@ -176,7 +176,7 @@ void MainWindow::deleteMatch() {
     }
 }
 
-void MainWindow::on_tableWidget_itemSelectionChanged() {
+void gs_match::on_tableWidget_itemSelectionChanged() {
     int row = ui->tableWidget->currentRow();
     if (row == -1) return;
 
@@ -186,12 +186,12 @@ void MainWindow::on_tableWidget_itemSelectionChanged() {
     ui->lineEditLieu->setText(ui->tableWidget->item(row, 4)->text());
     ui->etats->setCurrentText(ui->tableWidget->item(row, 5)->text());
 }
-void MainWindow::on_btnModifier_clicked() {
+void gs_match::on_btnModifier_clicked() {
     modifyMatch();
 }
 
 
-void MainWindow::modifyMatch() {
+void gs_match::modifyMatch() {
     int row = ui->tableWidget->currentRow();
     if (row == -1) {
         QMessageBox::warning(this, "Erreur", "Veuillez sélectionner un match à modifier !");
@@ -226,7 +226,7 @@ void MainWindow::modifyMatch() {
     }
 }
 
-void MainWindow::searchMatch() {
+void gs_match::searchMatch() {
     QString teamName = ui->rechtxt->text().trimmed();
     QVector<QVector<QString>> data = m.rechercher(teamName);
 
@@ -241,7 +241,7 @@ void MainWindow::searchMatch() {
     }
 }
 
-void MainWindow::sortMatches(const QString& sortOption) {
+void gs_match::sortMatches(const QString& sortOption) {
     // Call the trierPar function with the selected sorting option to get the sorted data
     QVector<QVector<QString>> data = m.trierPar(sortOption);
 
@@ -256,7 +256,7 @@ void MainWindow::sortMatches(const QString& sortOption) {
         }
     }
 }
-    void MainWindow::onSortOptionChanged(int index) {
+    void gs_match::onSortOptionChanged(int index) {
         // Get the current sorting option from the ComboBox
         QString sortOption = ui->tri->currentText();
 
@@ -276,7 +276,7 @@ void MainWindow::sortMatches(const QString& sortOption) {
         }
     }
 
-void MainWindow::generatePDF() {
+void gs_match::generatePDF() {
     QString filePath = QDir::currentPath() + "/matches_list.pdf";
     QPdfWriter writer(filePath);
     writer.setPageSize(QPageSize::A4);
@@ -374,7 +374,7 @@ void MainWindow::generatePDF() {
 
 
 
-void MainWindow::displayStatistics() {
+void gs_match::displayStatistics() {
     if (ui->stat->layout() == nullptr) {
         ui->stat->setLayout(new QVBoxLayout());
     }
@@ -461,7 +461,7 @@ void MainWindow::displayStatistics() {
 
 
 
-void MainWindow::onCalendarDateSelected(const QDate &date) {
+void gs_match::onCalendarDateSelected(const QDate &date) {
     QString selectedDate = date.toString("yyyy-MM-dd");
     QVector<QVector<QString>> data = m.getMatchesByDate(selectedDate);
 
@@ -477,7 +477,7 @@ void MainWindow::onCalendarDateSelected(const QDate &date) {
       highlightMatchDates();
 }
 
-void MainWindow::highlightMatchDates() {
+void gs_match::highlightMatchDates() {
     qDebug() << "Highlighting match dates...";
 
     // Iterate through each date with matches
@@ -518,7 +518,7 @@ void MainWindow::highlightMatchDates() {
     }
 }
 
-void MainWindow::onCalendarDateHovered(const QDate &date) {
+void gs_match::onCalendarDateHovered(const QDate &date) {
     // Query the database for the match info for the hovered date
     QVector<QVector<QString>> data = m.getMatchesByDate(date.toString("yyyy-MM-dd"));
 

@@ -1,5 +1,5 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef GS_MATCH_H
+#define GS_MATCH_H
 
 #include <QMainWindow>
 #include "match.h"
@@ -10,17 +10,17 @@
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
-class MainWindow;
+class gs_match;
 }
 QT_END_NAMESPACE
 
-class MainWindow : public QMainWindow
+class gs_match : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    explicit MainWindow(Arduino* a , QWidget *parent = nullptr);
-    ~MainWindow();
+    explicit gs_match(Arduino* a , QWidget *parent = nullptr);
+    ~gs_match();
 
 private slots:
     void paintEvent(QPaintEvent *event);
@@ -42,9 +42,9 @@ private slots:
 
 
 private:
-    Ui::MainWindow *ui;
+    Ui::gs_match *ui;
     Match m;
     Arduino* arduino;
 };
 
-#endif // MAINWINDOW_H
+#endif // GS_MATCH_H
