@@ -51,7 +51,7 @@ void Equipe::setPays(const QString& pays) { this->pays = pays; }
 void Equipe::settactique(const QString& tactique) {
     this->tactique = tactique;
 }
-
+//
 
 // Ajouter une équipe à la base de données
 bool Equipe::ajouter() {
