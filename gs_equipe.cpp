@@ -70,7 +70,7 @@ void gs_equipe::ajouterEquipe()
     QString pays = ui->payline->text();
     QString tactique = ui->comboTactique->currentText(); // OU lineEdit si tu utilises un champ texte
 
-    Equipe e(id, nom, pays, tactique); // ✅ Avec tactique !
+    Equipe e(id, nom, pays, tactique);
     if (e.ajouter()) {
         QMessageBox::information(this, "Succès", "Équipe ajoutée !");
         afficherEquipes(); // Rafraîchir le tableau
