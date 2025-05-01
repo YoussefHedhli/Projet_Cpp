@@ -98,6 +98,16 @@ bool Equipe::modifier(int id) {
         qDebug() << "Erreur lors de la modification de l'équipe:" << query.lastError().text();
         return false;
     }
+    if (!query.exec()) {
+        qDebug() << "Erreur lors de la modification de l'équipe:" << query.lastError().text();
+        return false;
+    }
+
+    if (query.numRowsAffected() == 0) {
+        qDebug() << "Aucune ligne modifiée. Vérifie si l'ID existe et si les valeurs sont différentes.";
+    }
+
+    return true;
 
     return true;
 }

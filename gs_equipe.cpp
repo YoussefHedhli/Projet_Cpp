@@ -128,14 +128,12 @@ void gs_equipe::supprimerEquipe() {
 }
 //appel de modifier
 void gs_equipe::modifierEquipe() {
-    // Vérifier si une ligne est sélectionnée
     QModelIndex index = ui->AFF->selectionModel()->currentIndex();
     if (!index.isValid()) {
         QMessageBox::warning(this, "Erreur", "Veuillez sélectionner une équipe à modifier.");
         return;
     }
 
-    // Récupérer l'ID de l'équipe sélectionnée (Colonne 0)
     QAbstractItemModel *model = ui->AFF->model();
     bool ok;
     int id = model->data(model->index(index.row(), 0)).toInt(&ok);
@@ -144,38 +142,35 @@ void gs_equipe::modifierEquipe() {
         return;
     }
 
-    // Vérifier l'existence des champs
-    if (!ui->nomline || !ui->payline) {
+    if (!ui->nomline || !ui->payline || !ui->comboTactique) {
         QMessageBox::critical(this, "Erreur", "Champs de modification non trouvés.");
         return;
     }
 
-    // Récupérer les nouvelles valeurs
     QString nom = ui->nomline->text().trimmed();
     QString pays = ui->payline->text().trimmed();
+    QString tactique = ui->comboTactique->currentText();  // Récupérer la tactique sélectionnée
 
-    // Validation : Vérifier que les champs ne sont pas vides
-    if (nom.isEmpty() || pays.isEmpty()) {
+    if (nom.isEmpty() || pays.isEmpty() || tactique.isEmpty()) {
         QMessageBox::warning(this, "Erreur", "Veuillez remplir tous les champs.");
         return;
     }
 
-    // Si les données n'ont pas changé, ne rien faire
+    // Comparer avec les données actuelles
     QString nomActuel = model->data(model->index(index.row(), 1)).toString();
     QString paysActuel = model->data(model->index(index.row(), 2)).toString();
-    if (nom == nomActuel && pays == paysActuel) {
+    QString tactiqueActuelle = model->data(model->index(index.row(), 3)).toString();
+
+    if (nom == nomActuel && pays == paysActuel && tactique == tactiqueActuelle) {
         QMessageBox::information(this, "Info", "Aucune modification détectée.");
         return;
     }
 
-    // Modifier l'équipe dans la base de données
-    QString tactique = ui->comboTactique->currentText()
-;  // Ou comboBox->currentText()
+    // Appliquer la modification
     Equipe e(id, nom, pays, tactique);
-
     if (e.modifier(id)) {
         QMessageBox::information(this, "Succès", "L'équipe a été modifiée avec succès.");
-        afficherEquipes();  // Mettre à jour l'affichage
+        afficherEquipes();
     } else {
         QMessageBox::critical(this, "Erreur", "Échec de la modification de l'équipe.");
     }
@@ -196,6 +191,8 @@ void gs_equipe::on_AFF_clicked(const QModelIndex &index) {
     // Afficher les valeurs dans les champs
     ui->nomline->setText(nom);
     ui->payline->setText(pays);
+    ui->comboTactique->setCurrentText(tactique);
+
 
     // Debug : Afficher dans la console
     qDebug() << "Équipe sélectionnée - Nom:" << nom << ", Pays:" << pays << ", Tactique:" << tactique;
