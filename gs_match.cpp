@@ -1,4 +1,6 @@
 #include "gs_match.h"
+#include "gs_equipe.h"
+#include "gs_billet.h"
 #include "./ui_gs_match.h"
 #include "connection.h"
 #include "match.h"
@@ -69,6 +71,7 @@ gs_match::gs_match(Arduino* a, QWidget *parent)
     connect(ui->sim, &QPushButton::clicked, this, &gs_match::on_sim_clicked);
     connect(ui->calendar, &QCalendarWidget::clicked, this, &gs_match::onCalendarDateSelected);
     connect(ui->calendar, &QCalendarWidget::clicked, this, &gs_match::onCalendarDateHovered);
+    connect(ui->equipepass, &QPushButton::clicked, this, &gs_match::on_equiepass_clicked);
     updateMatchDisplay();
     displayStatistics();
     highlightMatchDates();
@@ -87,6 +90,22 @@ gs_match::~gs_match() {
 void gs_match::on_sim_clicked() {
     Simulation *simulationWindow = new Simulation(arduino, this);  // Pass the Arduino pointer
     simulationWindow->exec();  // Open as a modal dialog
+}
+
+void gs_match::on_equiepass_clicked() {
+    // Create a new instance of gs_equipe window
+    gs_equipe *equipeWindow = new gs_equipe(this);  // Pass the parent window (gs_match)
+
+    // Show the new window
+    equipeWindow->show();  // Open it as a new window
+}
+
+void gs_match::on_billetpass_clicked() {
+    // Create a new instance of gs_billet window
+    gs_billet *billetWindow = new gs_billet(this);  // Pass the parent window (gs_match)
+
+    // Show the new window
+    billetWindow->show();  // Open it as a new window
 }
 
 
@@ -536,6 +555,8 @@ void gs_match::onCalendarDateHovered(const QDate &date) {
         ui->calendar->setToolTip("No matches on this date.");
     }
 }
+
+
 
 
 

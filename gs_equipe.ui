@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>982</width>
-    <height>656</height>
+    <width>1301</width>
+    <height>651</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -80,13 +80,13 @@ QPushButton:hover {
      <iconset theme="QIcon::ThemeIcon::SystemSearch"/>
     </property>
    </widget>
-   <widget class="QLabel" name="label_6">
+   <widget class="QLabel" name="ball">
     <property name="geometry">
      <rect>
-      <x>50</x>
-      <y>20</y>
-      <width>121</width>
-      <height>81</height>
+      <x>60</x>
+      <y>10</y>
+      <width>131</width>
+      <height>91</height>
      </rect>
     </property>
     <property name="text">
@@ -992,13 +992,13 @@ QPushButton:hover {
      <iconset theme="QIcon::ThemeIcon::SystemSearch"/>
     </property>
    </widget>
-   <widget class="QLabel" name="label">
+   <widget class="QLabel" name="label_pic">
     <property name="geometry">
      <rect>
-      <x>0</x>
+      <x>-70</x>
       <y>-80</y>
-      <width>991</width>
-      <height>731</height>
+      <width>1411</width>
+      <height>791</height>
      </rect>
     </property>
     <property name="text">
@@ -1090,10 +1090,10 @@ QPushButton:hover {
      <string/>
     </property>
    </widget>
-   <zorder>label</zorder>
+   <zorder>label_pic</zorder>
    <zorder>label_8</zorder>
    <zorder>label_5</zorder>
-   <zorder>label_6</zorder>
+   <zorder>ball</zorder>
    <zorder>label_14</zorder>
    <zorder>bmodif</zorder>
    <zorder>pushButton_10</zorder>
@@ -1117,7 +1117,7 @@ QPushButton:hover {
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>982</width>
+     <width>1301</width>
      <height>25</height>
     </rect>
    </property>

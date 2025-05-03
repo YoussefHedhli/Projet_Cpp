@@ -39,6 +39,8 @@ private slots:
     void highlightMatchDates();
     void onSortOptionChanged(int index);
     void onCalendarDateHovered(const QDate &date);
+    void on_equiepass_clicked();
+    void on_billetpass_clicked();
 
 
 private:

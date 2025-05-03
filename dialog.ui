@@ -933,6 +933,16 @@ QPushButton:hover {
     <string>Go Directly to pens</string>
    </property>
   </widget>
+  <widget class="QComboBox" name="comboBox">
+   <property name="geometry">
+    <rect>
+     <x>1110</x>
+     <y>250</y>
+     <width>82</width>
+     <height>28</height>
+    </rect>
+   </property>
+  </widget>
   <zorder>label_pic</zorder>
   <zorder>FieldLabel</zorder>
   <zorder>Player1</zorder>
@@ -972,6 +982,7 @@ QPushButton:hover {
   <zorder>keeper</zorder>
   <zorder>keeper1</zorder>
   <zorder>pens</zorder>
+  <zorder>comboBox</zorder>
  </widget>
  <resources/>
  <connections/>

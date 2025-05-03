@@ -35,7 +35,7 @@ public:
     QLabel *label_14;
     QPushButton *bmodif;
     QPushButton *pushButton_10;
-    QLabel *label_6;
+    QLabel *ball;
     QLabel *label_8;
     QTabWidget *tabWidget;
     QWidget *tab_4;
@@ -81,7 +81,7 @@ public:
     QComboBox *comboTactique;
     QLineEdit *linerech;
     QPushButton *pushButton_13;
-    QLabel *label;
+    QLabel *label_pic;
     QFrame *stat;
     QLabel *label_2;
     QTableView *AFF;
@@ -94,7 +94,7 @@ public:
     {
         if (gs_equipe->objectName().isEmpty())
             gs_equipe->setObjectName("gs_equipe");
-        gs_equipe->resize(982, 656);
+        gs_equipe->resize(1301, 651);
         centralwidget = new QWidget(gs_equipe);
         centralwidget->setObjectName("centralwidget");
         label_14 = new QLabel(centralwidget);
@@ -127,10 +127,10 @@ public:
 "}"));
         QIcon icon1(QIcon::fromTheme(QIcon::ThemeIcon::SystemSearch));
         pushButton_10->setIcon(icon1);
-        label_6 = new QLabel(centralwidget);
-        label_6->setObjectName("label_6");
-        label_6->setGeometry(QRect(50, 20, 121, 81));
-        label_6->setPixmap(QPixmap(QString::fromUtf8("../../Pictures/A1.png")));
+        ball = new QLabel(centralwidget);
+        ball->setObjectName("ball");
+        ball->setGeometry(QRect(60, 10, 131, 91));
+        ball->setPixmap(QPixmap(QString::fromUtf8("../../Pictures/A1.png")));
         label_8 = new QLabel(centralwidget);
         label_8->setObjectName("label_8");
         label_8->setGeometry(QRect(300, 310, 211, 241));
@@ -484,10 +484,10 @@ public:
 "    background-color: #001f33; /* Darker Prussian blue on hover */\n"
 "}"));
         pushButton_13->setIcon(icon1);
-        label = new QLabel(centralwidget);
-        label->setObjectName("label");
-        label->setGeometry(QRect(0, -80, 991, 731));
-        label->setPixmap(QPixmap(QString::fromUtf8("../../Pictures/ft2.png")));
+        label_pic = new QLabel(centralwidget);
+        label_pic->setObjectName("label_pic");
+        label_pic->setGeometry(QRect(-70, -80, 1411, 791));
+        label_pic->setPixmap(QPixmap(QString::fromUtf8("../../Pictures/ft2.png")));
         stat = new QFrame(centralwidget);
         stat->setObjectName("stat");
         stat->setGeometry(QRect(260, 320, 311, 271));
@@ -510,10 +510,10 @@ public:
         labeltactique->setObjectName("labeltactique");
         labeltactique->setGeometry(QRect(712, 199, 91, 21));
         gs_equipe->setCentralWidget(centralwidget);
-        label->raise();
+        label_pic->raise();
         label_8->raise();
         label_5->raise();
-        label_6->raise();
+        ball->raise();
         label_14->raise();
         bmodif->raise();
         pushButton_10->raise();
@@ -533,7 +533,7 @@ public:
         labeltactique->raise();
         menubar = new QMenuBar(gs_equipe);
         menubar->setObjectName("menubar");
-        menubar->setGeometry(QRect(0, 0, 982, 25));
+        menubar->setGeometry(QRect(0, 0, 1301, 25));
         gs_equipe->setMenuBar(menubar);
         statusbar = new QStatusBar(gs_equipe);
         statusbar->setObjectName("statusbar");
@@ -553,7 +553,7 @@ public:
         label_14->setText(QCoreApplication::translate("gs_equipe", "WELCOME!", nullptr));
         bmodif->setText(QCoreApplication::translate("gs_equipe", "Modifier", nullptr));
         pushButton_10->setText(QCoreApplication::translate("gs_equipe", "Employer", nullptr));
-        label_6->setText(QString());
+        ball->setText(QString());
         label_8->setText(QString());
         QTableWidgetItem *___qtablewidgetitem = table->horizontalHeaderItem(0);
         ___qtablewidgetitem->setText(QCoreApplication::translate("gs_equipe", "id_equipe", nullptr));
@@ -611,7 +611,7 @@ public:
 
         linerech->setText(QString());
         pushButton_13->setText(QCoreApplication::translate("gs_equipe", "Sponsor", nullptr));
-        label->setText(QString());
+        label_pic->setText(QString());
         label_2->setText(QString());
         combotri->setItemText(0, QCoreApplication::translate("gs_equipe", "Tri par ID (croissant)", nullptr));
         combotri->setItemText(1, QCoreApplication::translate("gs_equipe", "Tri par ID (d\303\251croissant)", nullptr));

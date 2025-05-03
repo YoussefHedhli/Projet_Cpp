@@ -48,7 +48,7 @@ public:
     QComboBox *etats;
     QFrame *frame;
     QPushButton *pushButton_4;
-    QPushButton *pushButton_9;
+    QPushButton *billetpass;
     QPushButton *pushButton_10;
     QPushButton *pushButton_11;
     QPushButton *equipepass;
@@ -208,10 +208,10 @@ public:
 "}\n"
 "\n"
 ""));
-        pushButton_9 = new QPushButton(frame);
-        pushButton_9->setObjectName("pushButton_9");
-        pushButton_9->setGeometry(QRect(490, 10, 111, 41));
-        pushButton_9->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+        billetpass = new QPushButton(frame);
+        billetpass->setObjectName("billetpass");
+        billetpass->setGeometry(QRect(490, 10, 111, 41));
+        billetpass->setStyleSheet(QString::fromUtf8("QPushButton {\n"
 "    border: 2px solid #003153;   /* Prussian Blue border */\n"
 "    border-radius: 10px;         /* Round the corners */\n"
 "    padding: 0 8px;              /* Padding inside the button */\n"
@@ -282,7 +282,7 @@ public:
         ball->setScaledContents(true);
         label_pic2->raise();
         pushButton_4->raise();
-        pushButton_9->raise();
+        billetpass->raise();
         pushButton_10->raise();
         pushButton_11->raise();
         equipepass->raise();
@@ -422,7 +422,7 @@ public:
         etats->setItemText(3, QCoreApplication::translate("gs_match", "Postponed", nullptr));
 
         pushButton_4->setText(QCoreApplication::translate("gs_match", "Sponsor", nullptr));
-        pushButton_9->setText(QCoreApplication::translate("gs_match", "Billet", nullptr));
+        billetpass->setText(QCoreApplication::translate("gs_match", "Billet", nullptr));
         pushButton_10->setText(QCoreApplication::translate("gs_match", "Employer", nullptr));
         pushButton_11->setText(QCoreApplication::translate("gs_match", "Match", nullptr));
         equipepass->setText(QCoreApplication::translate("gs_match", "Equipe", nullptr));

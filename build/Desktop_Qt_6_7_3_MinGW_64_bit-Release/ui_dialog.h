@@ -11,6 +11,7 @@
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QComboBox>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QFrame>
 #include <QtWidgets/QLCDNumber>
@@ -47,12 +48,12 @@ public:
     QLabel *Player22;
     QLabel *Ball;
     QPushButton *Start;
-    QPushButton *pushButton_2;
+    QPushButton *Resume;
     QPushButton *Pause;
-    QLCDNumber *lcdNumber;
-    QLabel *label;
-    QLabel *label_2;
-    QLabel *label_3;
+    QLCDNumber *chrono;
+    QLabel *scoreb;
+    QLabel *scorer;
+    QLabel *label_pic;
     QFrame *frame;
     QPushButton *pushButton_4;
     QPushButton *pushButton_9;
@@ -60,7 +61,15 @@ public:
     QPushButton *pushButton_11;
     QPushButton *pushButton_12;
     QLabel *label_pic2;
-    QLabel *label_7;
+    QLabel *ball;
+    QLabel *GOAL;
+    QLabel *GOAL1;
+    QLabel *penalty;
+    QLabel *penalty1;
+    QLabel *keeper;
+    QLabel *keeper1;
+    QPushButton *pens;
+    QComboBox *comboBox;
 
     void setupUi(QDialog *Dialog)
     {
@@ -76,7 +85,7 @@ public:
         FieldLabel->setScaledContents(true);
         Player1 = new QLabel(Dialog);
         Player1->setObjectName("Player1");
-        Player1->setGeometry(QRect(340, 370, 21, 21));
+        Player1->setGeometry(QRect(340, 390, 21, 21));
         Player1->setStyleSheet(QString::fromUtf8("background-color: blue;\n"
 "border-radius: 10px;\n"
 "width: 20px;\n"
@@ -274,10 +283,10 @@ public:
 "QPushButton:hover {\n"
 "    background-color: #505050;   /* Darker grey on hover */\n"
 "} "));
-        pushButton_2 = new QPushButton(Dialog);
-        pushButton_2->setObjectName("pushButton_2");
-        pushButton_2->setGeometry(QRect(810, 130, 83, 29));
-        pushButton_2->setStyleSheet(QString::fromUtf8("QPushButton{\n"
+        Resume = new QPushButton(Dialog);
+        Resume->setObjectName("Resume");
+        Resume->setGeometry(QRect(810, 130, 83, 29));
+        Resume->setStyleSheet(QString::fromUtf8("QPushButton{\n"
 "border: 2px solid #808080;\n"
 "border-radius: 10px;\n"
 "padding: 0 8px;              /* Padding inside the button */\n"
@@ -302,20 +311,20 @@ public:
 "QPushButton:hover {\n"
 "    background-color: #505050;   /* Darker grey on hover */\n"
 "} "));
-        lcdNumber = new QLCDNumber(Dialog);
-        lcdNumber->setObjectName("lcdNumber");
-        lcdNumber->setGeometry(QRect(580, 210, 64, 23));
-        label = new QLabel(Dialog);
-        label->setObjectName("label");
-        label->setGeometry(QRect(390, 210, 63, 20));
-        label_2 = new QLabel(Dialog);
-        label_2->setObjectName("label_2");
-        label_2->setGeometry(QRect(810, 210, 63, 20));
-        label_3 = new QLabel(Dialog);
-        label_3->setObjectName("label_3");
-        label_3->setGeometry(QRect(-10, -20, 1331, 681));
-        label_3->setPixmap(QPixmap(QString::fromUtf8("../../../Downloads/476346398_1815866255484140_2102298479494468270_n.jpg")));
-        label_3->setScaledContents(true);
+        chrono = new QLCDNumber(Dialog);
+        chrono->setObjectName("chrono");
+        chrono->setGeometry(QRect(580, 210, 64, 23));
+        scoreb = new QLabel(Dialog);
+        scoreb->setObjectName("scoreb");
+        scoreb->setGeometry(QRect(390, 210, 63, 20));
+        scorer = new QLabel(Dialog);
+        scorer->setObjectName("scorer");
+        scorer->setGeometry(QRect(810, 210, 63, 20));
+        label_pic = new QLabel(Dialog);
+        label_pic->setObjectName("label_pic");
+        label_pic->setGeometry(QRect(-10, -10, 1331, 681));
+        label_pic->setPixmap(QPixmap(QString::fromUtf8("../../../Downloads/476346398_1815866255484140_2102298479494468270_n.jpg")));
+        label_pic->setScaledContents(true);
         frame = new QFrame(Dialog);
         frame->setObjectName("frame");
         frame->setGeometry(QRect(240, 10, 821, 61));
@@ -405,19 +414,54 @@ public:
 "    color: #FFFFFF;\n"
 "}\n"
 ""));
-        label_7 = new QLabel(frame);
-        label_7->setObjectName("label_7");
-        label_7->setGeometry(QRect(-10, -30, 121, 121));
-        label_7->setPixmap(QPixmap(QString::fromUtf8("../../../Downloads/ac26d84d-c0ab-4a53-b362-c5e005f6e792-removebg-preview.png")));
-        label_7->setScaledContents(true);
+        ball = new QLabel(frame);
+        ball->setObjectName("ball");
+        ball->setGeometry(QRect(-10, -30, 121, 121));
+        ball->setPixmap(QPixmap(QString::fromUtf8("../../../Downloads/ac26d84d-c0ab-4a53-b362-c5e005f6e792-removebg-preview.png")));
+        ball->setScaledContents(true);
         label_pic2->raise();
         pushButton_4->raise();
         pushButton_9->raise();
         pushButton_10->raise();
         pushButton_11->raise();
         pushButton_12->raise();
-        label_7->raise();
-        label_3->raise();
+        ball->raise();
+        GOAL = new QLabel(Dialog);
+        GOAL->setObjectName("GOAL");
+        GOAL->setGeometry(QRect(940, 360, 63, 20));
+        GOAL1 = new QLabel(Dialog);
+        GOAL1->setObjectName("GOAL1");
+        GOAL1->setGeometry(QRect(280, 370, 63, 20));
+        penalty = new QLabel(Dialog);
+        penalty->setObjectName("penalty");
+        penalty->setGeometry(QRect(850, 360, 63, 20));
+        penalty1 = new QLabel(Dialog);
+        penalty1->setObjectName("penalty1");
+        penalty1->setGeometry(QRect(400, 360, 63, 20));
+        keeper = new QLabel(Dialog);
+        keeper->setObjectName("keeper");
+        keeper->setGeometry(QRect(900, 360, 63, 20));
+        keeper1 = new QLabel(Dialog);
+        keeper1->setObjectName("keeper1");
+        keeper1->setGeometry(QRect(350, 360, 63, 20));
+        pens = new QPushButton(Dialog);
+        pens->setObjectName("pens");
+        pens->setGeometry(QRect(560, 610, 161, 29));
+        pens->setStyleSheet(QString::fromUtf8("QPushButton{\n"
+"border: 2px solid #808080;\n"
+"border-radius: 10px;\n"
+"padding: 0 8px;              /* Padding inside the button */\n"
+"    background: #808080;         /* Grey background */\n"
+"    color: white;                /* White text color */\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: #505050;   /* Darker grey on hover */\n"
+"} "));
+        comboBox = new QComboBox(Dialog);
+        comboBox->setObjectName("comboBox");
+        comboBox->setGeometry(QRect(1110, 250, 82, 28));
+        label_pic->raise();
         FieldLabel->raise();
         Player1->raise();
         Player3->raise();
@@ -443,12 +487,20 @@ public:
         Player22->raise();
         Ball->raise();
         Start->raise();
-        pushButton_2->raise();
+        Resume->raise();
         Pause->raise();
-        lcdNumber->raise();
-        label->raise();
-        label_2->raise();
+        chrono->raise();
+        scoreb->raise();
+        scorer->raise();
         frame->raise();
+        GOAL->raise();
+        GOAL1->raise();
+        penalty->raise();
+        penalty1->raise();
+        keeper->raise();
+        keeper1->raise();
+        pens->raise();
+        comboBox->raise();
 
         retranslateUi(Dialog);
 
@@ -483,18 +535,25 @@ public:
         Player22->setText(QString());
         Ball->setText(QString());
         Start->setText(QCoreApplication::translate("Dialog", "START", nullptr));
-        pushButton_2->setText(QCoreApplication::translate("Dialog", "Resume", nullptr));
+        Resume->setText(QCoreApplication::translate("Dialog", "Resume", nullptr));
         Pause->setText(QCoreApplication::translate("Dialog", "PAUSE", nullptr));
-        label->setText(QCoreApplication::translate("Dialog", "0", nullptr));
-        label_2->setText(QCoreApplication::translate("Dialog", "0", nullptr));
-        label_3->setText(QString());
+        scoreb->setText(QCoreApplication::translate("Dialog", "0", nullptr));
+        scorer->setText(QCoreApplication::translate("Dialog", "0", nullptr));
+        label_pic->setText(QString());
         pushButton_4->setText(QCoreApplication::translate("Dialog", "Sponsor", nullptr));
         pushButton_9->setText(QCoreApplication::translate("Dialog", "Billet", nullptr));
         pushButton_10->setText(QCoreApplication::translate("Dialog", "Employer", nullptr));
         pushButton_11->setText(QCoreApplication::translate("Dialog", "Match", nullptr));
         pushButton_12->setText(QCoreApplication::translate("Dialog", "Equipe", nullptr));
         label_pic2->setText(QString());
-        label_7->setText(QString());
+        ball->setText(QString());
+        GOAL->setText(QString());
+        GOAL1->setText(QString());
+        penalty->setText(QString());
+        penalty1->setText(QString());
+        keeper->setText(QString());
+        keeper1->setText(QString());
+        pens->setText(QCoreApplication::translate("Dialog", "Go Directly to pens", nullptr));
     } // retranslateUi
 
 };

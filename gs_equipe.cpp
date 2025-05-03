@@ -20,6 +20,8 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QDebug>
+#include <QPainter>
+
 
 gs_equipe::gs_equipe(QWidget *parent)
     : QMainWindow(parent)
@@ -47,17 +49,6 @@ connect(ui->bpdf, &QPushButton::clicked, this, &gs_equipe::exporterPDF);
  connect(ui->up, &QPushButton::clicked, this, &gs_equipe::on_updateButton_clicked);
  connect(ui->matchpass, &QPushButton::clicked, this, &gs_equipe::on_matchpass_clicked);
 
-
-    // Chargement des images
-    QPixmap pix("C:/Users/MSI/Pictures/ft2.png");
-    ui->label->setPixmap(pix.scaled(1200, 1100, Qt::KeepAspectRatio));
-
-    QPixmap pix2("C:/Users/MSI/Pictures/dimensions-arcs-cercle-terrain-foot.png");
-    ui->label_4->setPixmap(pix2.scaled(500, 500, Qt::KeepAspectRatio));
-
-    QPixmap pix3("C:/Users/MSI/Pictures/A1.png");
-    ui->label_6->setPixmap(pix3.scaled(100, 100, Qt::KeepAspectRatio));
-
     // Affiche toutes les équipes dès l'ouverture
     afficherEquipes();
 }
@@ -65,6 +56,39 @@ gs_equipe::~gs_equipe()  // Changed from MainWindow
 {
     delete ui;
 }
+
+void gs_equipe::paintEvent(QPaintEvent *event) {
+    // Create a QPainter object to draw on the window
+    QPainter painter(this);
+
+    // Load background image
+    QPixmap pix("C:/Users/AMEN WORKSTATION/Desktop/projet/untitled/bg.jpg");
+    if (pix.isNull()) {
+        qDebug() << "Failed to load bg.jpg. Check the file path.";
+    } else {
+        // Scale the image to fit the entire window size
+        pix = pix.scaled(this->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+
+        // Draw the background image directly on the window
+        painter.drawPixmap(0, 0, pix);
+    }
+
+    // Optionally, you can also display the logo inside the label
+    QPixmap logoPix("C:/Users/AMEN WORKSTATION/Desktop/projet/untitled/ball.png");
+    if (!logoPix.isNull()) {
+        // Use QLabel to display the logo and set it to fit inside the label's area
+        ui->ball->setPixmap(logoPix.scaled(ui->ball->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        ui->ball->show();  // Ensure the label is visible with the logo
+    }
+
+    // Call the parent class paintEvent to allow other painting to occur
+    QMainWindow::paintEvent(event);
+}
+
+
+
+
+
 
 void gs_equipe::on_matchpass_clicked()
 {

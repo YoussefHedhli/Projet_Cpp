@@ -42,6 +42,7 @@ private slots:
      void exporterPDF();
      void afficherStatistiques();
       void onComboTriChanged(int index);
+     void paintEvent(QPaintEvent *event);
 
 
 private:

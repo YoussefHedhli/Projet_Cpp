@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+#include "gs_match.h"
 #include <QApplication>
 #include <QMessageBox>
 #include "connection.h"
@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
     }
 
     // Pass the connected Arduino to MainWindow
-    MainWindow w(arduino);
+    gs_match w(arduino);
 
     if (dbTest && arduinoTest == 0) {
         w.show();
