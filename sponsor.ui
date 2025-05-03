@@ -1,0 +1,824 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>sponsor</class>
+ <widget class="QDialog" name="sponsor">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1038</width>
+    <height>720</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <widget class="QLabel" name="label_pic">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>-30</x>
+     <y>0</y>
+     <width>1071</width>
+     <height>721</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap>../../../../Downloads/bg0777.jpg</pixmap>
+   </property>
+  </widget>
+  <widget class="QFrame" name="formulere">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>340</y>
+     <width>271</width>
+     <height>341</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(65, 65, 65);</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::Shape::NoFrame</enum>
+   </property>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>50</y>
+      <width>41</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>14</pointsize>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>ID</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>130</y>
+      <width>141</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>14</pointsize>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>Produit</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>170</y>
+      <width>161</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>14</pointsize>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>Contribution</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>90</y>
+      <width>171</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>14</pointsize>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>Nom Sponsor</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit_id">
+    <property name="geometry">
+     <rect>
+      <x>180</x>
+      <y>50</y>
+      <width>81</width>
+      <height>28</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit_nom_org">
+    <property name="geometry">
+     <rect>
+      <x>180</x>
+      <y>90</y>
+      <width>81</width>
+      <height>28</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit_produit">
+    <property name="geometry">
+     <rect>
+      <x>180</x>
+      <y>130</y>
+      <width>81</width>
+      <height>28</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit_contribution">
+    <property name="geometry">
+     <rect>
+      <x>180</x>
+      <y>170</y>
+      <width>81</width>
+      <height>28</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="ajouter">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>220</y>
+      <width>151</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+    border: 2px solid #808080;   /* Grey border */
+    border-radius: 10px;         /* Round the corners */
+    padding: 0 8px;              /* Padding inside the button */
+    background: #808080;         /* Grey background */
+    color: white;                /* White text color */
+}
+
+QPushButton:hover {
+    background-color: #505050;   /* Darker grey on hover */
+}
+</string>
+    </property>
+    <property name="text">
+     <string>Ajouter</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_11">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>0</y>
+      <width>181</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Nirmala UI</family>
+      <pointsize>20</pointsize>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>Sponsor</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="modifier">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>260</y>
+      <width>151</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+    border: 2px solid #808080;   /* Grey border */
+    border-radius: 10px;         /* Round the corners */
+    padding: 0 8px;              /* Padding inside the button */
+    background: #808080;         /* Grey background */
+    color: white;                /* White text color */
+}
+
+QPushButton:hover {
+    background-color: #505050;   /* Darker grey on hover */
+}
+</string>
+    </property>
+    <property name="text">
+     <string>Modifier</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="supprimer">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>300</y>
+      <width>151</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+    border: 2px solid #808080;   /* Grey border */
+    border-radius: 10px;         /* Round the corners */
+    padding: 0 8px;              /* Padding inside the button */
+    background: #808080;         /* Grey background */
+    color: white;                /* White text color */
+}
+
+QPushButton:hover {
+    background-color: #505050;   /* Darker grey on hover */
+}
+
+</string>
+    </property>
+    <property name="text">
+     <string>Supprimer</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QFrame" name="Mailing">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>320</x>
+     <y>340</y>
+     <width>421</width>
+     <height>341</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(65, 65, 65);
+</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::Shape::NoFrame</enum>
+   </property>
+   <widget class="QLabel" name="label_10">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>10</y>
+      <width>201</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>14</pointsize>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>Meilleur sponsor </string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnClassement">
+    <property name="geometry">
+     <rect>
+      <x>120</x>
+      <y>80</y>
+      <width>131</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Afficher Classement</string>
+    </property>
+   </widget>
+   <widget class="QTableWidget" name="tableClassement">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>140</y>
+      <width>361</width>
+      <height>192</height>
+     </rect>
+    </property>
+    <column>
+     <property name="text">
+      <string>Sponsor</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>equipe with the most sponsor</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>rang</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Contribution</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Catégorie</string>
+     </property>
+    </column>
+   </widget>
+  </widget>
+  <widget class="QPushButton" name="annuler">
+   <property name="geometry">
+    <rect>
+     <x>660</x>
+     <y>130</y>
+     <width>71</width>
+     <height>29</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton {
+    border: 2px solid #808080;   /* Grey border */
+    border-radius: 10px;         /* Round the corners */
+    padding: 0 8px;              /* Padding inside the button */
+    background: #808080;         /* Grey background */
+    color: white;                /* White text color */
+}
+
+QPushButton:hover {
+    background-color: #505050;   /* Darker grey on hover */
+}
+</string>
+   </property>
+   <property name="text">
+    <string>annuler</string>
+   </property>
+  </widget>
+  <widget class="QFrame" name="frame">
+   <property name="geometry">
+    <rect>
+     <x>80</x>
+     <y>60</y>
+     <width>761</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(65, 65, 65);</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::Shape::NoFrame</enum>
+   </property>
+   <widget class="QPushButton" name="pushButton_4">
+    <property name="geometry">
+     <rect>
+      <x>610</x>
+      <y>10</y>
+      <width>111</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+    border: 2px solid #003153;   /* Prussian Blue border */
+    border-radius: 10px;         /* Round the corners */
+    padding: 0 8px;              /* Padding inside the button */
+    background: #003153;         /* Prussian Blue background */
+    color: white;                /* White text color */
+}
+
+QPushButton:hover {
+    background-color: #001f33; /* Darker Prussian blue on hover */
+}
+
+</string>
+    </property>
+    <property name="text">
+     <string>Sponsor</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_9">
+    <property name="geometry">
+     <rect>
+      <x>490</x>
+      <y>10</y>
+      <width>111</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+    border: 2px solid #003153;   /* Prussian Blue border */
+    border-radius: 10px;         /* Round the corners */
+    padding: 0 8px;              /* Padding inside the button */
+    background: #003153;         /* Prussian Blue background */
+    color: white;                /* White text color */
+}
+
+QPushButton:hover {
+    background-color: #001f33; /* Darker Prussian blue on hover */
+}
+</string>
+    </property>
+    <property name="text">
+     <string>Billet</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_10">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>10</y>
+      <width>111</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+    border: 2px solid #003153;   /* Prussian Blue border */
+    border-radius: 10px;         /* Round the corners */
+    padding: 0 8px;              /* Padding inside the button */
+    background: #003153;         /* Prussian Blue background */
+    color: white;                /* White text color */
+}
+
+QPushButton:hover {
+    background-color: #001f33; /* Darker Prussian blue on hover */
+}
+</string>
+    </property>
+    <property name="text">
+     <string>Employer</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_11">
+    <property name="geometry">
+     <rect>
+      <x>250</x>
+      <y>10</y>
+      <width>111</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+    border: 2px solid #003153;   /* Prussian Blue border */
+    border-radius: 10px;         /* Round the corners */
+    padding: 0 8px;              /* Padding inside the button */
+    background: #003153;         /* Prussian Blue background */
+    color: white;                /* White text color */
+}
+
+QPushButton:hover {
+    background-color: #001f33; /* Darker Prussian blue on hover */
+}
+</string>
+    </property>
+    <property name="text">
+     <string>Match</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_12">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>10</y>
+      <width>111</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+    border: 2px solid #003153;   /* Prussian Blue border */
+    border-radius: 10px;         /* Round the corners */
+    padding: 0 8px;              /* Padding inside the button */
+    background: #003153;         /* Prussian Blue background */
+    color: white;                /* White text color */
+}
+
+QPushButton:hover {
+    background-color: #001f33; /* Darker Prussian blue on hover */
+}
+</string>
+    </property>
+    <property name="text">
+     <string>Equipe</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ball">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>-10</y>
+      <width>91</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QPushButton" name="recherche">
+   <property name="geometry">
+    <rect>
+     <x>362</x>
+     <y>130</y>
+     <width>91</width>
+     <height>29</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton {
+    border: 2px solid #808080;   /* Grey border */
+    border-radius: 10px;         /* Round the corners */
+    padding: 0 8px;              /* Padding inside the button */
+    background: #808080;         /* Grey background */
+    color: white;                /* White text color */
+}
+
+QPushButton:hover {
+    background-color: #505050;   /* Darker grey on hover */
+}
+</string>
+   </property>
+   <property name="text">
+    <string>Recherche</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="tri">
+   <property name="geometry">
+    <rect>
+     <x>470</x>
+     <y>130</y>
+     <width>83</width>
+     <height>29</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton {
+    border: 2px solid #808080;   /* Grey border */
+    border-radius: 10px;         /* Round the corners */
+    padding: 0 8px;              /* Padding inside the button */
+    background: #808080;         /* Grey background */
+    color: white;                /* White text color */
+}
+
+QPushButton:hover {
+    background-color: #505050;   /* Darker grey on hover */
+}
+</string>
+   </property>
+   <property name="text">
+    <string>Tri par ID</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="lineEditrecherche">
+   <property name="geometry">
+    <rect>
+     <x>80</x>
+     <y>130</y>
+     <width>271</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(65, 65, 65);
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QTableWidget" name="tableWidget">
+   <property name="geometry">
+    <rect>
+     <x>70</x>
+     <y>180</y>
+     <width>521</width>
+     <height>141</height>
+    </rect>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>763</width>
+     <height>16777215</height>
+    </size>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(65, 65, 65);</string>
+   </property>
+   <column>
+    <property name="text">
+     <string>ID</string>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>9</pointsize>
+      <bold>false</bold>
+     </font>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Nom Sponsor</string>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>9</pointsize>
+     </font>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Produit </string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Contribution</string>
+    </property>
+   </column>
+  </widget>
+  <widget class="QPushButton" name="pdf">
+   <property name="geometry">
+    <rect>
+     <x>750</x>
+     <y>130</y>
+     <width>71</width>
+     <height>29</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton {
+    border: 2px solid #808080;   /* Grey border */
+    border-radius: 10px;         /* Round the corners */
+    padding: 0 8px;              /* Padding inside the button */
+    background: #808080;         /* Grey background */
+    color: white;                /* White text color */
+}
+
+QPushButton:hover {
+    background-color: #505050;   /* Darker grey on hover */
+}
+</string>
+   </property>
+   <property name="text">
+    <string>pdf</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="statistique">
+   <property name="geometry">
+    <rect>
+     <x>850</x>
+     <y>130</y>
+     <width>91</width>
+     <height>29</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton {
+    border: 2px solid #808080;   /* Grey border */
+    border-radius: 10px;         /* Round the corners */
+    padding: 0 8px;              /* Padding inside the button */
+    background: #808080;         /* Grey background */
+    color: white;                /* White text color */
+}
+
+QPushButton:hover {
+    background-color: #505050;   /* Darker grey on hover */
+}
+</string>
+   </property>
+   <property name="text">
+    <string>statistique</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="labelImageSponsor">
+   <property name="geometry">
+    <rect>
+     <x>760</x>
+     <y>340</y>
+     <width>241</width>
+     <height>161</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>MS Sans Serif</family>
+     <pointsize>15</pointsize>
+     <italic>true</italic>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="acceptDrops">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignmentFlag::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnLoadImage">
+   <property name="geometry">
+    <rect>
+     <x>780</x>
+     <y>530</y>
+     <width>101</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Charger image</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnRemoveImage">
+   <property name="geometry">
+    <rect>
+     <x>764</x>
+     <y>582</y>
+     <width>121</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Supprimer image</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="tri_des">
+   <property name="geometry">
+    <rect>
+     <x>560</x>
+     <y>130</y>
+     <width>83</width>
+     <height>29</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton {
+    border: 2px solid #808080;   /* Grey border */
+    border-radius: 10px;         /* Round the corners */
+    padding: 0 8px;              /* Padding inside the button */
+    background: #808080;         /* Grey background */
+    color: white;                /* White text color */
+}
+
+QPushButton:hover {
+    background-color: #505050;   /* Darker grey on hover */
+}
+</string>
+   </property>
+   <property name="text">
+    <string>tri des</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

@@ -41,6 +41,7 @@ private slots:
     void onCalendarDateHovered(const QDate &date);
     void on_equiepass_clicked();
     void on_billetpass_clicked();
+    void on_sponsorpass_clicked();
 
 
 private:

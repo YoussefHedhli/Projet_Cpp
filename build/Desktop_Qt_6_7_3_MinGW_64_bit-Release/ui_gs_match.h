@@ -47,7 +47,7 @@ public:
     QLabel *label_6;
     QComboBox *etats;
     QFrame *frame;
-    QPushButton *pushButton_4;
+    QPushButton *sponsorpass;
     QPushButton *billetpass;
     QPushButton *pushButton_10;
     QPushButton *pushButton_11;
@@ -192,10 +192,10 @@ public:
         frame->setGeometry(QRect(230, 20, 761, 61));
         frame->setFrameShape(QFrame::Shape::StyledPanel);
         frame->setFrameShadow(QFrame::Shadow::Raised);
-        pushButton_4 = new QPushButton(frame);
-        pushButton_4->setObjectName("pushButton_4");
-        pushButton_4->setGeometry(QRect(610, 10, 111, 41));
-        pushButton_4->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+        sponsorpass = new QPushButton(frame);
+        sponsorpass->setObjectName("sponsorpass");
+        sponsorpass->setGeometry(QRect(610, 10, 111, 41));
+        sponsorpass->setStyleSheet(QString::fromUtf8("QPushButton {\n"
 "    border: 2px solid #003153;   /* Prussian Blue border */\n"
 "    border-radius: 10px;         /* Round the corners */\n"
 "    padding: 0 8px;              /* Padding inside the button */\n"
@@ -281,7 +281,7 @@ public:
         ball->setGeometry(QRect(-20, -30, 121, 111));
         ball->setScaledContents(true);
         label_pic2->raise();
-        pushButton_4->raise();
+        sponsorpass->raise();
         billetpass->raise();
         pushButton_10->raise();
         pushButton_11->raise();
@@ -421,7 +421,7 @@ public:
         etats->setItemText(2, QCoreApplication::translate("gs_match", "Didn't Start", nullptr));
         etats->setItemText(3, QCoreApplication::translate("gs_match", "Postponed", nullptr));
 
-        pushButton_4->setText(QCoreApplication::translate("gs_match", "Sponsor", nullptr));
+        sponsorpass->setText(QCoreApplication::translate("gs_match", "Sponsor", nullptr));
         billetpass->setText(QCoreApplication::translate("gs_match", "Billet", nullptr));
         pushButton_10->setText(QCoreApplication::translate("gs_match", "Employer", nullptr));
         pushButton_11->setText(QCoreApplication::translate("gs_match", "Match", nullptr));

@@ -1,6 +1,7 @@
 #include "gs_match.h"
 #include "gs_equipe.h"
 #include "gs_billet.h"
+#include "sponsor.h"
 #include "./ui_gs_match.h"
 #include "connection.h"
 #include "match.h"
@@ -106,6 +107,14 @@ void gs_match::on_billetpass_clicked() {
 
     // Show the new window
     billetWindow->show();  // Open it as a new window
+}
+
+void gs_match::on_sponsorpass_clicked() {
+    // Create a new instance of sponsor window
+    sponsor *sponsorWindow = new sponsor(this);  // Pass the parent window (gs_match)
+
+    // Show the sponsor window
+    sponsorWindow->show();  // Open it as a new window
 }
 
 
