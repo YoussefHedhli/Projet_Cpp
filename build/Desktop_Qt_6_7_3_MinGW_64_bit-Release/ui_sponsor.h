@@ -45,10 +45,10 @@ public:
     QPushButton *annuler;
     QFrame *frame;
     QPushButton *pushButton_4;
-    QPushButton *pushButton_9;
-    QPushButton *pushButton_10;
-    QPushButton *pushButton_11;
-    QPushButton *pushButton_12;
+    QPushButton *billetpass;
+    QPushButton *employerpass;
+    QPushButton *matchpass;
+    QPushButton *equipepass;
     QLabel *ball;
     QPushButton *recherche;
     QPushButton *tri;
@@ -232,10 +232,10 @@ public:
 "}\n"
 "\n"
 ""));
-        pushButton_9 = new QPushButton(frame);
-        pushButton_9->setObjectName("pushButton_9");
-        pushButton_9->setGeometry(QRect(490, 10, 111, 41));
-        pushButton_9->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+        billetpass = new QPushButton(frame);
+        billetpass->setObjectName("billetpass");
+        billetpass->setGeometry(QRect(490, 10, 111, 41));
+        billetpass->setStyleSheet(QString::fromUtf8("QPushButton {\n"
 "    border: 2px solid #003153;   /* Prussian Blue border */\n"
 "    border-radius: 10px;         /* Round the corners */\n"
 "    padding: 0 8px;              /* Padding inside the button */\n"
@@ -247,10 +247,10 @@ public:
 "    background-color: #001f33; /* Darker Prussian blue on hover */\n"
 "}\n"
 ""));
-        pushButton_10 = new QPushButton(frame);
-        pushButton_10->setObjectName("pushButton_10");
-        pushButton_10->setGeometry(QRect(370, 10, 111, 41));
-        pushButton_10->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+        employerpass = new QPushButton(frame);
+        employerpass->setObjectName("employerpass");
+        employerpass->setGeometry(QRect(370, 10, 111, 41));
+        employerpass->setStyleSheet(QString::fromUtf8("QPushButton {\n"
 "    border: 2px solid #003153;   /* Prussian Blue border */\n"
 "    border-radius: 10px;         /* Round the corners */\n"
 "    padding: 0 8px;              /* Padding inside the button */\n"
@@ -262,10 +262,10 @@ public:
 "    background-color: #001f33; /* Darker Prussian blue on hover */\n"
 "}\n"
 ""));
-        pushButton_11 = new QPushButton(frame);
-        pushButton_11->setObjectName("pushButton_11");
-        pushButton_11->setGeometry(QRect(250, 10, 111, 41));
-        pushButton_11->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+        matchpass = new QPushButton(frame);
+        matchpass->setObjectName("matchpass");
+        matchpass->setGeometry(QRect(250, 10, 111, 41));
+        matchpass->setStyleSheet(QString::fromUtf8("QPushButton {\n"
 "    border: 2px solid #003153;   /* Prussian Blue border */\n"
 "    border-radius: 10px;         /* Round the corners */\n"
 "    padding: 0 8px;              /* Padding inside the button */\n"
@@ -277,10 +277,10 @@ public:
 "    background-color: #001f33; /* Darker Prussian blue on hover */\n"
 "}\n"
 ""));
-        pushButton_12 = new QPushButton(frame);
-        pushButton_12->setObjectName("pushButton_12");
-        pushButton_12->setGeometry(QRect(130, 10, 111, 41));
-        pushButton_12->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+        equipepass = new QPushButton(frame);
+        equipepass->setObjectName("equipepass");
+        equipepass->setGeometry(QRect(130, 10, 111, 41));
+        equipepass->setStyleSheet(QString::fromUtf8("QPushButton {\n"
 "    border: 2px solid #003153;   /* Prussian Blue border */\n"
 "    border-radius: 10px;         /* Round the corners */\n"
 "    padding: 0 8px;              /* Padding inside the button */\n"
@@ -446,10 +446,10 @@ public:
         ___qtablewidgetitem4->setText(QCoreApplication::translate("sponsor", "Cat\303\251gorie", nullptr));
         annuler->setText(QCoreApplication::translate("sponsor", "annuler", nullptr));
         pushButton_4->setText(QCoreApplication::translate("sponsor", "Sponsor", nullptr));
-        pushButton_9->setText(QCoreApplication::translate("sponsor", "Billet", nullptr));
-        pushButton_10->setText(QCoreApplication::translate("sponsor", "Employer", nullptr));
-        pushButton_11->setText(QCoreApplication::translate("sponsor", "Match", nullptr));
-        pushButton_12->setText(QCoreApplication::translate("sponsor", "Equipe", nullptr));
+        billetpass->setText(QCoreApplication::translate("sponsor", "Billet", nullptr));
+        employerpass->setText(QCoreApplication::translate("sponsor", "Employer", nullptr));
+        matchpass->setText(QCoreApplication::translate("sponsor", "Match", nullptr));
+        equipepass->setText(QCoreApplication::translate("sponsor", "Equipe", nullptr));
         ball->setText(QString());
         recherche->setText(QCoreApplication::translate("sponsor", "Recherche", nullptr));
         tri->setText(QCoreApplication::translate("sponsor", "Tri par ID", nullptr));

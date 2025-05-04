@@ -441,7 +441,7 @@ QPushButton:hover {
      <string>Sponsor</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_9">
+   <widget class="QPushButton" name="billetpass">
     <property name="geometry">
      <rect>
       <x>490</x>
@@ -468,7 +468,7 @@ QPushButton:hover {
      <string>Billet</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_10">
+   <widget class="QPushButton" name="employerpass">
     <property name="geometry">
      <rect>
       <x>370</x>
@@ -495,7 +495,7 @@ QPushButton:hover {
      <string>Employer</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_11">
+   <widget class="QPushButton" name="matchpass">
     <property name="geometry">
      <rect>
       <x>250</x>
@@ -522,7 +522,7 @@ QPushButton:hover {
      <string>Match</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_12">
+   <widget class="QPushButton" name="equipepass">
     <property name="geometry">
      <rect>
       <x>130</x>

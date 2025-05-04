@@ -1,4 +1,5 @@
 #include "gs_billet.h"
+#include "fennetre1.h"
 #include "ui_gs_billet.h"
 #include "stadiumwidget.h"
 #include <QMessageBox>
@@ -32,6 +33,11 @@ gs_billet::gs_billet(QWidget *parent) :
     ui(new Ui::gs_billet)
 {
     ui->setupUi(this);
+
+    connect(ui->matchpass, &QPushButton::clicked, this, &gs_billet::on_matchpass_clicked);
+    connect(ui->equipepass, &QPushButton::clicked, this, &gs_billet::on_equipepass_clicked);
+    connect(ui->sponsorpass, &QPushButton::clicked, this, &gs_billet::on_sponsorpass_clicked);
+    connect(ui->employerpass, &QPushButton::clicked, this, &gs_billet::on_employerpass_clicked);
 }
 
 gs_billet::~gs_billet()
@@ -62,26 +68,26 @@ void gs_billet::paintEvent(QPaintEvent *event) {
     QMainWindow::paintEvent(event);  // Ensure the parent class paintEvent is called
 }
 
-void gs_billet::on_equipepass_clicked() {
-    // Check if the window is already open
-    if (equipeWindow && equipeWindow->isVisible()) {
-        QMessageBox::warning(this, "Already Open", "The EquipePass window is already open.");
-        return;
-    }
-
-    // Create and show the new window
-    equipeWindow = new gs_equipe();
-    equipeWindow->show();
-
-    // Close current window
-    this->close();
-
-    // Optional: Connect to destroy signal to reset the pointer
-    connect(equipeWindow, &gs_equipe::destroyed, [this]() {
-        equipeWindow = nullptr;
-    });
+void gs_billet::on_matchpass_clicked() {
+    QMessageBox::warning(this, "Accès refusé", "Vous n'avez pas l'accès requis pour la gestion des équipes.");
 }
 
+void gs_billet::on_equipepass_clicked() {
+    QMessageBox::warning(this, "Accès refusé", "Vous n'avez pas l'accès requis pour la gestion des billets.");
+}
+
+void gs_billet::on_sponsorpass_clicked() {
+    QMessageBox::warning(this, "Accès refusé", "Vous n'avez pas l'accès requis pour la gestion des sponsors.");
+}
+
+void gs_billet::on_employerpass_clicked() {
+    // Open the gs_match window
+    fennetre1 *window = new fennetre1(this);  // Passing 'this' as the parent window
+    window->show();  // Show the fennetre1 window
+
+    // Close the gs_match window
+    this->close();  // Close the current window (gs_match)
+}
 
 void gs_billet::on_stat_clicked() {
     QSqlQuery query;

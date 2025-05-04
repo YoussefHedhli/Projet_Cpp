@@ -1,4 +1,5 @@
 #include "sponsor.h"
+#include "fennetre1.h"
 #include "ui_sponsor.h"
 #include <QSqlQuery>
 #include <QSqlQueryModel>
@@ -42,7 +43,7 @@
 #include <QDropEvent>
 #include <QFile>
 #include <QFileDialog>
-#include "arduino.h"
+//#include "arduino.h"
 
 sponsor::sponsor(QWidget *parent) : QDialog(parent), ui(new Ui::sponsor) {
     ui->setupUi(this);
@@ -56,9 +57,13 @@ sponsor::sponsor(QWidget *parent) : QDialog(parent), ui(new Ui::sponsor) {
     connect(ui->annuler, &QPushButton::clicked, this, &sponsor::on_annuler_clicked);
     connect(ui->btnClassement, &QPushButton::clicked, this, &sponsor::loadSponsorRanking);
     connect(ui->btnLoadImage, &QPushButton::clicked, this, &sponsor::on_btnLoadImage_clicked);
+   // connect(ui->matchpass, &QPushButton::clicked, this, &sponsor::on_matchpass_clicked);
+    connect(ui->equipepass, &QPushButton::clicked, this, &sponsor::on_equiepass_clicked);
+    connect(ui->matchpass, &QPushButton::clicked, this, &sponsor::on_matchpass_clicked);
+    connect(ui->employerpass, &QPushButton::clicked, this, &sponsor::on_employerpass_clicked);
 
     // Utiliser le singleton pour la connexion Arduino
-    if (arduino.isConnected()) {
+    /*if (arduino.isConnected()) {
         qDebug() << "Arduino déjà connecté.";
     } else {
         int result = arduino.connect_arduino();
@@ -69,14 +74,14 @@ sponsor::sponsor(QWidget *parent) : QDialog(parent), ui(new Ui::sponsor) {
             qDebug() << "Échec de la connexion Arduino.";
             QMessageBox::critical(this, "Erreur", "Impossible de se connecter à l'Arduino. Vérifiez le port COM et les connexions.");
         }
-    }
+    }*/
 
 
 
     // Configurer un timer pour lire les données toutes les 100ms
-    serialReadTimer = new QTimer(this);
-    connect(serialReadTimer, &QTimer::timeout, this, &sponsor::updateLineEditsFromArduino);
-    serialReadTimer->start(100); // Lire toutes les 100ms
+    //serialReadTimer = new QTimer(this);
+   // connect(serialReadTimer, &QTimer::timeout, this, &sponsor::updateLineEditsFromArduino);
+    //serialReadTimer->start(100); // Lire toutes les 100ms
 
 
     // Configure QLabel
@@ -96,13 +101,13 @@ sponsor::sponsor(int id_s, QString nom_org, QString produit, QString contributio
 
 
 sponsor::~sponsor() {
-    serialReadTimer->stop(); // Arrêter le timer
+    /*serialReadTimer->stop(); // Arrêter le timer
     delete serialReadTimer;
-    arduino.close_arduino();  // Close the Arduino connection
+    arduino.close_arduino();  // Close the Arduino connection*/
     delete ui;
 }
 
-void sponsor::updateLineEditsFromArduino() {
+/*void sponsor::updateLineEditsFromArduino() {
     QByteArray data = arduino.read_from_arduino();
     QString received = QString(data).trimmed();
 
@@ -128,7 +133,7 @@ void sponsor::updateLineEditsFromArduino() {
             matriculeBuffer.clear();
         }
     }
-}
+}*/
 
 void sponsor::paintEvent(QPaintEvent *event) {
     // Create a QPainter object to draw on the window
@@ -156,6 +161,27 @@ void sponsor::paintEvent(QPaintEvent *event) {
 
     // Call the parent class paintEvent to allow other painting to occur
     QDialog::paintEvent(event);
+}
+
+void sponsor::on_equiepass_clicked() {
+    QMessageBox::warning(this, "Accès refusé", "Vous n'avez pas l'accès requis pour la gestion des équipes.");
+}
+
+void sponsor::on_billetpass_clicked() {
+    QMessageBox::warning(this, "Accès refusé", "Vous n'avez pas l'accès requis pour la gestion des billets.");
+}
+
+void sponsor::on_matchpass_clicked() {
+    QMessageBox::warning(this, "Accès refusé", "Vous n'avez pas l'accès requis pour la gestion des sponsors.");
+}
+
+void sponsor::on_employerpass_clicked() {
+    // Open the gs_match window
+    fennetre1 *window = new fennetre1(this);  // Passing 'this' as the parent window
+    window->show();  // Show the gs_match window
+
+    // Close the gs_equipe window
+    this->close();  // Close the current window (gs_equipe)
 }
 
 

@@ -55,6 +55,9 @@ void trierEquipes(const QString &critere);
     void on_btnTactique_clicked();
     void on_comboTrii_currentIndexChanged(const QString &tri);
     void on_matchpass_clicked();
+    void on_billetpass_clicked();
+    void on_sponsorpass_clicked();
+    void on_employerpass_clicked();
 
 
 

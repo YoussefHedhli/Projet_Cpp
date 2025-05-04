@@ -29,7 +29,7 @@
     <property name="frameShadow">
      <enum>QFrame::Shadow::Raised</enum>
     </property>
-    <widget class="QPushButton" name="pushButton_4">
+    <widget class="QPushButton" name="sponsorpass">
      <property name="geometry">
       <rect>
        <x>610</x>
@@ -84,7 +84,7 @@ QPushButton:hover {
       <string>Billet</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton_10">
+    <widget class="QPushButton" name="employerpass">
      <property name="geometry">
       <rect>
        <x>370</x>
@@ -205,9 +205,9 @@ QPushButton:hover {
      </property>
     </widget>
     <zorder>label_pic2</zorder>
-    <zorder>pushButton_4</zorder>
+    <zorder>sponsorpass</zorder>
     <zorder>pushButton_9</zorder>
-    <zorder>pushButton_10</zorder>
+    <zorder>employerpass</zorder>
     <zorder>matchpass</zorder>
     <zorder>equipepass</zorder>
     <zorder>ball</zorder>

@@ -34,7 +34,7 @@ public:
     QWidget *centralwidget;
     QLabel *label_14;
     QPushButton *bmodif;
-    QPushButton *pushButton_10;
+    QPushButton *employerpass;
     QLabel *ball;
     QLabel *label_8;
     QTabWidget *tabWidget;
@@ -61,7 +61,7 @@ public:
     QLabel *label_5;
     QPushButton *bsupp;
     QPushButton *matchpass;
-    QPushButton *pushButton_12;
+    QPushButton *billetpass;
     QPushButton *bpdf;
     QPushButton *Rech;
     QPushButton *pushButton_8;
@@ -80,7 +80,7 @@ public:
     QLabel *label_11;
     QComboBox *comboTactique;
     QLineEdit *linerech;
-    QPushButton *pushButton_13;
+    QPushButton *sponsorpass;
     QLabel *label_pic;
     QFrame *stat;
     QLabel *label_2;
@@ -111,10 +111,10 @@ public:
 "}"));
         QIcon icon(QIcon::fromTheme(QIcon::ThemeIcon::MailMessageNew));
         bmodif->setIcon(icon);
-        pushButton_10 = new QPushButton(centralwidget);
-        pushButton_10->setObjectName("pushButton_10");
-        pushButton_10->setGeometry(QRect(480, 50, 101, 29));
-        pushButton_10->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+        employerpass = new QPushButton(centralwidget);
+        employerpass->setObjectName("employerpass");
+        employerpass->setGeometry(QRect(480, 50, 101, 29));
+        employerpass->setStyleSheet(QString::fromUtf8("QPushButton {\n"
 "    border: 2px solid #003153;   /* Prussian Blue border */\n"
 "    border-radius: 10px;         /* Round the corners */\n"
 "    padding: 0 8px;              /* Padding inside the button */\n"
@@ -126,7 +126,7 @@ public:
 "    background-color: #001f33; /* Darker Prussian blue on hover */\n"
 "}"));
         QIcon icon1(QIcon::fromTheme(QIcon::ThemeIcon::SystemSearch));
-        pushButton_10->setIcon(icon1);
+        employerpass->setIcon(icon1);
         ball = new QLabel(centralwidget);
         ball->setObjectName("ball");
         ball->setGeometry(QRect(60, 10, 131, 91));
@@ -306,10 +306,10 @@ public:
 "    background-color: #001f33; /* Darker Prussian blue on hover */\n"
 "}"));
         matchpass->setIcon(icon1);
-        pushButton_12 = new QPushButton(centralwidget);
-        pushButton_12->setObjectName("pushButton_12");
-        pushButton_12->setGeometry(QRect(640, 50, 101, 29));
-        pushButton_12->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+        billetpass = new QPushButton(centralwidget);
+        billetpass->setObjectName("billetpass");
+        billetpass->setGeometry(QRect(640, 50, 101, 29));
+        billetpass->setStyleSheet(QString::fromUtf8("QPushButton {\n"
 "    border: 2px solid #003153;   /* Prussian Blue border */\n"
 "    border-radius: 10px;         /* Round the corners */\n"
 "    padding: 0 8px;              /* Padding inside the button */\n"
@@ -320,7 +320,7 @@ public:
 "QPushButton:hover {\n"
 "    background-color: #001f33; /* Darker Prussian blue on hover */\n"
 "}"));
-        pushButton_12->setIcon(icon1);
+        billetpass->setIcon(icon1);
         bpdf = new QPushButton(centralwidget);
         bpdf->setObjectName("bpdf");
         bpdf->setGeometry(QRect(720, 120, 141, 29));
@@ -469,10 +469,10 @@ public:
         linerech->setObjectName("linerech");
         linerech->setGeometry(QRect(10, 120, 271, 28));
         linerech->setStyleSheet(QString::fromUtf8(""));
-        pushButton_13 = new QPushButton(centralwidget);
-        pushButton_13->setObjectName("pushButton_13");
-        pushButton_13->setGeometry(QRect(790, 50, 101, 29));
-        pushButton_13->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+        sponsorpass = new QPushButton(centralwidget);
+        sponsorpass->setObjectName("sponsorpass");
+        sponsorpass->setGeometry(QRect(790, 50, 101, 29));
+        sponsorpass->setStyleSheet(QString::fromUtf8("QPushButton {\n"
 "    border: 2px solid #003153;   /* Prussian Blue border */\n"
 "    border-radius: 10px;         /* Round the corners */\n"
 "    padding: 0 8px;              /* Padding inside the button */\n"
@@ -483,7 +483,7 @@ public:
 "QPushButton:hover {\n"
 "    background-color: #001f33; /* Darker Prussian blue on hover */\n"
 "}"));
-        pushButton_13->setIcon(icon1);
+        sponsorpass->setIcon(icon1);
         label_pic = new QLabel(centralwidget);
         label_pic->setObjectName("label_pic");
         label_pic->setGeometry(QRect(-70, -80, 1411, 791));
@@ -516,17 +516,17 @@ public:
         ball->raise();
         label_14->raise();
         bmodif->raise();
-        pushButton_10->raise();
+        employerpass->raise();
         tabWidget->raise();
         bsupp->raise();
         matchpass->raise();
-        pushButton_12->raise();
+        billetpass->raise();
         bpdf->raise();
         Rech->raise();
         pushButton_8->raise();
         formulere->raise();
         linerech->raise();
-        pushButton_13->raise();
+        sponsorpass->raise();
         stat->raise();
         AFF->raise();
         combotri->raise();
@@ -552,7 +552,7 @@ public:
         gs_equipe->setWindowTitle(QCoreApplication::translate("gs_equipe", "gs_equipe", nullptr));
         label_14->setText(QCoreApplication::translate("gs_equipe", "WELCOME!", nullptr));
         bmodif->setText(QCoreApplication::translate("gs_equipe", "Modifier", nullptr));
-        pushButton_10->setText(QCoreApplication::translate("gs_equipe", "Employer", nullptr));
+        employerpass->setText(QCoreApplication::translate("gs_equipe", "Employer", nullptr));
         ball->setText(QString());
         label_8->setText(QString());
         QTableWidgetItem *___qtablewidgetitem = table->horizontalHeaderItem(0);
@@ -587,7 +587,7 @@ public:
         label_5->setText(QString());
         bsupp->setText(QCoreApplication::translate("gs_equipe", "Supprimer", nullptr));
         matchpass->setText(QCoreApplication::translate("gs_equipe", "Match", nullptr));
-        pushButton_12->setText(QCoreApplication::translate("gs_equipe", "Billet", nullptr));
+        billetpass->setText(QCoreApplication::translate("gs_equipe", "Billet", nullptr));
         bpdf->setText(QCoreApplication::translate("gs_equipe", "Exporter en PDF", nullptr));
         Rech->setText(QCoreApplication::translate("gs_equipe", "Recherche", nullptr));
         pushButton_8->setText(QCoreApplication::translate("gs_equipe", "Equipe", nullptr));
@@ -610,7 +610,7 @@ public:
         comboTactique->setItemText(2, QCoreApplication::translate("gs_equipe", "4-3-3", nullptr));
 
         linerech->setText(QString());
-        pushButton_13->setText(QCoreApplication::translate("gs_equipe", "Sponsor", nullptr));
+        sponsorpass->setText(QCoreApplication::translate("gs_equipe", "Sponsor", nullptr));
         label_pic->setText(QString());
         label_2->setText(QString());
         combotri->setItemText(0, QCoreApplication::translate("gs_equipe", "Tri par ID (croissant)", nullptr));

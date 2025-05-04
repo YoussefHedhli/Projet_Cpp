@@ -42,6 +42,7 @@ private slots:
     void on_equiepass_clicked();
     void on_billetpass_clicked();
     void on_sponsorpass_clicked();
+    void on_employerpass_clicked();
 
 
 private:

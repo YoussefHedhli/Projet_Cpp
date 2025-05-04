@@ -1,6 +1,7 @@
 #include "gs_equipe.h"
 #include "ui_gs_equipe.h"
 #include "Equipe.h"
+#include "fennetre1.h"
 #include <QMessageBox>
 #include <QDebug>
 #include <QSqlError>
@@ -48,6 +49,9 @@ connect(ui->bpdf, &QPushButton::clicked, this, &gs_equipe::exporterPDF);
  connect(ui->combotri, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &gs_equipe::onComboTriChanged);
  connect(ui->up, &QPushButton::clicked, this, &gs_equipe::on_updateButton_clicked);
  connect(ui->matchpass, &QPushButton::clicked, this, &gs_equipe::on_matchpass_clicked);
+ connect(ui->billetpass, &QPushButton::clicked, this, &gs_equipe::on_billetpass_clicked);
+ connect(ui->sponsorpass, &QPushButton::clicked, this, &gs_equipe::on_sponsorpass_clicked);
+ connect(ui->employerpass, &QPushButton::clicked, this, &gs_equipe::on_employerpass_clicked);
 
     // Affiche toutes les équipes dès l'ouverture
     afficherEquipes();
@@ -84,16 +88,27 @@ void gs_equipe::paintEvent(QPaintEvent *event) {
     // Call the parent class paintEvent to allow other painting to occur
     QMainWindow::paintEvent(event);
 }
-
-
-
-
-
-
-void gs_equipe::on_matchpass_clicked()
-{
-    this->close();  // Close only the gs_equipe window
+void gs_equipe::on_matchpass_clicked() {
+    QMessageBox::warning(this, "Accès refusé", "Vous n'avez pas l'accès requis pour la gestion des équipes.");
 }
+
+void gs_equipe::on_billetpass_clicked() {
+    QMessageBox::warning(this, "Accès refusé", "Vous n'avez pas l'accès requis pour la gestion des billets.");
+}
+
+void gs_equipe::on_sponsorpass_clicked() {
+    QMessageBox::warning(this, "Accès refusé", "Vous n'avez pas l'accès requis pour la gestion des sponsors.");
+}
+
+void gs_equipe::on_employerpass_clicked() {
+    // Open the gs_match window
+    fennetre1 *window = new fennetre1(this);  // Passing 'this' as the parent window
+    window->show();  // Show the fennetre1 window
+
+    // Close the gs_match window
+    this->close();  // Close the current window (gs_match)
+}
+
 
 void gs_equipe::ajouterEquipe()
 {

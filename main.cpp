@@ -1,8 +1,8 @@
-#include "gs_match.h"
+#include "mainwindow.h"  // Include MainWindow (authentication)
 #include <QApplication>
 #include <QMessageBox>
 #include "connection.h"
-#include "arduino.h"
+// #include "arduino.h"  // Arduino code is disabled
 
 int main(int argc, char *argv[])
 {
@@ -10,32 +10,28 @@ int main(int argc, char *argv[])
     Connection c;
     bool dbTest = c.createconnect();  // Test database connection
 
-    // Create and connect an instance of the Arduino class
-    Arduino* arduino = new Arduino;
-    int arduinoTest = arduino->connect_arduino();
+    // // Create and connect an instance of the Arduino class
+    // Arduino* Arduino = new ::Arduino;
+    // int arduinoTest = Arduino->connect_arduino();
 
-    if (arduinoTest == 0) {
-        qDebug() << "Arduino connected successfully.";
-    } else {
-        qDebug() << "Failed to connect to Arduino.";
-    }
+    // if (arduinoTest == 0) {
+    //     qDebug() << "Arduino connected successfully.";
+    // } else {
+    //     qDebug() << "Failed to connect to Arduino.";
+    // }
 
-    // Pass the connected Arduino to MainWindow
-    gs_match w(arduino);
+    // Show MainWindow (authentication) first
+    MainWindow w(nullptr);  // Pass nullptr since Arduino is disabled
 
-    if (dbTest && arduinoTest == 0) {
+    if (dbTest /* && arduinoTest == 0 */) {
         w.show();
-        QMessageBox::information(nullptr, QObject::tr("Database and Arduino are open"),
-                                 QObject::tr("Connection successful to both database and Arduino.\n"
-                                             "Click Cancel to exit."), QMessageBox::Cancel);
+        QMessageBox::information(nullptr, QObject::tr("Connection Successful"),
+                                 QObject::tr("Database connected successfully."),
+                                 QMessageBox::Ok);
     } else {
         QString errorMsg = "Connection failed.";
-        if (!dbTest) {
-            errorMsg += "\nDatabase connection failed.";
-        }
-        if (arduinoTest != 0) {
-            errorMsg += "\nArduino connection failed.";
-        }
+        if (!dbTest) errorMsg += "\nDatabase connection failed.";
+        // if (arduinoTest != 0) errorMsg += "\nArduino connection failed.";
 
         QMessageBox::critical(nullptr, QObject::tr("Connection Error"),
                               QObject::tr(qPrintable(errorMsg)),
@@ -43,6 +39,6 @@ int main(int argc, char *argv[])
     }
 
     int execResult = a.exec();
-    delete arduino; // Free the memory
+    // delete Arduino; // Clean up Arduino (disabled)
     return execResult;
 }

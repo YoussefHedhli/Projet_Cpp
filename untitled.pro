@@ -18,10 +18,15 @@ SOURCES += main.cpp \
     billet.cpp \
     calendar.cpp \
     connection.cpp \
+    employe.cpp \
     equipe.cpp \
+    fennetre1.cpp \
+    fennetre2.cpp \
+    global.cpp \
     gs_billet.cpp \
     gs_equipe.cpp \
     gs_match.cpp \
+    mainwindow.cpp \
     match.cpp \
     simulation.cpp \
     sponsor.cpp \
@@ -31,10 +36,15 @@ HEADERS += arduino.h \
     billet.h \
     calendar.h \
     connection.h \
+    employe.h \
     equipe.h \
+    fennetre1.h \
+    fennetre2.h \
+    global.h \
     gs_billet.h \
     gs_equipe.h \
     gs_match.h \
+    mainwindow.h \
     match.h \
     simulation.h \
     sponsor.h \
@@ -43,9 +53,12 @@ HEADERS += arduino.h \
 FORMS += calendar.ui \
     billet.ui \
     dialog.ui \  # Removed the comment to avoid parsing errors
+    fennetre1.ui \
+    fennetre2.ui \
     gs_billet.ui \
     gs_equipe.ui \
     gs_match.ui \
+    mainwindow.ui \
     sponsor.ui
 
 # Add the Qt resource file

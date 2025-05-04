@@ -11,15 +11,13 @@
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
-#include <QtWidgets/QComboBox>
 #include <QtWidgets/QFrame>
-#include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMainWindow>
+#include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
-#include <QtWidgets/QTableWidget>
-#include <QtWidgets/QTextEdit>
+#include <QtWidgets/QStatusBar>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -28,452 +26,124 @@ class Ui_MainWindow
 {
 public:
     QWidget *centralwidget;
+    QPushButton *pushButton_login;
+    QLineEdit *lineEdit_email;
+    QLineEdit *lineEdit_mdp;
     QLabel *label_pic;
-    QFrame *Mailing;
-    QPushButton *pushButton_5;
-    QLabel *label_10;
-    QFrame *Mailing_4;
-    QPushButton *pushButton_14;
-    QLabel *label_13;
-    QFrame *Mailing_5;
-    QPushButton *pushButton_15;
-    QTextEdit *textEdit_3;
-    QLabel *label_14;
-    QLineEdit *lineEdit_12;
-    QFrame *Mailing_3;
-    QLabel *label_15;
-    QPushButton *pushButton_7;
-    QFrame *formulere;
-    QLabel *label_2;
-    QLabel *label_3;
-    QLabel *label_4;
-    QLabel *label_5;
-    QLineEdit *lineEditTeam1;
-    QLineEdit *lineEditTeam2;
-    QLineEdit *lineEditDate;
-    QLineEdit *lineEditLieu;
-    QPushButton *btnAjouter;
-    QLabel *label_11;
-    QLabel *label_6;
-    QComboBox *comboEtat;
     QFrame *frame;
-    QPushButton *pushButton_4;
-    QPushButton *pushButton_9;
-    QPushButton *pushButton_10;
-    QPushButton *pushButton_11;
-    QPushButton *pushButton_12;
-    QLabel *label_pic2;
+    QPushButton *pushButton_mdp_oublie;
     QLabel *ball;
-    QPushButton *btnSupprimer;
-    QPushButton *pushButton_6;
-    QLineEdit *lineEdit_11;
-    QPushButton *pushButton_8;
-    QPushButton *pushButton;
-    QTableWidget *tableWidget;
-    QLabel *label_8;
+    QMenuBar *menubar;
+    QStatusBar *statusbar;
 
     void setupUi(QMainWindow *MainWindow)
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName("MainWindow");
-        MainWindow->resize(1313, 600);
+        MainWindow->resize(888, 567);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName("centralwidget");
+        pushButton_login = new QPushButton(centralwidget);
+        pushButton_login->setObjectName("pushButton_login");
+        pushButton_login->setGeometry(QRect(250, 350, 381, 41));
+        pushButton_login->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+"    background-color: #C0C0C0;\n"
+"    border-radius: 10px;\n"
+"    padding: 5px;\n"
+"    font-weight: bold;\n"
+"    color: black;\n"
+"    font-size: 18px;  /* Change the font size here */\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: #A9A9A9;\n"
+"}\n"
+"\n"
+"QPushButton#registerButton {\n"
+"    background-color: rgba(192, 192, 192, 0.5);\n"
+"    color: black;\n"
+"    font-size: 18px;  /* You can set a different font size for this specific button */\n"
+"}\n"
+""));
+        lineEdit_email = new QLineEdit(centralwidget);
+        lineEdit_email->setObjectName("lineEdit_email");
+        lineEdit_email->setGeometry(QRect(250, 170, 381, 41));
+        lineEdit_email->setStyleSheet(QString::fromUtf8("    QLineEdit {\n"
+"        background-color: #2D2D2D;\n"
+"        border-radius: 20px;\n"
+"        padding: 5px;\n"
+"        color: white;\n"
+"        border: 1px solid #555;\n"
+"    }\n"
+""));
+        lineEdit_mdp = new QLineEdit(centralwidget);
+        lineEdit_mdp->setObjectName("lineEdit_mdp");
+        lineEdit_mdp->setGeometry(QRect(250, 240, 381, 41));
+        lineEdit_mdp->setStyleSheet(QString::fromUtf8("    QLineEdit {\n"
+"        background-color: #2D2D2D;\n"
+"        border-radius: 20px;\n"
+"        padding: 5px;\n"
+"        color: white;\n"
+"        border: 1px solid #555;\n"
+"    }\n"
+"QLineEdit::placeholder {\n"
+"    color: #aaa;\n"
+"    font-style: italic;\n"
+"    font-size: 14px;\n"
+"}\n"
+""));
         label_pic = new QLabel(centralwidget);
         label_pic->setObjectName("label_pic");
-        label_pic->setGeometry(QRect(-30, -30, 1341, 631));
-        label_pic->setStyleSheet(QString::fromUtf8("QLabel {\n"
-"    background-color: #000000;\n"
-"    color: #FFFFFF;\n"
-"}\n"
-""));
-        label_pic->setScaledContents(true);
-        Mailing = new QFrame(centralwidget);
-        Mailing->setObjectName("Mailing");
-        Mailing->setGeometry(QRect(450, 320, 361, 161));
-        Mailing->setAutoFillBackground(true);
-        Mailing->setStyleSheet(QString::fromUtf8("QLabel {\n"
-"    background-color: #000000;\n"
-"    color: #FFFFFF;\n"
-"}\n"
-""));
-        Mailing->setFrameShape(QFrame::Shape::StyledPanel);
-        Mailing->setFrameShadow(QFrame::Shadow::Raised);
-        pushButton_5 = new QPushButton(Mailing);
-        pushButton_5->setObjectName("pushButton_5");
-        pushButton_5->setGeometry(QRect(20, 80, 141, 31));
-        pushButton_5->setStyleSheet(QString::fromUtf8("QPushButton {\n"
-"    border: 2px solid #808080;   /* Grey border */\n"
-"    border-radius: 10px;         /* Round the corners */\n"
-"    padding: 0 8px;              /* Padding inside the button */\n"
-"    background: #808080;         /* Grey background */\n"
-"    color: white;                /* White text color */\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    background-color: #505050;   /* Darker grey on hover */\n"
-"}\n"
-""));
-        label_10 = new QLabel(Mailing);
-        label_10->setObjectName("label_10");
-        label_10->setGeometry(QRect(20, 10, 131, 20));
-        Mailing_4 = new QFrame(Mailing);
-        Mailing_4->setObjectName("Mailing_4");
-        Mailing_4->setGeometry(QRect(210, 0, 221, 161));
-        Mailing_4->setAutoFillBackground(false);
-        Mailing_4->setStyleSheet(QString::fromUtf8("QLabel {\n"
-"    background-color: #000000;\n"
-"    color: #FFFFFF;\n"
-"}\n"
-""));
-        Mailing_4->setFrameShape(QFrame::Shape::StyledPanel);
-        Mailing_4->setFrameShadow(QFrame::Shadow::Raised);
-        pushButton_14 = new QPushButton(Mailing_4);
-        pushButton_14->setObjectName("pushButton_14");
-        pushButton_14->setGeometry(QRect(10, 80, 131, 31));
-        pushButton_14->setStyleSheet(QString::fromUtf8("QPushButton {\n"
-"    border: 2px solid #808080;   /* Grey border */\n"
-"    border-radius: 10px;         /* Round the corners */\n"
-"    padding: 0 8px;              /* Padding inside the button */\n"
-"    background: #808080;         /* Grey background */\n"
-"    color: white;                /* White text color */\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    background-color: #505050;   /* Darker grey on hover */\n"
-"}\n"
-""));
-        label_13 = new QLabel(Mailing_4);
-        label_13->setObjectName("label_13");
-        label_13->setGeometry(QRect(40, 10, 71, 20));
-        Mailing_5 = new QFrame(Mailing_4);
-        Mailing_5->setObjectName("Mailing_5");
-        Mailing_5->setGeometry(QRect(180, 10, 181, 251));
-        Mailing_5->setFrameShape(QFrame::Shape::StyledPanel);
-        Mailing_5->setFrameShadow(QFrame::Shadow::Raised);
-        pushButton_15 = new QPushButton(Mailing_5);
-        pushButton_15->setObjectName("pushButton_15");
-        pushButton_15->setGeometry(QRect(20, 210, 141, 31));
-        pushButton_15->setStyleSheet(QString::fromUtf8("QPushButton{\n"
-"border:2px solid gray;\n"
-"border-radius: 10px;\n"
-"padding:0 8px;\n"
-"background:gray;\n"
-"}"));
-        textEdit_3 = new QTextEdit(Mailing_5);
-        textEdit_3->setObjectName("textEdit_3");
-        textEdit_3->setGeometry(QRect(20, 100, 141, 101));
-        label_14 = new QLabel(Mailing_5);
-        label_14->setObjectName("label_14");
-        label_14->setGeometry(QRect(60, 10, 81, 20));
-        lineEdit_12 = new QLineEdit(Mailing_5);
-        lineEdit_12->setObjectName("lineEdit_12");
-        lineEdit_12->setGeometry(QRect(20, 50, 141, 28));
-        Mailing_3 = new QFrame(centralwidget);
-        Mailing_3->setObjectName("Mailing_3");
-        Mailing_3->setGeometry(QRect(930, 290, 181, 251));
-        Mailing_3->setAutoFillBackground(true);
-        Mailing_3->setStyleSheet(QString::fromUtf8("QLabel {\n"
-"    background-color: #000000;\n"
-"    color: #FFFFFF;\n"
-"}\n"
-""));
-        Mailing_3->setFrameShape(QFrame::Shape::StyledPanel);
-        Mailing_3->setFrameShadow(QFrame::Shadow::Raised);
-        label_15 = new QLabel(Mailing_3);
-        label_15->setObjectName("label_15");
-        label_15->setGeometry(QRect(50, 10, 81, 20));
-        pushButton_7 = new QPushButton(centralwidget);
-        pushButton_7->setObjectName("pushButton_7");
-        pushButton_7->setGeometry(QRect(720, 90, 61, 29));
-        pushButton_7->setStyleSheet(QString::fromUtf8("QPushButton {\n"
-"    border: 2px solid #808080;   /* Grey border */\n"
-"    border-radius: 10px;         /* Round the corners */\n"
-"    padding: 0 8px;              /* Padding inside the button */\n"
-"    background: #808080;         /* Grey background */\n"
-"    color: white;                /* White text color */\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    background-color: #505050;   /* Darker grey on hover */\n"
-"}\n"
-""));
-        formulere = new QFrame(centralwidget);
-        formulere->setObjectName("formulere");
-        formulere->setGeometry(QRect(170, 270, 181, 301));
-        formulere->setAutoFillBackground(true);
-        formulere->setStyleSheet(QString::fromUtf8("QLabel {\n"
-"    background-color: #000000;\n"
-"    color: #FFFFFF;\n"
-"}\n"
-""));
-        formulere->setFrameShape(QFrame::Shape::StyledPanel);
-        formulere->setFrameShadow(QFrame::Shadow::Raised);
-        label_2 = new QLabel(formulere);
-        label_2->setObjectName("label_2");
-        label_2->setGeometry(QRect(20, 50, 61, 21));
-        label_3 = new QLabel(formulere);
-        label_3->setObjectName("label_3");
-        label_3->setGeometry(QRect(20, 130, 61, 21));
-        label_4 = new QLabel(formulere);
-        label_4->setObjectName("label_4");
-        label_4->setGeometry(QRect(20, 170, 41, 21));
-        label_5 = new QLabel(formulere);
-        label_5->setObjectName("label_5");
-        label_5->setGeometry(QRect(20, 90, 61, 21));
-        lineEditTeam1 = new QLineEdit(formulere);
-        lineEditTeam1->setObjectName("lineEditTeam1");
-        lineEditTeam1->setGeometry(QRect(90, 50, 81, 28));
-        lineEditTeam2 = new QLineEdit(formulere);
-        lineEditTeam2->setObjectName("lineEditTeam2");
-        lineEditTeam2->setGeometry(QRect(90, 90, 81, 28));
-        lineEditDate = new QLineEdit(formulere);
-        lineEditDate->setObjectName("lineEditDate");
-        lineEditDate->setGeometry(QRect(90, 130, 81, 28));
-        lineEditLieu = new QLineEdit(formulere);
-        lineEditLieu->setObjectName("lineEditLieu");
-        lineEditLieu->setGeometry(QRect(90, 170, 81, 28));
-        btnAjouter = new QPushButton(formulere);
-        btnAjouter->setObjectName("btnAjouter");
-        btnAjouter->setGeometry(QRect(20, 260, 151, 31));
-        btnAjouter->setStyleSheet(QString::fromUtf8("QPushButton {\n"
-"    border: 2px solid #808080;   /* Grey border */\n"
-"    border-radius: 10px;         /* Round the corners */\n"
-"    padding: 0 8px;              /* Padding inside the button */\n"
-"    background: #808080;         /* Grey background */\n"
-"    color: white;                /* White text color */\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    background-color: #505050;   /* Darker grey on hover */\n"
-"}\n"
-""));
-        label_11 = new QLabel(formulere);
-        label_11->setObjectName("label_11");
-        label_11->setGeometry(QRect(50, 10, 81, 20));
-        label_6 = new QLabel(formulere);
-        label_6->setObjectName("label_6");
-        label_6->setGeometry(QRect(20, 210, 41, 21));
-        comboEtat = new QComboBox(formulere);
-        comboEtat->addItem(QString());
-        comboEtat->addItem(QString());
-        comboEtat->addItem(QString());
-        comboEtat->addItem(QString());
-        comboEtat->setObjectName("comboEtat");
-        comboEtat->setGeometry(QRect(90, 210, 82, 28));
+        label_pic->setGeometry(QRect(-8, 0, 931, 541));
         frame = new QFrame(centralwidget);
         frame->setObjectName("frame");
-        frame->setGeometry(QRect(230, 20, 761, 61));
+        frame->setGeometry(QRect(220, 60, 441, 371));
+        frame->setStyleSheet(QString::fromUtf8("    QFrame {\n"
+"        background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */\n"
+"        border-radius: 40px; /* Adjust for more or less roundness */\n"
+"        padding: 10px;\n"
+"    }"));
         frame->setFrameShape(QFrame::Shape::StyledPanel);
         frame->setFrameShadow(QFrame::Shadow::Raised);
-        pushButton_4 = new QPushButton(frame);
-        pushButton_4->setObjectName("pushButton_4");
-        pushButton_4->setGeometry(QRect(610, 10, 111, 41));
-        pushButton_4->setStyleSheet(QString::fromUtf8("QPushButton {\n"
-"    border: 2px solid #003153;   /* Prussian Blue border */\n"
-"    border-radius: 10px;         /* Round the corners */\n"
-"    padding: 0 8px;              /* Padding inside the button */\n"
-"    background: #003153;         /* Prussian Blue background */\n"
-"    color: white;                /* White text color */\n"
+        pushButton_mdp_oublie = new QPushButton(frame);
+        pushButton_mdp_oublie->setObjectName("pushButton_mdp_oublie");
+        pushButton_mdp_oublie->setGeometry(QRect(130, 240, 191, 31));
+        pushButton_mdp_oublie->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+"    border: none;\n"
+"    background: transparent;\n"
+"    color: #004b6b;  /* Brighter Prussian Blue */\n"
+"    font-size: 12pt;\n"
+"    font-weight: 300;  /* Thinner font */\n"
+"    font-family: \"Arial\", sans-serif;\n"
+"    transition: color 0.3s ease-in-out;  /* Smooth transition effect */\n"
 "}\n"
 "\n"
 "QPushButton:hover {\n"
-"    background-color: #001f33; /* Darker Prussian blue on hover */\n"
+"    color: #001524;  /* Much darker Prussian Blue */\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    color: #000c17;  /* Almost black when clicked */\n"
 "}\n"
 "\n"
 ""));
-        pushButton_9 = new QPushButton(frame);
-        pushButton_9->setObjectName("pushButton_9");
-        pushButton_9->setGeometry(QRect(490, 10, 111, 41));
-        pushButton_9->setStyleSheet(QString::fromUtf8("QPushButton {\n"
-"    border: 2px solid #003153;   /* Prussian Blue border */\n"
-"    border-radius: 10px;         /* Round the corners */\n"
-"    padding: 0 8px;              /* Padding inside the button */\n"
-"    background: #003153;         /* Prussian Blue background */\n"
-"    color: white;                /* White text color */\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    background-color: #001f33; /* Darker Prussian blue on hover */\n"
-"}\n"
-""));
-        pushButton_10 = new QPushButton(frame);
-        pushButton_10->setObjectName("pushButton_10");
-        pushButton_10->setGeometry(QRect(370, 10, 111, 41));
-        pushButton_10->setStyleSheet(QString::fromUtf8("QPushButton {\n"
-"    border: 2px solid #003153;   /* Prussian Blue border */\n"
-"    border-radius: 10px;         /* Round the corners */\n"
-"    padding: 0 8px;              /* Padding inside the button */\n"
-"    background: #003153;         /* Prussian Blue background */\n"
-"    color: white;                /* White text color */\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    background-color: #001f33; /* Darker Prussian blue on hover */\n"
-"}\n"
-""));
-        pushButton_11 = new QPushButton(frame);
-        pushButton_11->setObjectName("pushButton_11");
-        pushButton_11->setGeometry(QRect(250, 10, 111, 41));
-        pushButton_11->setStyleSheet(QString::fromUtf8("QPushButton {\n"
-"    border: 2px solid #003153;   /* Prussian Blue border */\n"
-"    border-radius: 10px;         /* Round the corners */\n"
-"    padding: 0 8px;              /* Padding inside the button */\n"
-"    background: #003153;         /* Prussian Blue background */\n"
-"    color: white;                /* White text color */\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    background-color: #001f33; /* Darker Prussian blue on hover */\n"
-"}\n"
-""));
-        pushButton_12 = new QPushButton(frame);
-        pushButton_12->setObjectName("pushButton_12");
-        pushButton_12->setGeometry(QRect(130, 10, 111, 41));
-        pushButton_12->setStyleSheet(QString::fromUtf8("QPushButton {\n"
-"    border: 2px solid #003153;   /* Prussian Blue border */\n"
-"    border-radius: 10px;         /* Round the corners */\n"
-"    padding: 0 8px;              /* Padding inside the button */\n"
-"    background: #003153;         /* Prussian Blue background */\n"
-"    color: white;                /* White text color */\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    background-color: #001f33; /* Darker Prussian blue on hover */\n"
-"}\n"
-""));
-        label_pic2 = new QLabel(frame);
-        label_pic2->setObjectName("label_pic2");
-        label_pic2->setGeometry(QRect(-140, -10, 901, 81));
-        label_pic2->setStyleSheet(QString::fromUtf8("QLabel {\n"
-"    background-color: #000000;\n"
-"    color: #FFFFFF;\n"
-"}\n"
-""));
-        ball = new QLabel(frame);
+        ball = new QLabel(centralwidget);
         ball->setObjectName("ball");
-        ball->setGeometry(QRect(-20, -30, 121, 111));
-        ball->setScaledContents(true);
-        label_pic2->raise();
-        pushButton_4->raise();
-        pushButton_9->raise();
-        pushButton_10->raise();
-        pushButton_11->raise();
-        pushButton_12->raise();
-        ball->raise();
-        btnSupprimer = new QPushButton(centralwidget);
-        btnSupprimer->setObjectName("btnSupprimer");
-        btnSupprimer->setGeometry(QRect(880, 90, 91, 29));
-        btnSupprimer->setStyleSheet(QString::fromUtf8("QPushButton {\n"
-"    border: 2px solid #808080;   /* Grey border */\n"
-"    border-radius: 10px;         /* Round the corners */\n"
-"    padding: 0 8px;              /* Padding inside the button */\n"
-"    background: #808080;         /* Grey background */\n"
-"    color: white;                /* White text color */\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    background-color: #505050;   /* Darker grey on hover */\n"
-"}\n"
-"\n"
-""));
-        pushButton_6 = new QPushButton(centralwidget);
-        pushButton_6->setObjectName("pushButton_6");
-        pushButton_6->setGeometry(QRect(512, 90, 91, 29));
-        pushButton_6->setStyleSheet(QString::fromUtf8("QPushButton {\n"
-"    border: 2px solid #808080;   /* Grey border */\n"
-"    border-radius: 10px;         /* Round the corners */\n"
-"    padding: 0 8px;              /* Padding inside the button */\n"
-"    background: #808080;         /* Grey background */\n"
-"    color: white;                /* White text color */\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    background-color: #505050;   /* Darker grey on hover */\n"
-"}\n"
-""));
-        lineEdit_11 = new QLineEdit(centralwidget);
-        lineEdit_11->setObjectName("lineEdit_11");
-        lineEdit_11->setGeometry(QRect(230, 90, 271, 28));
-        lineEdit_11->setStyleSheet(QString::fromUtf8("QLabel {\n"
-"    background-color: #000000;\n"
-"    color: #FFFFFF;\n"
-"}\n"
-""));
-        pushButton_8 = new QPushButton(centralwidget);
-        pushButton_8->setObjectName("pushButton_8");
-        pushButton_8->setGeometry(QRect(620, 90, 83, 29));
-        pushButton_8->setStyleSheet(QString::fromUtf8("QPushButton {\n"
-"    border: 2px solid #808080;   /* Grey border */\n"
-"    border-radius: 10px;         /* Round the corners */\n"
-"    padding: 0 8px;              /* Padding inside the button */\n"
-"    background: #808080;         /* Grey background */\n"
-"    color: white;                /* White text color */\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    background-color: #505050;   /* Darker grey on hover */\n"
-"}\n"
-""));
-        pushButton = new QPushButton(centralwidget);
-        pushButton->setObjectName("pushButton");
-        pushButton->setGeometry(QRect(790, 90, 83, 29));
-        pushButton->setStyleSheet(QString::fromUtf8("QPushButton {\n"
-"    border: 2px solid #808080;   /* Grey border */\n"
-"    border-radius: 10px;         /* Round the corners */\n"
-"    padding: 0 8px;              /* Padding inside the button */\n"
-"    background: #808080;         /* Grey background */\n"
-"    color: white;                /* White text color */\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    background-color: #505050;   /* Darker grey on hover */\n"
-"}\n"
-""));
-        tableWidget = new QTableWidget(centralwidget);
-        if (tableWidget->columnCount() < 6)
-            tableWidget->setColumnCount(6);
-        QFont font;
-        font.setPointSize(9);
-        font.setBold(false);
-        QTableWidgetItem *__qtablewidgetitem = new QTableWidgetItem();
-        __qtablewidgetitem->setFont(font);
-        tableWidget->setHorizontalHeaderItem(0, __qtablewidgetitem);
-        QTableWidgetItem *__qtablewidgetitem1 = new QTableWidgetItem();
-        tableWidget->setHorizontalHeaderItem(1, __qtablewidgetitem1);
-        QTableWidgetItem *__qtablewidgetitem2 = new QTableWidgetItem();
-        tableWidget->setHorizontalHeaderItem(2, __qtablewidgetitem2);
-        QTableWidgetItem *__qtablewidgetitem3 = new QTableWidgetItem();
-        tableWidget->setHorizontalHeaderItem(3, __qtablewidgetitem3);
-        QTableWidgetItem *__qtablewidgetitem4 = new QTableWidgetItem();
-        tableWidget->setHorizontalHeaderItem(4, __qtablewidgetitem4);
-        QTableWidgetItem *__qtablewidgetitem5 = new QTableWidgetItem();
-        tableWidget->setHorizontalHeaderItem(5, __qtablewidgetitem5);
-        tableWidget->setObjectName("tableWidget");
-        tableWidget->setGeometry(QRect(290, 130, 621, 121));
-        tableWidget->setMaximumSize(QSize(763, 16777215));
-        tableWidget->setStyleSheet(QString::fromUtf8("QLabel {\n"
-"    background-color: #000000;\n"
-"    color: #FFFFFF;\n"
-"}\n"
-""));
-        label_8 = new QLabel(centralwidget);
-        label_8->setObjectName("label_8");
-        label_8->setGeometry(QRect(10, 0, 1351, 611));
+        ball->setGeometry(QRect(390, 30, 121, 111));
         MainWindow->setCentralWidget(centralwidget);
-        label_8->raise();
         label_pic->raise();
-        Mailing->raise();
-        Mailing_3->raise();
-        pushButton_7->raise();
         frame->raise();
-        btnSupprimer->raise();
-        pushButton_6->raise();
-        lineEdit_11->raise();
-        pushButton_8->raise();
-        pushButton->raise();
-        tableWidget->raise();
-        formulere->raise();
+        pushButton_login->raise();
+        lineEdit_email->raise();
+        lineEdit_mdp->raise();
+        ball->raise();
+        menubar = new QMenuBar(MainWindow);
+        menubar->setObjectName("menubar");
+        menubar->setGeometry(QRect(0, 0, 888, 25));
+        MainWindow->setMenuBar(menubar);
+        statusbar = new QStatusBar(MainWindow);
+        statusbar->setObjectName("statusbar");
+        MainWindow->setStatusBar(statusbar);
 
         retranslateUi(MainWindow);
 
@@ -483,49 +153,15 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
+        pushButton_login->setText(QCoreApplication::translate("MainWindow", "Login", nullptr));
+        lineEdit_email->setText(QString());
+#if QT_CONFIG(whatsthis)
+        lineEdit_mdp->setWhatsThis(QCoreApplication::translate("MainWindow", "<html><head/><body><p>222</p></body></html>", nullptr));
+#endif // QT_CONFIG(whatsthis)
+        lineEdit_mdp->setText(QString());
         label_pic->setText(QString());
-        pushButton_5->setText(QCoreApplication::translate("MainWindow", "Start Simulation", nullptr));
-        label_10->setText(QCoreApplication::translate("MainWindow", "Match Simulation", nullptr));
-        pushButton_14->setText(QCoreApplication::translate("MainWindow", "Visit Calendar", nullptr));
-        label_13->setText(QCoreApplication::translate("MainWindow", "Calendar", nullptr));
-        pushButton_15->setText(QCoreApplication::translate("MainWindow", "Envoyer", nullptr));
-        label_14->setText(QCoreApplication::translate("MainWindow", "Mailing", nullptr));
-        label_15->setText(QCoreApplication::translate("MainWindow", "Statistique", nullptr));
-        pushButton_7->setText(QCoreApplication::translate("MainWindow", "PDF", nullptr));
-        label_2->setText(QCoreApplication::translate("MainWindow", "Equipe 1", nullptr));
-        label_3->setText(QCoreApplication::translate("MainWindow", "Date", nullptr));
-        label_4->setText(QCoreApplication::translate("MainWindow", "Lieu", nullptr));
-        label_5->setText(QCoreApplication::translate("MainWindow", "Equipe 2", nullptr));
-        btnAjouter->setText(QCoreApplication::translate("MainWindow", "Ajouter", nullptr));
-        label_11->setText(QCoreApplication::translate("MainWindow", "Employer", nullptr));
-        label_6->setText(QCoreApplication::translate("MainWindow", "Etat", nullptr));
-        comboEtat->setItemText(0, QCoreApplication::translate("MainWindow", "Started", nullptr));
-        comboEtat->setItemText(1, QCoreApplication::translate("MainWindow", "Ended", nullptr));
-        comboEtat->setItemText(2, QCoreApplication::translate("MainWindow", "Didn't Start", nullptr));
-        comboEtat->setItemText(3, QCoreApplication::translate("MainWindow", "Postponed", nullptr));
-
-        pushButton_4->setText(QCoreApplication::translate("MainWindow", "Sponsor", nullptr));
-        pushButton_9->setText(QCoreApplication::translate("MainWindow", "Billet", nullptr));
-        pushButton_10->setText(QCoreApplication::translate("MainWindow", "Employer", nullptr));
-        pushButton_11->setText(QCoreApplication::translate("MainWindow", "Match", nullptr));
-        pushButton_12->setText(QCoreApplication::translate("MainWindow", "Equipe", nullptr));
-        label_pic2->setText(QString());
+        pushButton_mdp_oublie->setText(QCoreApplication::translate("MainWindow", "Mot de passe oublie", nullptr));
         ball->setText(QString());
-        btnSupprimer->setText(QCoreApplication::translate("MainWindow", "Supprimer", nullptr));
-        pushButton_6->setText(QCoreApplication::translate("MainWindow", "Recherche", nullptr));
-        pushButton_8->setText(QCoreApplication::translate("MainWindow", "Tri par ID", nullptr));
-        pushButton->setText(QCoreApplication::translate("MainWindow", "Modifier", nullptr));
-        QTableWidgetItem *___qtablewidgetitem = tableWidget->horizontalHeaderItem(0);
-        ___qtablewidgetitem->setText(QCoreApplication::translate("MainWindow", "Match", nullptr));
-        QTableWidgetItem *___qtablewidgetitem1 = tableWidget->horizontalHeaderItem(1);
-        ___qtablewidgetitem1->setText(QCoreApplication::translate("MainWindow", "ID", nullptr));
-        QTableWidgetItem *___qtablewidgetitem2 = tableWidget->horizontalHeaderItem(2);
-        ___qtablewidgetitem2->setText(QCoreApplication::translate("MainWindow", "Date", nullptr));
-        QTableWidgetItem *___qtablewidgetitem3 = tableWidget->horizontalHeaderItem(3);
-        ___qtablewidgetitem3->setText(QCoreApplication::translate("MainWindow", "Lieu", nullptr));
-        QTableWidgetItem *___qtablewidgetitem4 = tableWidget->horizontalHeaderItem(4);
-        ___qtablewidgetitem4->setText(QCoreApplication::translate("MainWindow", "Etat", nullptr));
-        label_8->setText(QString());
     } // retranslateUi
 
 };

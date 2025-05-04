@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>888</width>
+    <height>567</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QPushButton" name="pushButton_login">
+    <property name="geometry">
+     <rect>
+      <x>250</x>
+      <y>350</y>
+      <width>381</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+    background-color: #C0C0C0;
+    border-radius: 10px;
+    padding: 5px;
+    font-weight: bold;
+    color: black;
+    font-size: 18px;  /* Change the font size here */
+}
+
+QPushButton:hover {
+    background-color: #A9A9A9;
+}
+
+QPushButton#registerButton {
+    background-color: rgba(192, 192, 192, 0.5);
+    color: black;
+    font-size: 18px;  /* You can set a different font size for this specific button */
+}
+</string>
+    </property>
+    <property name="text">
+     <string>Login</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit_email">
+    <property name="geometry">
+     <rect>
+      <x>250</x>
+      <y>170</y>
+      <width>381</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">    QLineEdit {
+        background-color: #2D2D2D;
+        border-radius: 20px;
+        padding: 5px;
+        color: white;
+        border: 1px solid #555;
+    }
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit_mdp">
+    <property name="geometry">
+     <rect>
+      <x>250</x>
+      <y>240</y>
+      <width>381</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="whatsThis">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;222&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">    QLineEdit {
+        background-color: #2D2D2D;
+        border-radius: 20px;
+        padding: 5px;
+        color: white;
+        border: 1px solid #555;
+    }
+QLineEdit::placeholder {
+    color: #aaa;
+    font-style: italic;
+    font-size: 14px;
+}
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_pic">
+    <property name="geometry">
+     <rect>
+      <x>-8</x>
+      <y>0</y>
+      <width>931</width>
+      <height>541</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QFrame" name="frame">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>60</y>
+      <width>441</width>
+      <height>371</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">    QFrame {
+        background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+        border-radius: 40px; /* Adjust for more or less roundness */
+        padding: 10px;
+    }</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Shape::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Shadow::Raised</enum>
+    </property>
+    <widget class="QPushButton" name="pushButton_mdp_oublie">
+     <property name="geometry">
+      <rect>
+       <x>130</x>
+       <y>240</y>
+       <width>191</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+    border: none;
+    background: transparent;
+    color: #004b6b;  /* Brighter Prussian Blue */
+    font-size: 12pt;
+    font-weight: 300;  /* Thinner font */
+    font-family: &quot;Arial&quot;, sans-serif;
+    transition: color 0.3s ease-in-out;  /* Smooth transition effect */
+}
+
+QPushButton:hover {
+    color: #001524;  /* Much darker Prussian Blue */
+}
+
+QPushButton:pressed {
+    color: #000c17;  /* Almost black when clicked */
+}
+
+</string>
+     </property>
+     <property name="text">
+      <string>Mot de passe oublie</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QLabel" name="ball">
+    <property name="geometry">
+     <rect>
+      <x>390</x>
+      <y>30</y>
+      <width>121</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <zorder>label_pic</zorder>
+   <zorder>frame</zorder>
+   <zorder>pushButton_login</zorder>
+   <zorder>lineEdit_email</zorder>
+   <zorder>lineEdit_mdp</zorder>
+   <zorder>ball</zorder>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>888</width>
+     <height>25</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

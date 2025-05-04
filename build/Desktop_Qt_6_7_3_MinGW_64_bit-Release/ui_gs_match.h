@@ -49,7 +49,7 @@ public:
     QFrame *frame;
     QPushButton *sponsorpass;
     QPushButton *billetpass;
-    QPushButton *pushButton_10;
+    QPushButton *employerpass;
     QPushButton *pushButton_11;
     QPushButton *equipepass;
     QLabel *label_pic2;
@@ -223,10 +223,10 @@ public:
 "    background-color: #001f33; /* Darker Prussian blue on hover */\n"
 "}\n"
 ""));
-        pushButton_10 = new QPushButton(frame);
-        pushButton_10->setObjectName("pushButton_10");
-        pushButton_10->setGeometry(QRect(370, 10, 111, 41));
-        pushButton_10->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+        employerpass = new QPushButton(frame);
+        employerpass->setObjectName("employerpass");
+        employerpass->setGeometry(QRect(370, 10, 111, 41));
+        employerpass->setStyleSheet(QString::fromUtf8("QPushButton {\n"
 "    border: 2px solid #003153;   /* Prussian Blue border */\n"
 "    border-radius: 10px;         /* Round the corners */\n"
 "    padding: 0 8px;              /* Padding inside the button */\n"
@@ -283,7 +283,7 @@ public:
         label_pic2->raise();
         sponsorpass->raise();
         billetpass->raise();
-        pushButton_10->raise();
+        employerpass->raise();
         pushButton_11->raise();
         equipepass->raise();
         ball->raise();
@@ -423,7 +423,7 @@ public:
 
         sponsorpass->setText(QCoreApplication::translate("gs_match", "Sponsor", nullptr));
         billetpass->setText(QCoreApplication::translate("gs_match", "Billet", nullptr));
-        pushButton_10->setText(QCoreApplication::translate("gs_match", "Employer", nullptr));
+        employerpass->setText(QCoreApplication::translate("gs_match", "Employer", nullptr));
         pushButton_11->setText(QCoreApplication::translate("gs_match", "Match", nullptr));
         equipepass->setText(QCoreApplication::translate("gs_match", "Equipe", nullptr));
         label_pic2->setText(QString());

@@ -55,6 +55,10 @@ private slots:
     void onGoClicked();      // Slot for Go button
     void paintEvent(QPaintEvent *event);
     void on_equipepass_clicked();
+    void on_matchpass_clicked();
+    void on_sponsorpass_clicked();
+    void on_employerpass_clicked();
+
 
 private:
     Ui::gs_billet *ui;

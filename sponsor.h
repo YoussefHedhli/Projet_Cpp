@@ -8,7 +8,7 @@
 #include <QTableWidget>
 #include <QByteArray>
 #include <QString>
-#include "arduino.h"  // Include the Arduino header file where the 'arduino' class is defined
+//#include "arduino.h"  // Include the Arduino header file where the 'arduino' class is defined
 
 namespace Ui {
 class sponsor;
@@ -49,7 +49,7 @@ private slots:
     void on_btnLoadImage_clicked();
     void on_tri_des_clicked();
 
-    void updateLineEditsFromArduino(); // Slot pour lire les données Arduino
+    //void updateLineEditsFromArduino(); // Slot pour lire les données Arduino
     void checkMatricule(const QString &matricule); // Vérifier le matricule
 
 private:
@@ -67,6 +67,10 @@ private:
     void loadSponsorImage(const QString &sponsorName);
     void paintEvent(QPaintEvent *event);
     QString getSelectedSponsor() const;
+    void on_equiepass_clicked();
+    void on_billetpass_clicked();
+    void on_matchpass_clicked();
+    void on_employerpass_clicked();
 
 
     QString matriculeBuffer; // Buffer pour accumuler les chiffres
@@ -76,7 +80,7 @@ private:
     bool saveSponsorImage(const QString &filePath, const QByteArray &data);
     QTimer *serialReadTimer; // Ajouter un timer
     QString receivedData; // Données reçues d'Arduino
-    Arduino arduino;
+    //Arduino arduino;
 
 };
 

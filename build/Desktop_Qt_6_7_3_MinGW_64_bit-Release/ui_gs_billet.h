@@ -30,9 +30,9 @@ class Ui_gs_billet
 public:
     QWidget *centralwidget;
     QFrame *frame;
-    QPushButton *pushButton_4;
+    QPushButton *sponsorpass;
     QPushButton *pushButton_9;
-    QPushButton *pushButton_10;
+    QPushButton *employerpass;
     QPushButton *matchpass;
     QPushButton *equipepass;
     QLabel *label_pic2;
@@ -80,10 +80,10 @@ public:
         frame->setGeometry(QRect(210, 10, 761, 61));
         frame->setFrameShape(QFrame::Shape::StyledPanel);
         frame->setFrameShadow(QFrame::Shadow::Raised);
-        pushButton_4 = new QPushButton(frame);
-        pushButton_4->setObjectName("pushButton_4");
-        pushButton_4->setGeometry(QRect(610, 10, 111, 41));
-        pushButton_4->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+        sponsorpass = new QPushButton(frame);
+        sponsorpass->setObjectName("sponsorpass");
+        sponsorpass->setGeometry(QRect(610, 10, 111, 41));
+        sponsorpass->setStyleSheet(QString::fromUtf8("QPushButton {\n"
 "    border: 2px solid #003153;   /* Prussian Blue border */\n"
 "    border-radius: 10px;         /* Round the corners */\n"
 "    padding: 0 8px;              /* Padding inside the button */\n"
@@ -111,10 +111,10 @@ public:
 "    background-color: #001f33; /* Darker Prussian blue on hover */\n"
 "}\n"
 ""));
-        pushButton_10 = new QPushButton(frame);
-        pushButton_10->setObjectName("pushButton_10");
-        pushButton_10->setGeometry(QRect(370, 10, 111, 41));
-        pushButton_10->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+        employerpass = new QPushButton(frame);
+        employerpass->setObjectName("employerpass");
+        employerpass->setGeometry(QRect(370, 10, 111, 41));
+        employerpass->setStyleSheet(QString::fromUtf8("QPushButton {\n"
 "    border: 2px solid #003153;   /* Prussian Blue border */\n"
 "    border-radius: 10px;         /* Round the corners */\n"
 "    padding: 0 8px;              /* Padding inside the button */\n"
@@ -170,9 +170,9 @@ public:
         ball->setPixmap(QPixmap(QString::fromUtf8("123-removebg-preview.png")));
         ball->setScaledContents(true);
         label_pic2->raise();
-        pushButton_4->raise();
+        sponsorpass->raise();
         pushButton_9->raise();
-        pushButton_10->raise();
+        employerpass->raise();
         matchpass->raise();
         equipepass->raise();
         ball->raise();
@@ -487,9 +487,9 @@ public:
     void retranslateUi(QMainWindow *gs_billet)
     {
         gs_billet->setWindowTitle(QCoreApplication::translate("gs_billet", "MainWindow", nullptr));
-        pushButton_4->setText(QCoreApplication::translate("gs_billet", "Sponsor", nullptr));
+        sponsorpass->setText(QCoreApplication::translate("gs_billet", "Sponsor", nullptr));
         pushButton_9->setText(QCoreApplication::translate("gs_billet", "Billet", nullptr));
-        pushButton_10->setText(QCoreApplication::translate("gs_billet", "Employer", nullptr));
+        employerpass->setText(QCoreApplication::translate("gs_billet", "Employer", nullptr));
         matchpass->setText(QCoreApplication::translate("gs_billet", "Match", nullptr));
         equipepass->setText(QCoreApplication::translate("gs_billet", "Equipe", nullptr));
         label_pic2->setText(QString());

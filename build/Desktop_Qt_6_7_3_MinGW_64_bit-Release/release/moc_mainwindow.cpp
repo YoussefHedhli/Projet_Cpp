@@ -36,10 +36,12 @@ namespace {
 struct qt_meta_stringdata_CLASSMainWindowENDCLASS_t {};
 constexpr auto qt_meta_stringdata_CLASSMainWindowENDCLASS = QtMocHelpers::stringData(
     "MainWindow",
-    "addMatchToDatabase",
+    "on_pushButton_login_clicked",
     "",
-    "deleteMatch",
-    "updateMatchDisplay"
+    "on_pushButton_mdp_oublie_clicked",
+    "paintEvent",
+    "QPaintEvent*",
+    "event"
 );
 #else  // !QT_MOC_HAS_STRINGDATA
 #error "qtmochelpers.h not found or too old."
@@ -62,12 +64,12 @@ Q_CONSTINIT static const uint qt_meta_data_CLASSMainWindowENDCLASS[] = {
  // slots: name, argc, parameters, tag, flags, initial metatype offsets
        1,    0,   32,    2, 0x08,    1 /* Private */,
        3,    0,   33,    2, 0x08,    2 /* Private */,
-       4,    0,   34,    2, 0x08,    3 /* Private */,
+       4,    1,   34,    2, 0x08,    3 /* Private */,
 
  // slots: parameters
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void,
+    QMetaType::Void, 0x80000000 | 5,    6,
 
        0        // eod
 };
@@ -81,12 +83,13 @@ Q_CONSTINIT const QMetaObject MainWindow::staticMetaObject = { {
     qt_incomplete_metaTypeArray<qt_meta_stringdata_CLASSMainWindowENDCLASS_t,
         // Q_OBJECT / Q_GADGET
         QtPrivate::TypeAndForceComplete<MainWindow, std::true_type>,
-        // method 'addMatchToDatabase'
+        // method 'on_pushButton_login_clicked'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
-        // method 'deleteMatch'
+        // method 'on_pushButton_mdp_oublie_clicked'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
-        // method 'updateMatchDisplay'
-        QtPrivate::TypeAndForceComplete<void, std::false_type>
+        // method 'paintEvent'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        QtPrivate::TypeAndForceComplete<QPaintEvent *, std::false_type>
     >,
     nullptr
 } };
@@ -97,13 +100,12 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         auto *_t = static_cast<MainWindow *>(_o);
         (void)_t;
         switch (_id) {
-        case 0: _t->addMatchToDatabase(); break;
-        case 1: _t->deleteMatch(); break;
-        case 2: _t->updateMatchDisplay(); break;
+        case 0: _t->on_pushButton_login_clicked(); break;
+        case 1: _t->on_pushButton_mdp_oublie_clicked(); break;
+        case 2: _t->paintEvent((*reinterpret_cast< std::add_pointer_t<QPaintEvent*>>(_a[1]))); break;
         default: ;
         }
     }
-    (void)_a;
 }
 
 const QMetaObject *MainWindow::metaObject() const

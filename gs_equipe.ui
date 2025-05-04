@@ -51,7 +51,7 @@ background:gray;
      <iconset theme="QIcon::ThemeIcon::MailMessageNew"/>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_10">
+   <widget class="QPushButton" name="employerpass">
     <property name="geometry">
      <rect>
       <x>480</x>
@@ -558,7 +558,7 @@ QPushButton:hover {
      <iconset theme="QIcon::ThemeIcon::SystemSearch"/>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_12">
+   <widget class="QPushButton" name="billetpass">
     <property name="geometry">
      <rect>
       <x>640</x>
@@ -963,7 +963,7 @@ background:gray;
      <string/>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_13">
+   <widget class="QPushButton" name="sponsorpass">
     <property name="geometry">
      <rect>
       <x>790</x>
@@ -1096,17 +1096,17 @@ QPushButton:hover {
    <zorder>ball</zorder>
    <zorder>label_14</zorder>
    <zorder>bmodif</zorder>
-   <zorder>pushButton_10</zorder>
+   <zorder>employerpass</zorder>
    <zorder>tabWidget</zorder>
    <zorder>bsupp</zorder>
    <zorder>matchpass</zorder>
-   <zorder>pushButton_12</zorder>
+   <zorder>billetpass</zorder>
    <zorder>bpdf</zorder>
    <zorder>Rech</zorder>
    <zorder>pushButton_8</zorder>
    <zorder>formulere</zorder>
    <zorder>linerech</zorder>
-   <zorder>pushButton_13</zorder>
+   <zorder>sponsorpass</zorder>
    <zorder>stat</zorder>
    <zorder>AFF</zorder>
    <zorder>combotri</zorder>

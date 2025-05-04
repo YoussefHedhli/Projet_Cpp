@@ -26,6 +26,7 @@
 #include <QFont>
 #include <numeric> // For std::accumulate
 #include "simulation.h"
+#include "fennetre1.h"
 
 gs_match::gs_match(Arduino* a, QWidget *parent)
     : QMainWindow(parent),
@@ -73,6 +74,7 @@ gs_match::gs_match(Arduino* a, QWidget *parent)
     connect(ui->calendar, &QCalendarWidget::clicked, this, &gs_match::onCalendarDateSelected);
     connect(ui->calendar, &QCalendarWidget::clicked, this, &gs_match::onCalendarDateHovered);
     connect(ui->equipepass, &QPushButton::clicked, this, &gs_match::on_equiepass_clicked);
+    connect(ui->employerpass, &QPushButton::clicked, this, &gs_match::on_employerpass_clicked);
     updateMatchDisplay();
     displayStatistics();
     highlightMatchDates();
@@ -94,28 +96,26 @@ void gs_match::on_sim_clicked() {
 }
 
 void gs_match::on_equiepass_clicked() {
-    // Create a new instance of gs_equipe window
-    gs_equipe *equipeWindow = new gs_equipe(this);  // Pass the parent window (gs_match)
-
-    // Show the new window
-    equipeWindow->show();  // Open it as a new window
+    QMessageBox::warning(this, "Accès refusé", "Vous n'avez pas l'accès requis pour la gestion des équipes.");
 }
 
 void gs_match::on_billetpass_clicked() {
-    // Create a new instance of gs_billet window
-    gs_billet *billetWindow = new gs_billet(this);  // Pass the parent window (gs_match)
-
-    // Show the new window
-    billetWindow->show();  // Open it as a new window
+    QMessageBox::warning(this, "Accès refusé", "Vous n'avez pas l'accès requis pour la gestion des billets.");
 }
+
 
 void gs_match::on_sponsorpass_clicked() {
-    // Create a new instance of sponsor window
-    sponsor *sponsorWindow = new sponsor(this);  // Pass the parent window (gs_match)
-
-    // Show the sponsor window
-    sponsorWindow->show();  // Open it as a new window
+    QMessageBox::warning(this, "Accès refusé", "Vous n'avez pas l'accès requis pour la gestion des sponsors.");
 }
+void gs_match::on_employerpass_clicked() {
+    // Open the fennetre1 window
+    fennetre1 *window = new fennetre1(this);  // Passing 'this' as the parent window
+    window->show();  // Show the fennetre1 window
+
+    // Close the gs_match window
+    this->close();  // Close the current window (gs_match)
+}
+
 
 
     void gs_match::paintEvent(QPaintEvent *event)
