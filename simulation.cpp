@@ -15,8 +15,8 @@
 Simulation::Simulation(Arduino* a, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Dialog),
-    serialPort(nullptr), // assign passed Arduino pointer here
-    arduino(a),
+    //serialPort(nullptr), // assign passed Arduino pointer here
+    //arduino(a),
     isPaused(false),
     isGameRunning(false),
     blueScore(0),
@@ -38,14 +38,14 @@ Simulation::Simulation(Arduino* a, QWidget *parent) :
     connect(matchTimer, &QTimer::timeout, this, &Simulation::updateMatchTime);
     matchTime = 15;  // Set match duration to 15 seconds
     ui->chrono->display(matchTime);// Initialize LCD display
-    if (arduino && arduino->getserial()->isOpen()) {
+    /*if (arduino && arduino->getserial()->isOpen()) {
         qDebug() << "Simulation: Using shared Arduino instance (connected).";
     } else {
         qDebug() << "Simulation: Arduino instance not connected.";
     }
     QTimer *arduinoTimer = new QTimer(this);
     connect(arduinoTimer, &QTimer::timeout, this, &Simulation::checkArduinoData);
-    arduinoTimer->start(100);
+    arduinoTimer->start(100);*/
 }
 
 Simulation::~Simulation() {
@@ -74,7 +74,7 @@ void Simulation::paintEvent(QPaintEvent *event)
     // Optionally, you can also use QPainter for other custom drawing if needed
     QDialog::paintEvent(event);  // Ensure the parent class paintEvent is called
 }
-void Simulation::initSerial() {
+/*void Simulation::initSerial() {
     if (arduino && arduino->getserial()->isOpen()) {
         qDebug() << "Arduino already connected and serial port is open.";
         return;  // ✅ Already connected, do nothing
@@ -82,7 +82,7 @@ void Simulation::initSerial() {
 
     qDebug() << "Serial port not open in Simulation. No reconnection attempted.";
     // ❌ Do NOT attempt to connect here again. Just skip.
-}
+}*/
 
 
 
@@ -97,12 +97,12 @@ void Simulation::updateLCD() {
 
     QString fullText = scoreLine + "|" + timeLine;
     // Send the data to Arduino using Arduino class
-    if (arduino && arduino->getserial()->isOpen()) {
+   /* if (arduino && arduino->getserial()->isOpen()) {
         arduino->write_to_arduino((fullText + "\n").toUtf8());
         qDebug() << "Sent to Arduino:" << fullText;  // Debug message to verify data sent
     } else {
         qDebug() << "Error: Serial port is not open.";
-    }
+    }*/
 }
 
 void Simulation::stopUpdating() {
@@ -111,10 +111,10 @@ void Simulation::stopUpdating() {
         qDebug() << "Stopped timer.";
     }
 
-    if (arduino) {
+    /*if (arduino) {
         arduino->close_arduino();
         qDebug() << "Closed Arduino connection.";
-    }
+    }*/
 }
 void Simulation::on_Start_clicked() {
     qDebug() << "Start button clicked.";
@@ -133,10 +133,10 @@ void Simulation::on_Start_clicked() {
         qDebug() << "Game started!";
     }
 
-    initSerial();  // Initialize serial communication if needed
+    //initSerial();  // Initialize serial communication if needed
 }
 
-void Simulation::checkArduinoData()
+/*void Simulation::checkArduinoData()
 {
     QByteArray data = arduino->read_from_arduino();
     QString message = QString::fromUtf8(data).trimmed();
@@ -165,7 +165,7 @@ void Simulation::checkArduinoData()
         // Close the window after the user clicks OK
         close();  // Close the simulation window
     }
-}
+}*/
 
 
 void Simulation::updateMatchTime() {
@@ -443,9 +443,9 @@ void Simulation::on_Resume_clicked() {
 void Simulation::on_Pause_clicked() {
     isPaused = true;
     qDebug() << "Game paused!";
-    if (arduino && arduino->isConnected()) {
+    /*if (arduino && arduino->isConnected()) {
         arduino->write_to_arduino("PAUSED\n");
-    }
+    }*/
 }
 
 
@@ -705,9 +705,9 @@ void Simulation::resetPlayers() {
 }
 
 void Simulation::closeEvent(QCloseEvent *event) {
-    if (arduino && arduino->isConnected()) {
+    /*if (arduino && arduino->isConnected()) {
         arduino->write_to_arduino("RESET\n");
         qDebug() << "Sent RESET to Arduino";
-    }
+    }*/
     QDialog::closeEvent(event);  // Call base class implementation
 }

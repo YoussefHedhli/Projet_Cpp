@@ -36,7 +36,7 @@ private:
     Ui::Dialog *ui;
     QPushButton *Start;
     QSerialPort *serialPort;
-    Arduino *arduino;  // Already done? Just make sure it's initialized to nullptr
+   // Arduino *arduino;  // Already done? Just make sure it's initialized to nullptr
     QTimer *timer;
     bool isPaused;
     bool isGameRunning;
@@ -99,7 +99,7 @@ private:
     void kickBall(bool isBlueTurn);
     void checkPenaltyShootoutState();
     void hideMatchPlayersForPenalties();
-    void initSerial();
+    //void initSerial();
     void updateLCD();
     void stopUpdating();
     void checkArduinoData();
